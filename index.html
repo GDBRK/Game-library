@@ -951,10 +951,9 @@ DMC для девочек…
           return (parse(a.date) - parse(b.date)) * mult;
         }
         if (field === 'has' || currentFilter.sort === 'has-review') {
-  const aHas = a.review ? 1 : 0;
-  const bHas = b.review ? 1 : 0;
-  return (bHas - aHas);
-
+          const aHas = a.review ? 1 : 0;
+          const bHas = b.review ? 1 : 0;
+          return (bHas - aHas);
         }
         return 0;
       });
