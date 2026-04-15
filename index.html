@@ -7,22 +7,39 @@
   <style>
     :root {
       --bg: #0f0f13; --card: #1a1a24; --text: #e6e6ef;
-      --accent: #7c5cff; --good: #4ade80; --mid: #fbbf24; --bad: #f87171;
-      --border: #3a3a50; --muted: #8888aa;
+      --accent: #7c5cff; --border: #3a3a50; --muted: #8888aa;
+      --c-red: #ef4444; --c-yellow: #fbbf24; --c-green: #4ade80; --c-purple: #7c5cff;
+      --review-bg: #15151c; --review-text: #e0e0f0;
+    }
+    [data-theme="light"] {
+      --bg: #f5f5fa; --card: #ffffff; --text: #1a1a2e;
+      --accent: #6c5ce7; --border: #d0d0e0; --muted: #666688;
+      --c-red: #dc2626; --c-yellow: #d97706; --c-green: #16a34a; --c-purple: #7c3aed;
+      --review-bg: #f8f8ff; --review-text: #2a2a4a;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
       background: var(--bg); color: var(--text);
-      padding: 16px; line-height: 1.5;
+      padding: 16px; line-height: 1.5; transition: background 0.3s, color 0.3s;
     }
     header {
       text-align: center; margin-bottom: 20px; padding: 20px;
       background: linear-gradient(135deg, var(--card), #252535);
       border-radius: 16px; border: 1px solid var(--border);
+      position: relative;
     }
+    [data-theme="light"] header { background: linear-gradient(135deg, var(--card), #e8e8f5); }
     h1 { font-size: 1.6rem; margin-bottom: 6px; }
     #stats { color: var(--muted); font-size: 0.95rem; }
+    
+    #themeToggle {
+      position: absolute; top: 12px; right: 16px;
+      background: var(--accent); color: white; border: none;
+      padding: 6px 12px; border-radius: 20px; cursor: pointer;
+      font-size: 0.9rem; display: flex; align-items: center; gap: 4px;
+    }
+    #themeToggle:hover { opacity: 0.9; }
     
     .filters {
       display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
@@ -36,16 +53,11 @@
     }
     .filters input { min-width: 180px; }
     
-    .grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
-    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
     .card {
       background: var(--card); border-radius: 12px; padding: 14px;
-      border-left: 4px solid var(--accent);
-      border: 1px solid var(--border);
-      transition: transform 0.2s;
-      display: flex; flex-direction: column;
+      border-left: 4px solid var(--accent); border: 1px solid var(--border);
+      transition: transform 0.2s; display: flex; flex-direction: column; cursor: pointer;
     }
     .card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
     
@@ -53,9 +65,7 @@
       width: 100%; height: 160px; border-radius: 8px; margin-bottom: 10px;
       background: var(--card); overflow: hidden; position: relative;
     }
-    .card-image img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-    }
+    .card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .cover-placeholder {
       width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
       font-size: 2.2rem; font-weight: bold; color: white; text-shadow: 0 2px 6px rgba(0,0,0,0.6);
@@ -68,41 +78,67 @@
     }
     @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     
-    .card-header {
-      display: flex; justify-content: space-between; align-items: start;
-      margin-bottom: 8px; gap: 8px; flex-wrap: wrap;
-    }
+    .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; gap: 8px; flex-wrap: wrap; }
     .game-title { font-weight: 600; font-size: 1.05rem; line-height: 1.3; }
+    
     .rating {
-      background: var(--accent); color: white; padding: 3px 9px;
-      border-radius: 16px; font-weight: bold; font-size: 0.9rem;
+      color: white; padding: 3px 9px; border-radius: 16px; font-weight: bold; font-size: 0.9rem;
       min-width: 48px; text-align: center; flex-shrink: 0;
     }
-    .rating.empty { background: var(--border); }
-    
+    .rating.red { background: var(--c-red); }
+    .rating.yellow { background: var(--c-yellow); color: #1a1a24; }
+    .rating.green { background: var(--c-green); color: #1a1a24; }
+    .rating.purple { background: var(--c-purple); }
+    .rating.empty { background: var(--border); color: var(--muted); }
+
     .verdict {
       display: inline-block; padding: 2px 9px; border-radius: 10px;
-      font-size: 0.82rem; font-weight: 500; margin-bottom: 8px;
+      font-size: 0.82rem; font-weight: 600; margin-bottom: 8px;
     }
-    .verdict.пик { background: rgba(74, 222, 128, 0.15); color: var(--good); }
-    .verdict.рекомендую { background: rgba(251, 191, 36, 0.15); color: var(--mid); }
-    .verdict.можно { background: rgba(124, 92, 255, 0.15); color: var(--accent); }
-    .verdict.не-рекомендую, .verdict.дроп { background: rgba(248, 113, 113, 0.15); color: var(--bad); }
+    .verdict.пик { background: var(--c-purple); color: white; }
+    .verdict.рекомендую { background: var(--c-green); color: #1a1a24; }
+    .verdict.можно { background: var(--c-yellow); color: #1a1a24; }
+    .verdict.не-рекомендую, .verdict.дроп { background: var(--c-red); color: white; }
     
-    .meta {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px;
-      font-size: 0.88rem; color: var(--muted); margin: 8px 0;
-    }
+    .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 0.88rem; color: var(--muted); margin: 8px 0; }
     .review {
       font-size: 0.92rem; color: var(--text); margin-top: 8px;
-      padding-top: 8px; border-top: 1px dashed var(--border);
-      margin-top: auto;
+      padding-top: 8px; border-top: 1px dashed var(--border); margin-top: auto;
     }
-    .review a {
-      color: var(--accent); text-decoration: none; font-weight: 500;
+    .review-btn {
       display: inline-flex; align-items: center; gap: 4px;
+      color: var(--accent); text-decoration: none; font-weight: 500; cursor: pointer;
     }
-    .review a:hover { text-decoration: underline; }
+    .review-btn:hover { text-decoration: underline; }
+    
+    /* 📄 Страница обзора */
+    #reviewView {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--bg); z-index: 100; padding: 20px; overflow-y: auto;
+    }
+    #reviewView.active { display: block; }
+    .review-header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+      padding-bottom: 16px; border-bottom: 1px solid var(--border);
+    }
+    #backBtn {
+      background: var(--accent); color: white; border: none;
+      padding: 8px 16px; border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; font-size: 0.95rem;
+    }
+    #backBtn:hover { opacity: 0.9; }
+    #reviewTitle { font-size: 1.4rem; font-weight: 600; }
+    #reviewContent {
+      background: var(--review-bg); color: var(--review-text);
+      padding: 24px; border-radius: 12px; line-height: 1.7;
+      font-size: 1.05rem; max-width: 800px; margin: 0 auto;
+      white-space: pre-wrap;
+    }
+    #reviewContent h1, #reviewContent h2, #reviewContent h3 {
+      color: var(--accent); margin: 1.5em 0 0.8em;
+    }
+    #reviewContent p { margin: 0.8em 0; }
+    #reviewContent a { color: var(--accent); }
     
     @media (max-width: 600px) {
       .meta { grid-template-columns: 1fr; }
@@ -115,6 +151,7 @@
   <header>
     <h1>🎮 Библиотека пройденных игр</h1>
     <p id="stats">Загрузка...</p>
+    <button id="themeToggle">🌓 Тема</button>
   </header>
 
   <div class="filters">
@@ -138,6 +175,15 @@
   </div>
 
   <div id="gamesGrid" class="grid"></div>
+
+  <!-- 📄 Просмотр обзора -->
+  <div id="reviewView">
+    <div class="review-header">
+      <button id="backBtn">← Назад</button>
+      <h2 id="reviewTitle">Название игры</h2>
+    </div>
+    <div id="reviewContent">Загрузка обзора...</div>
+  </div>
 
   <script>
     const CSV_DATA = `ИГРА,ОЦЕНКА,ВЫВОД,ОБЗОР,Жанр,ДАТА ПРОХОЖДЕНИЯ,ЧАСОВ,ДОСТИЖЕНИЯ,%
@@ -190,6 +236,26 @@ Firewatch,,,,СИМУЛЯТОР ХОДЬБЫ,,,,
 Nioh 2,,Не рекомендую,,SOULSLIKE,30.09.2025,"3,5",2/88,2%
 Warcraft 3,,Дроп,Поиграл час и понял что вообще не люблю стратегии,СТРАТЕГИЯ,,"1,5",,`;
 
+    // 🔗 Ссылки на обзоры (только те, что ты дал)
+    const REVIEW_LINKS = {
+      'Resident Evil 4 Remake': 'https://docs.google.com/document/d/e/2PACX-1vQfFqOvbjSJVYbIRZCitrcJIVpwYheES82b4n2T5mlb005--xZKB3n4kKllAYXDzD-zysm5Mu3paDl8/pub?output=txt',
+      'Resident Evil 9 Requiem': 'https://docs.google.com/document/d/e/2PACX-1vSV53Isdo5_eX-mWad1gdBomF1MHDHlNLYoeGJO9EO84iRMkZtnue-Wv_XBwbpcdn4vEs54HxNKTbun/pub?output=txt',
+      'Lies of P': 'https://docs.google.com/document/d/e/2PACX-1vSqi0ZivoRO_0WjMW9lscZxDxkgtV2NopwhhfXKZ4y2t6kmSyTqSjgHHQMOOZI-eH4geG9-SHVm_vMz/pub?output=txt',
+      'Ghost of Tsushima': 'https://docs.google.com/document/d/e/2PACX-1vTl_erKecH-Z_6ZnwpapQ3uCiqsZBAyAKNN_HP8Q80BtOco9I2rdtVooNGNWdfLLCTX4f1UOpAnaslz/pub?output=txt',
+      'Sekiro': 'https://docs.google.com/document/d/e/2PACX-1vTxCM8Sx1GTKqF1bYJYWC9KIl3RruAQsCp1ootAPyfrjVMil19_WwQR_s_KuNLLfLvGTDY966wbZlPa/pub?output=txt',
+      'Black Myth: Wukong': 'https://docs.google.com/document/d/e/2PACX-1vS24EHezBL2T-moSXMxugV5Mh-kya9orSip-1IhIXOINnJ54t_N-cqIT2LNV1FVD6-uQylSWs3YFdZi/pub?output=txt',
+      'Clair Obscur: Expedition 33': 'https://docs.google.com/document/d/e/2PACX-1vTn4_qJI36p5mYDMkWFY0RK7RZqyej9GRpUGOCEhyqt2emWeKcBjdJr6P8fsLX3Glem0GB9zXLzR37T/pub?output=txt',
+      'The Last of Us Part I': 'https://docs.google.com/document/d/e/2PACX-1vTk-JtsIIup1ffLV3c28bTTjdTyv5VLt3IIoAqKIrlVhLMgtZxvs33whw_wkgjg8ROqDQAFCSqACB6n/pub?output=txt',
+      'Castlevania: Lords of Shadow 2': 'https://docs.google.com/document/d/e/2PACX-1vTdsRaa3_fcIzyUonUnUEWMvUh9pn4D-VJ4QOIGFFkPH3uVs3ipjLn7EK6osnz4ty0GQgVlEfqmPKxF/pub?output=txt',
+      'Hollow Knight: Silksong': 'https://docs.google.com/document/d/e/2PACX-1vRFzpuwtzznTpxAACc57PeKUoxXsu48zpcpN-4657uYlqugJiLzOx1_hjLP4DLvtVmTgiPxQIHNXt2v/pub?output=txt',
+      'Persona 5 Royal': 'https://docs.google.com/document/d/e/2PACX-1vRG8iRjYXm3vlwy-yWkZrIvSitqHhkZjaKU4xamhSsPmwaMuo6Vi53qkN1QP2sxk9cQUP_L07_0QdAT/pub?output=txt',
+      'Bayonetta': 'https://docs.google.com/document/d/e/2PACX-1vSpGmSws1wbCo_tB2kuD-GDT7cBi5nafi45m2T7OWH1F9FZSIS9d-QBtZ_RkKmMb3m0d-TNi6nagUcu/pub?output=txt',
+      'God of War 2018': 'https://docs.google.com/document/d/e/2PACX-1vRYTFMGq9QRhNTeUYelPqxgQ-cxAV0jPIs5t8KAK2xR_QBIrjfCKDx3Zn2eAo0bjJDYSAZn3AxxWIdq/pub?output=txt',
+      'Bloodborne': 'https://docs.google.com/document/d/e/2PACX-1vTzRgfDSsAI5PT2c103bmO7UnW9bBluvgPZLJD_GnPuXS4RxNeJyk144B4UvVTN_KYETv0LQQEZ7-KN/pub?output=txt',
+      'SILENT HILL f': 'https://docs.google.com/document/d/e/2PACX-1vQn_4O2U7aGv0WvYhNqJj1Wz9QE5APMMqzeDczLzkuqWpcKJ2cLv5lQh0Ag3gDIL4JIYqeKq96AVJU8/pub?output=txt',
+      'The First Berserker: Khazan': 'https://docs.google.com/document/d/e/2PACX-1vTtRrXtG9S99uxYC4OeMbPSgoVu4fz2axq2xu0whszX4NnzNqqSwhitOyMLlusV3oeRdE7zQyK2WcK1/pub?output=txt'
+    };
+
     let games = [];
     const coverCache = JSON.parse(localStorage.getItem('gameCovers') || '{}');
 
@@ -226,9 +292,12 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
 
     function fmtVerdict(v) {
       if (!v) return '';
-      const map = { 'пик': '🔥 Пик', 'рекомендую': '✅ Рекомендую', 'можно попробовать': '🤔 Можно попробовать', 'не рекомендую': '❌ Не рекомендую', 'дроп': '🗑️ Дроп' };
       const key = v.toLowerCase().trim();
-      return `<span class="verdict ${key}">${map[key] || v}</span>`;
+      if (key.includes('пик')) return `<span class="verdict пик">Пик</span>`;
+      if (key.includes('рекомендую') && !key.includes('не')) return `<span class="verdict рекомендую">Рекомендую</span>`;
+      if (key.includes('можно')) return `<span class="verdict можно">Можно попробовать</span>`;
+      if (key.includes('не рекомендую') || key.includes('дроп')) return `<span class="verdict не-рекомендую">${v}</span>`;
+      return `<span class="verdict можно">${v}</span>`;
     }
 
     function fmtNum(val) {
@@ -237,13 +306,21 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
       return isNaN(n) ? val : n % 1 === 0 ? n.toString() : n.toFixed(1);
     }
 
+    function getRatingClass(rating) {
+      const r = parseFloat(rating);
+      if (isNaN(r)) return 'empty';
+      if (r <= 4) return 'red';
+      if (r <= 6) return 'yellow';
+      if (r <= 8) return 'green';
+      return 'purple';
+    }
+
     // 🖼️ Загрузка обложек
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const img = entry.target;
-          const title = img.dataset.title;
-          loadCover(img, title);
+          loadCover(img, img.dataset.title);
           observer.unobserve(img);
         }
       });
@@ -254,33 +331,103 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
       if (coverCache[title]) {
         img.src = coverCache[title];
         img.onload = () => img.classList.remove('loading-cover');
-        img.onerror = () => setPlaceholder(img, title);
+        img.onerror = () => tryNextSource(img, title);
         return;
       }
+      await tryNextSource(img, title);
+    }
+
+    async function tryNextSource(img, title, attempt = 0) {
+      const sources = [
+        () => fetchFromRAWG(title),
+        () => fetchFromGOG(title),
+        () => fetchFromSteam(title)
+      ];
+      if (attempt >= sources.length) { setPlaceholder(img, title); return; }
       try {
-        await new Promise(r => setTimeout(r, 150)); // задержка от rate-limit
-        const res = await fetch(`https://api.gog.com/v2/games/search?query=${encodeURIComponent(title)}&limit=1`);
-        const data = await res.json();
-        if (data.products?.length > 0) {
-          const id = data.products[0].cover_product_v2_id;
-          const url = `https://images.gog.com/${id}.jpg`;
+        await new Promise(r => setTimeout(r, 200 * attempt));
+        const url = await sources[attempt]();
+        if (url) {
           coverCache[title] = url;
           localStorage.setItem('gameCovers', JSON.stringify(coverCache));
           img.src = url;
           img.onload = () => img.classList.remove('loading-cover');
-          img.onerror = () => setPlaceholder(img, title);
-        } else {
-          setPlaceholder(img, title);
+          img.onerror = () => tryNextSource(img, title, attempt + 1);
+        } else tryNextSource(img, title, attempt + 1);
+      } catch (e) { tryNextSource(img, title, attempt + 1); }
+    }
+
+    async function fetchFromRAWG(title) {
+      try {
+        const res = await fetch(`https://api.rawg.io/api/games?key=demo&search=${encodeURIComponent(title)}&page_size=1`);
+        const data = await res.json();
+        if (data.results?.[0]?.background_image) return data.results[0].background_image;
+      } catch (e) {} return null;
+    }
+    async function fetchFromGOG(title) {
+      try {
+        const res = await fetch(`https://api.gog.com/v2/games/search?query=${encodeURIComponent(title)}&limit=1`);
+        const data = await res.json();
+        if (data.products?.[0]?.cover_product_v2_id) {
+          return `https://images.gog.com/${data.products[0].cover_product_v2_id}.jpg`;
         }
-      } catch (e) {
-        setPlaceholder(img, title);
-      }
+      } catch (e) {} return null;
+    }
+    async function fetchFromSteam(title) {
+      try {
+        const res = await fetch(`https://store.steampowered.com/api/storesearch?cc=ru&l=russian&term=${encodeURIComponent(title)}`);
+        const data = await res.json();
+        if (data.items?.[0]?.id) return `https://cdn.akamai.steamstatic.com/steam/apps/${data.items[0].id}/header.jpg`;
+      } catch (e) {} return null;
     }
 
     function setPlaceholder(img, title) {
       img.classList.remove('loading-cover');
       const initials = title.split(' ').filter(Boolean).map(w => w[0]).join('').substring(0, 2).toUpperCase();
       img.outerHTML = `<div class="cover-placeholder">${initials}</div>`;
+    }
+
+    // 📄 Функции обзоров
+    function getReviewLink(gameTitle) {
+      return REVIEW_LINKS[gameTitle] || null;
+    }
+
+    async function loadReview(gameTitle) {
+      const link = getReviewLink(gameTitle);
+      if (!link) return 'Обзор не доступен.';
+      try {
+        const res = await fetch(link);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const text = await res.text();
+        // Простая очистка от лишних пробелов
+        return text.trim().replace(/\r\n/g, '\n');
+      } catch (e) {
+        return 'Не удалось загрузить обзор. Попробуйте позже.';
+      }
+    }
+
+    function showReviewView(title, content) {
+      document.getElementById('reviewTitle').textContent = title;
+      document.getElementById('reviewContent').textContent = content;
+      document.getElementById('reviewView').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function hideReviewView() {
+      document.getElementById('reviewView').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // 🌓 Тема
+    function initTheme() {
+      const saved = localStorage.getItem('theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+      document.getElementById('themeToggle').addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
     }
 
     function renderGames(list) {
@@ -295,19 +442,19 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
         card.className = 'card';
         const hours = g['ЧАСОВ'] ? `⏱ ${fmtNum(g['ЧАСОВ'])} ч` : '';
         const ach = g['ДОСТИЖЕНИЯ'] || '';
-        const pct = g['%'] ? `(${g['%']}%)` : '';
+        const pct = g['%'] ? `(${g['%'].replace('%', '')}%)` : '';
         const rating = g['ОЦЕНКА'] ? `${g['ОЦЕНКА']}/10` : '–';
-        const ratingClass = g['ОЦЕНКА'] ? '' : 'empty';
+        const ratingClass = getRatingClass(g['ОЦЕНКА']);
         
+        // Обработка обзора: ссылка → кнопка, текст → текст, пусто → ничего
         let reviewHtml = '';
-        if (g['ОБЗОР']) {
-          const text = g['ОБЗОР'].trim();
-          if (text.includes('http')) {
-            const url = text.match(/https?:\/\/[^\s]+/)?.[0] || text;
-            const linkText = text.replace(url, '').trim() || '📄 Читать обзор';
-            reviewHtml = `<div class="review">💬 <a href="${url}" target="_blank" rel="noopener">${linkText} →</a></div>`;
-          } else if (text && text !== '–') {
-            reviewHtml = `<div class="review">💬 ${text}</div>`;
+        const reviewVal = g['ОБЗОР']?.trim();
+        if (reviewVal) {
+          const link = getReviewLink(g['ИГРА']);
+          if (link) {
+            reviewHtml = `<div class="review"><span class="review-btn" data-game="${g['ИГРА']}">📄 Читать обзор →</span></div>`;
+          } else if (reviewVal !== '–' && !reviewVal.startsWith('http')) {
+            reviewHtml = `<div class="review">💬 ${reviewVal}</div>`;
           }
         }
         
@@ -327,8 +474,20 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
           ${reviewHtml}
         `;
         grid.appendChild(card);
-        const img = card.querySelector('img');
-        observer.observe(img);
+        observer.observe(card.querySelector('img'));
+        
+        // Клик по карточке можно добавить позже, пока только кнопка обзора
+        const reviewBtn = card.querySelector('.review-btn');
+        if (reviewBtn) {
+          reviewBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const game = g['ИГРА'];
+            document.getElementById('reviewContent').textContent = '⏳ Загрузка...';
+            showReviewView(game, '');
+            const content = await loadReview(game);
+            document.getElementById('reviewContent').textContent = content;
+          });
+        }
       });
     }
 
@@ -387,10 +546,22 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
     }
 
     function init() {
+      initTheme();
       games = parseCSV(CSV_DATA);
       populateGenres(games);
       updateStats(games);
       filterAndRender();
+      
+      // Кнопка "Назад" в обзоре
+      document.getElementById('backBtn').addEventListener('click', hideReviewView);
+      
+      // Закрытие обзора по Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.getElementById('reviewView').classList.contains('active')) {
+          hideReviewView();
+        }
+      });
+      
       console.log(`✅ Загружено ${games.length} игр`);
     }
 
