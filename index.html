@@ -57,7 +57,7 @@
     .card {
       background: var(--card); border-radius: 12px; padding: 14px;
       border-left: 4px solid var(--accent); border: 1px solid var(--border);
-      transition: transform 0.2s; display: flex; flex-direction: column; cursor: pointer;
+      transition: transform 0.2s; display: flex; flex-direction: column;
     }
     .card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
     
@@ -107,38 +107,9 @@
     }
     .review-btn {
       display: inline-flex; align-items: center; gap: 4px;
-      color: var(--accent); text-decoration: none; font-weight: 500; cursor: pointer;
+      color: var(--accent); text-decoration: none; font-weight: 500;
     }
     .review-btn:hover { text-decoration: underline; }
-    
-    /* 📄 Страница обзора */
-    #reviewView {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: var(--bg); z-index: 100; padding: 20px; overflow-y: auto;
-    }
-    #reviewView.active { display: block; }
-    .review-header {
-      display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
-      padding-bottom: 16px; border-bottom: 1px solid var(--border);
-    }
-    #backBtn {
-      background: var(--accent); color: white; border: none;
-      padding: 8px 16px; border-radius: 8px; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; font-size: 0.95rem;
-    }
-    #backBtn:hover { opacity: 0.9; }
-    #reviewTitle { font-size: 1.4rem; font-weight: 600; }
-    #reviewContent {
-      background: var(--review-bg); color: var(--review-text);
-      padding: 24px; border-radius: 12px; line-height: 1.7;
-      font-size: 1.05rem; max-width: 800px; margin: 0 auto;
-      white-space: pre-wrap;
-    }
-    #reviewContent h1, #reviewContent h2, #reviewContent h3 {
-      color: var(--accent); margin: 1.5em 0 0.8em;
-    }
-    #reviewContent p { margin: 0.8em 0; }
-    #reviewContent a { color: var(--accent); }
     
     @media (max-width: 600px) {
       .meta { grid-template-columns: 1fr; }
@@ -175,15 +146,6 @@
   </div>
 
   <div id="gamesGrid" class="grid"></div>
-
-  <!-- 📄 Просмотр обзора -->
-  <div id="reviewView">
-    <div class="review-header">
-      <button id="backBtn">← Назад</button>
-      <h2 id="reviewTitle">Название игры</h2>
-    </div>
-    <div id="reviewContent">Загрузка обзора...</div>
-  </div>
 
   <script>
     const CSV_DATA = `ИГРА,ОЦЕНКА,ВЫВОД,ОБЗОР,Жанр,ДАТА ПРОХОЖДЕНИЯ,ЧАСОВ,ДОСТИЖЕНИЯ,%
@@ -236,24 +198,24 @@ Firewatch,,,,СИМУЛЯТОР ХОДЬБЫ,,,,
 Nioh 2,,Не рекомендую,,SOULSLIKE,30.09.2025,"3,5",2/88,2%
 Warcraft 3,,Дроп,Поиграл час и понял что вообще не люблю стратегии,СТРАТЕГИЯ,,"1,5",,`;
 
-    // 🔗 Ссылки на обзоры (только те, что ты дал)
+    // 🔗 Ссылки на обзоры (исправленные)
     const REVIEW_LINKS = {
-      'Resident Evil 4 Remake': 'https://docs.google.com/document/d/e/2PACX-1vQfFqOvbjSJVYbIRZCitrcJIVpwYheES82b4n2T5mlb005--xZKB3n4kKllAYXDzD-zysm5Mu3paDl8/pub?output=txt',
-      'Resident Evil 9 Requiem': 'https://docs.google.com/document/d/e/2PACX-1vSV53Isdo5_eX-mWad1gdBomF1MHDHlNLYoeGJO9EO84iRMkZtnue-Wv_XBwbpcdn4vEs54HxNKTbun/pub?output=txt',
-      'Lies of P': 'https://docs.google.com/document/d/e/2PACX-1vSqi0ZivoRO_0WjMW9lscZxDxkgtV2NopwhhfXKZ4y2t6kmSyTqSjgHHQMOOZI-eH4geG9-SHVm_vMz/pub?output=txt',
-      'Ghost of Tsushima': 'https://docs.google.com/document/d/e/2PACX-1vTl_erKecH-Z_6ZnwpapQ3uCiqsZBAyAKNN_HP8Q80BtOco9I2rdtVooNGNWdfLLCTX4f1UOpAnaslz/pub?output=txt',
-      'Sekiro': 'https://docs.google.com/document/d/e/2PACX-1vTxCM8Sx1GTKqF1bYJYWC9KIl3RruAQsCp1ootAPyfrjVMil19_WwQR_s_KuNLLfLvGTDY966wbZlPa/pub?output=txt',
-      'Black Myth: Wukong': 'https://docs.google.com/document/d/e/2PACX-1vS24EHezBL2T-moSXMxugV5Mh-kya9orSip-1IhIXOINnJ54t_N-cqIT2LNV1FVD6-uQylSWs3YFdZi/pub?output=txt',
-      'Clair Obscur: Expedition 33': 'https://docs.google.com/document/d/e/2PACX-1vTn4_qJI36p5mYDMkWFY0RK7RZqyej9GRpUGOCEhyqt2emWeKcBjdJr6P8fsLX3Glem0GB9zXLzR37T/pub?output=txt',
-      'The Last of Us Part I': 'https://docs.google.com/document/d/e/2PACX-1vTk-JtsIIup1ffLV3c28bTTjdTyv5VLt3IIoAqKIrlVhLMgtZxvs33whw_wkgjg8ROqDQAFCSqACB6n/pub?output=txt',
-      'Castlevania: Lords of Shadow 2': 'https://docs.google.com/document/d/e/2PACX-1vTdsRaa3_fcIzyUonUnUEWMvUh9pn4D-VJ4QOIGFFkPH3uVs3ipjLn7EK6osnz4ty0GQgVlEfqmPKxF/pub?output=txt',
-      'Hollow Knight: Silksong': 'https://docs.google.com/document/d/e/2PACX-1vRFzpuwtzznTpxAACc57PeKUoxXsu48zpcpN-4657uYlqugJiLzOx1_hjLP4DLvtVmTgiPxQIHNXt2v/pub?output=txt',
-      'Persona 5 Royal': 'https://docs.google.com/document/d/e/2PACX-1vRG8iRjYXm3vlwy-yWkZrIvSitqHhkZjaKU4xamhSsPmwaMuo6Vi53qkN1QP2sxk9cQUP_L07_0QdAT/pub?output=txt',
-      'Bayonetta': 'https://docs.google.com/document/d/e/2PACX-1vSpGmSws1wbCo_tB2kuD-GDT7cBi5nafi45m2T7OWH1F9FZSIS9d-QBtZ_RkKmMb3m0d-TNi6nagUcu/pub?output=txt',
-      'God of War 2018': 'https://docs.google.com/document/d/e/2PACX-1vRYTFMGq9QRhNTeUYelPqxgQ-cxAV0jPIs5t8KAK2xR_QBIrjfCKDx3Zn2eAo0bjJDYSAZn3AxxWIdq/pub?output=txt',
-      'Bloodborne': 'https://docs.google.com/document/d/e/2PACX-1vTzRgfDSsAI5PT2c103bmO7UnW9bBluvgPZLJD_GnPuXS4RxNeJyk144B4UvVTN_KYETv0LQQEZ7-KN/pub?output=txt',
-      'SILENT HILL f': 'https://docs.google.com/document/d/e/2PACX-1vQn_4O2U7aGv0WvYhNqJj1Wz9QE5APMMqzeDczLzkuqWpcKJ2cLv5lQh0Ag3gDIL4JIYqeKq96AVJU8/pub?output=txt',
-      'The First Berserker: Khazan': 'https://docs.google.com/document/d/e/2PACX-1vTtRrXtG9S99uxYC4OeMbPSgoVu4fz2axq2xu0whszX4NnzNqqSwhitOyMLlusV3oeRdE7zQyK2WcK1/pub?output=txt'
+      'Resident Evil 4 Remake': 'https://docs.google.com/document/d/e/2PACX-1vQfFqOvbjSJVYbIRZCitrcJIVpwYheES82b4n2T5mlb005--xZKB3n4kKllAYXDzD-zysm5Mu3paDl8/pub',
+      'Resident Evil 9 Requiem': 'https://docs.google.com/document/d/e/2PACX-1vSV53Isdo5_eX-mWad1gdBomF1MHDHlNLYoeGJO9EO84iRMkZtnue-Wv_XBwbpcdn4vEs54HxNKTbun/pub',
+      'Lies of P': 'https://docs.google.com/document/d/e/2PACX-1vSqi0ZivoRO_0WjMW9lscZxDxkgtV2NopwhhfXKZ4y2t6kmSyTqSjgHHQMOOZI-eH4geG9-SHVm_vMz/pub',
+      'Ghost of Tsushima': 'https://docs.google.com/document/d/e/2PACX-1vTl_erKecH-Z_6ZnwpapQ3uCiqsZBAyAKNN_HP8Q80BtOco9I2rdtVooNGNWdfLLCTX4f1UOpAnaslz/pub',
+      'Sekiro': 'https://docs.google.com/document/d/e/2PACX-1vTxCM8Sx1GTKqF1bYJYWC9KIl3RruAQsCp1ootAPyfrjVMil19_WwQR_s_KuNLLfLvGTDY966wbZlPa/pub',
+      'Black Myth: Wukong': 'https://docs.google.com/document/d/e/2PACX-1vS24EHezBL2T-moSXMxugV5Mh-kya9orSip-1IhIXOINnJ54t_N-cqIT2LNV1FVD6-uQylSWs3YFdZi/pub',
+      'Clair Obscur: Expedition 33': 'https://docs.google.com/document/d/e/2PACX-1vTn4_qJI36p5mYDMkWFY0RK7RZqyej9GRpUGOCEhyqt2emWeKcBjdJr6P8fsLX3Glem0GB9zXLzR37T/pub',
+      'The Last of Us Part I': 'https://docs.google.com/document/d/e/2PACX-1vTk-JtsIIup1ffLV3c28bTTjdTyv5VLt3IIoAqKIrlVhLMgtZxvs33whw_wkgjg8ROqDQAFCSqACB6n/pub',
+      'Castlevania: Lords of Shadow 2': 'https://docs.google.com/document/d/e/2PACX-1vTdsRaa3_fcIzyUonUnUEWMvUh9pn4D-VJ4QOIGFFkPH3uVs3ipjLn7EK6osnz4ty0GQgVlEfqmPKxF/pub',
+      'Hollow Knight: Silksong': 'https://docs.google.com/document/d/e/2PACX-1vRFzpuwtzznTpxAACc57PeKUoxXsu48zpcpN-4657uYlqugJiLzOx1_hjLP4DLvtVmTgiPxQIHNXt2v/pub',
+      'Persona 5 Royal': 'https://docs.google.com/document/d/e/2PACX-1vRG8iRjYXm3vlwy-yWkZrIvSitqHhkZjaKU4xamhSsPmwaMuo6Vi53qkN1QP2sxk9cQUP_L07_0QdAT/pub',
+      'Bayonetta': 'https://docs.google.com/document/d/e/2PACX-1vSpGmSws1wbCo_tB2kuD-GDT7cBi5nafi45m2T7OWH1F9FZSIS9d-QBtZ_RkKmMb3m0d-TNi6nagUcu/pub',
+      'God of War 2018': 'https://docs.google.com/document/d/e/2PACX-1vRYTFMGq9QRhNTeUYelPqxgQ-cxAV0jPIs5t8KAK2xR_QBIrjfCKDx3Zn2eAo0bjJDYSAZn3AxxWIdq/pub',
+      'Bloodborne': 'https://docs.google.com/document/d/e/2PACX-1vTzRgfDSsAI5PT2c103bmO7UnW9bBluvgPZLJD_GnPuXS4RxNeJyk144B4UvVTN_KYETv0LQQEZ7-KN/pub',
+      'SILENT HILL f': 'https://docs.google.com/document/d/e/2PACX-1vQn_4O2U7aGv0WvYhNqJj1Wz9QE5APMMqzeDczLzkuqWpcKJ2cLv5lQh0Ag3gDIL4JIYqeKq96AVJU8/pub',
+      'The First Berserker: Khazan': 'https://docs.google.com/document/d/e/2PACX-1vTtRrXtG9S99uxYC4OeMbPSgoVu4fz2axq2xu0whszX4NnzNqqSwhitOyMLlusV3oeRdE7zQyK2WcK1/pub'
     };
 
     let games = [];
@@ -315,7 +277,7 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
       return 'purple';
     }
 
-    // 🖼️ Загрузка обложек
+    // 🖼️ Загрузка обложек с кэшем
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -328,12 +290,14 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
 
     async function loadCover(img, title) {
       img.classList.add('loading-cover');
+      
       if (coverCache[title]) {
         img.src = coverCache[title];
         img.onload = () => img.classList.remove('loading-cover');
-        img.onerror = () => tryNextSource(img, title);
+        img.onerror = () => setPlaceholder(img, title);
         return;
       }
+      
       await tryNextSource(img, title);
     }
 
@@ -343,9 +307,14 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
         () => fetchFromGOG(title),
         () => fetchFromSteam(title)
       ];
-      if (attempt >= sources.length) { setPlaceholder(img, title); return; }
+      
+      if (attempt >= sources.length) {
+        setPlaceholder(img, title);
+        return;
+      }
+      
       try {
-        await new Promise(r => setTimeout(r, 200 * attempt));
+        await new Promise(r => setTimeout(r, 300 * attempt));
         const url = await sources[attempt]();
         if (url) {
           coverCache[title] = url;
@@ -353,8 +322,12 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
           img.src = url;
           img.onload = () => img.classList.remove('loading-cover');
           img.onerror = () => tryNextSource(img, title, attempt + 1);
-        } else tryNextSource(img, title, attempt + 1);
-      } catch (e) { tryNextSource(img, title, attempt + 1); }
+        } else {
+          tryNextSource(img, title, attempt + 1);
+        }
+      } catch (e) {
+        tryNextSource(img, title, attempt + 1);
+      }
     }
 
     async function fetchFromRAWG(title) {
@@ -362,8 +335,10 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
         const res = await fetch(`https://api.rawg.io/api/games?key=demo&search=${encodeURIComponent(title)}&page_size=1`);
         const data = await res.json();
         if (data.results?.[0]?.background_image) return data.results[0].background_image;
-      } catch (e) {} return null;
+      } catch (e) {}
+      return null;
     }
+
     async function fetchFromGOG(title) {
       try {
         const res = await fetch(`https://api.gog.com/v2/games/search?query=${encodeURIComponent(title)}&limit=1`);
@@ -371,14 +346,19 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
         if (data.products?.[0]?.cover_product_v2_id) {
           return `https://images.gog.com/${data.products[0].cover_product_v2_id}.jpg`;
         }
-      } catch (e) {} return null;
+      } catch (e) {}
+      return null;
     }
+
     async function fetchFromSteam(title) {
       try {
         const res = await fetch(`https://store.steampowered.com/api/storesearch?cc=ru&l=russian&term=${encodeURIComponent(title)}`);
         const data = await res.json();
-        if (data.items?.[0]?.id) return `https://cdn.akamai.steamstatic.com/steam/apps/${data.items[0].id}/header.jpg`;
-      } catch (e) {} return null;
+        if (data.items?.[0]?.id) {
+          return `https://cdn.akamai.steamstatic.com/steam/apps/${data.items[0].id}/header.jpg`;
+        }
+      } catch (e) {}
+      return null;
     }
 
     function setPlaceholder(img, title) {
@@ -387,35 +367,8 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
       img.outerHTML = `<div class="cover-placeholder">${initials}</div>`;
     }
 
-    // 📄 Функции обзоров
     function getReviewLink(gameTitle) {
       return REVIEW_LINKS[gameTitle] || null;
-    }
-
-    async function loadReview(gameTitle) {
-      const link = getReviewLink(gameTitle);
-      if (!link) return 'Обзор не доступен.';
-      try {
-        const res = await fetch(link);
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const text = await res.text();
-        // Простая очистка от лишних пробелов
-        return text.trim().replace(/\r\n/g, '\n');
-      } catch (e) {
-        return 'Не удалось загрузить обзор. Попробуйте позже.';
-      }
-    }
-
-    function showReviewView(title, content) {
-      document.getElementById('reviewTitle').textContent = title;
-      document.getElementById('reviewContent').textContent = content;
-      document.getElementById('reviewView').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function hideReviewView() {
-      document.getElementById('reviewView').classList.remove('active');
-      document.body.style.overflow = '';
     }
 
     // 🌓 Тема
@@ -437,6 +390,7 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
         grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted)">Ничего не найдено 😕</p>';
         return;
       }
+      
       list.forEach(g => {
         const card = document.createElement('div');
         card.className = 'card';
@@ -446,13 +400,14 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
         const rating = g['ОЦЕНКА'] ? `${g['ОЦЕНКА']}/10` : '–';
         const ratingClass = getRatingClass(g['ОЦЕНКА']);
         
-        // Обработка обзора: ссылка → кнопка, текст → текст, пусто → ничего
+        // Обработка обзора
         let reviewHtml = '';
         const reviewVal = g['ОБЗОР']?.trim();
         if (reviewVal) {
           const link = getReviewLink(g['ИГРА']);
           if (link) {
-            reviewHtml = `<div class="review"><span class="review-btn" data-game="${g['ИГРА']}">📄 Читать обзор →</span></div>`;
+            // 🔗 Настоящая ссылка для открытия в новой вкладке
+            reviewHtml = `<div class="review"><a href="${link}" target="_blank" rel="noopener" class="review-btn">📄 Читать обзор →</a></div>`;
           } else if (reviewVal !== '–' && !reviewVal.startsWith('http')) {
             reviewHtml = `<div class="review">💬 ${reviewVal}</div>`;
           }
@@ -475,19 +430,6 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
         `;
         grid.appendChild(card);
         observer.observe(card.querySelector('img'));
-        
-        // Клик по карточке можно добавить позже, пока только кнопка обзора
-        const reviewBtn = card.querySelector('.review-btn');
-        if (reviewBtn) {
-          reviewBtn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            const game = g['ИГРА'];
-            document.getElementById('reviewContent').textContent = '⏳ Загрузка...';
-            showReviewView(game, '');
-            const content = await loadReview(game);
-            document.getElementById('reviewContent').textContent = content;
-          });
-        }
       });
     }
 
@@ -520,6 +462,7 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
       const genre = document.getElementById('filterGenre').value;
       const search = document.getElementById('search').value.toLowerCase();
       const sort = document.getElementById('sortBy').value;
+      
       let filtered = games.filter(g => {
         const v = (g['ВЫВОД']||'').toLowerCase();
         const matchV = !verdict || v.includes(verdict);
@@ -527,6 +470,7 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
         const matchS = !search || g['ИГРА'].toLowerCase().includes(search);
         return matchV && matchG && matchS;
       });
+      
       const [field, order] = sort.split('-');
       const mult = order === 'asc' ? 1 : -1;
       filtered.sort((a,b) => {
@@ -542,6 +486,7 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
         }
         return 0;
       });
+      
       renderGames(filtered);
     }
 
@@ -551,17 +496,6 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
       populateGenres(games);
       updateStats(games);
       filterAndRender();
-      
-      // Кнопка "Назад" в обзоре
-      document.getElementById('backBtn').addEventListener('click', hideReviewView);
-      
-      // Закрытие обзора по Escape
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && document.getElementById('reviewView').classList.contains('active')) {
-          hideReviewView();
-        }
-      });
-      
       console.log(`✅ Загружено ${games.length} игр`);
     }
 
