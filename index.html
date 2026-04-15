@@ -37,26 +37,46 @@
     .filters input { min-width: 180px; }
     
     .grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 14px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
     }
     .card {
       background: var(--card); border-radius: 12px; padding: 14px;
       border-left: 4px solid var(--accent);
       border: 1px solid var(--border);
       transition: transform 0.2s;
+      display: flex; flex-direction: column;
     }
-    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+    
+    .card-image {
+      width: 100%; height: 160px; border-radius: 8px; margin-bottom: 10px;
+      background: var(--card); overflow: hidden; position: relative;
+    }
+    .card-image img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .cover-placeholder {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; font-weight: bold; color: white; text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      background: linear-gradient(135deg, var(--accent), #4a3dff);
+    }
+    .loading-cover {
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, var(--card) 25%, #2a2a3a 50%, var(--card) 75%);
+      background-size: 200% 100%; animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     
     .card-header {
       display: flex; justify-content: space-between; align-items: start;
       margin-bottom: 8px; gap: 8px; flex-wrap: wrap;
     }
-    .game-title { font-weight: 600; font-size: 1.05rem; }
+    .game-title { font-weight: 600; font-size: 1.05rem; line-height: 1.3; }
     .rating {
       background: var(--accent); color: white; padding: 3px 9px;
       border-radius: 16px; font-weight: bold; font-size: 0.9rem;
-      min-width: 48px; text-align: center;
+      min-width: 48px; text-align: center; flex-shrink: 0;
     }
     .rating.empty { background: var(--border); }
     
@@ -76,6 +96,7 @@
     .review {
       font-size: 0.92rem; color: var(--text); margin-top: 8px;
       padding-top: 8px; border-top: 1px dashed var(--border);
+      margin-top: auto;
     }
     .review a {
       color: var(--accent); text-decoration: none; font-weight: 500;
@@ -170,6 +191,7 @@ Nioh 2,,Не рекомендую,,SOULSLIKE,30.09.2025,"3,5",2/88,2%
 Warcraft 3,,Дроп,Поиграл час и понял что вообще не люблю стратегии,СТРАТЕГИЯ,,"1,5",,`;
 
     let games = [];
+    const coverCache = JSON.parse(localStorage.getItem('gameCovers') || '{}');
 
     function parseCSV(text) {
       const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
@@ -182,9 +204,7 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
         const game = {};
         headers.forEach((h, idx) => {
           let val = values[idx] || '';
-          if ((h === 'ЧАСОВ' || h === '%') && val && val.includes(',')) {
-            val = val.replace(',', '.');
-          }
+          if ((h === 'ЧАСОВ' || h === '%') && val && val.includes(',')) val = val.replace(',', '.');
           game[h.trim()] = val.trim();
         });
         if (game['ИГРА']) result.push(game);
@@ -193,17 +213,12 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
     }
 
     function parseLine(line) {
-      const result = [];
-      let cur = '', inQ = false;
+      const result = []; let cur = '', inQ = false;
       for (let i = 0; i < line.length; i++) {
         const c = line[i], n = line[i+1];
-        if (c === '"') {
-          if (inQ && n === '"') { cur += '"'; i++; }
-          else inQ = !inQ;
-        } else if (c === ',' && !inQ) {
-          result.push(cur.trim());
-          cur = '';
-        } else cur += c;
+        if (c === '"') { if (inQ && n === '"') { cur += '"'; i++; } else inQ = !inQ; }
+        else if (c === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
+        else cur += c;
       }
       result.push(cur.trim());
       return result.map(v => v.replace(/^"|"$/g, ''));
@@ -211,11 +226,7 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
 
     function fmtVerdict(v) {
       if (!v) return '';
-      const map = {
-        'пик': '🔥 Пик', 'рекомендую': '✅ Рекомендую',
-        'можно попробовать': '🤔 Можно попробовать',
-        'не рекомендую': '❌ Не рекомендую', 'дроп': '🗑️ Дроп'
-      };
+      const map = { 'пик': '🔥 Пик', 'рекомендую': '✅ Рекомендую', 'можно попробовать': '🤔 Можно попробовать', 'не рекомендую': '❌ Не рекомендую', 'дроп': '🗑️ Дроп' };
       const key = v.toLowerCase().trim();
       return `<span class="verdict ${key}">${map[key] || v}</span>`;
     }
@@ -224,6 +235,52 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
       if (!val) return '';
       const n = parseFloat(val);
       return isNaN(n) ? val : n % 1 === 0 ? n.toString() : n.toFixed(1);
+    }
+
+    // 🖼️ Загрузка обложек
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          const title = img.dataset.title;
+          loadCover(img, title);
+          observer.unobserve(img);
+        }
+      });
+    }, { rootMargin: '200px' });
+
+    async function loadCover(img, title) {
+      img.classList.add('loading-cover');
+      if (coverCache[title]) {
+        img.src = coverCache[title];
+        img.onload = () => img.classList.remove('loading-cover');
+        img.onerror = () => setPlaceholder(img, title);
+        return;
+      }
+      try {
+        await new Promise(r => setTimeout(r, 150)); // задержка от rate-limit
+        const res = await fetch(`https://api.gog.com/v2/games/search?query=${encodeURIComponent(title)}&limit=1`);
+        const data = await res.json();
+        if (data.products?.length > 0) {
+          const id = data.products[0].cover_product_v2_id;
+          const url = `https://images.gog.com/${id}.jpg`;
+          coverCache[title] = url;
+          localStorage.setItem('gameCovers', JSON.stringify(coverCache));
+          img.src = url;
+          img.onload = () => img.classList.remove('loading-cover');
+          img.onerror = () => setPlaceholder(img, title);
+        } else {
+          setPlaceholder(img, title);
+        }
+      } catch (e) {
+        setPlaceholder(img, title);
+      }
+    }
+
+    function setPlaceholder(img, title) {
+      img.classList.remove('loading-cover');
+      const initials = title.split(' ').filter(Boolean).map(w => w[0]).join('').substring(0, 2).toUpperCase();
+      img.outerHTML = `<div class="cover-placeholder">${initials}</div>`;
     }
 
     function renderGames(list) {
@@ -242,22 +299,20 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
         const rating = g['ОЦЕНКА'] ? `${g['ОЦЕНКА']}/10` : '–';
         const ratingClass = g['ОЦЕНКА'] ? '' : 'empty';
         
-        // 🔗 Исправленная обработка ссылок
         let reviewHtml = '';
         if (g['ОБЗОР']) {
           const text = g['ОБЗОР'].trim();
-          // Проверяем, есть ли в тексте ссылка (http)
           if (text.includes('http')) {
             const url = text.match(/https?:\/\/[^\s]+/)?.[0] || text;
             const linkText = text.replace(url, '').trim() || '📄 Читать обзор';
             reviewHtml = `<div class="review">💬 <a href="${url}" target="_blank" rel="noopener">${linkText} →</a></div>`;
           } else if (text && text !== '–') {
-            // Если это просто текст (название документа), ищем его в таблице
             reviewHtml = `<div class="review">💬 ${text}</div>`;
           }
         }
         
         card.innerHTML = `
+          <div class="card-image"><img data-title="${g['ИГРА']}" alt="${g['ИГРА']}"></div>
           <div class="card-header">
             <div class="game-title">${g['ИГРА']}</div>
             <div class="rating ${ratingClass}">${rating}</div>
@@ -272,6 +327,8 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
           ${reviewHtml}
         `;
         grid.appendChild(card);
+        const img = card.querySelector('img');
+        observer.observe(img);
       });
     }
 
@@ -314,21 +371,14 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
       const [field, order] = sort.split('-');
       const mult = order === 'asc' ? 1 : -1;
       filtered.sort((a,b) => {
-        if (field === 'rating') {
-          const ra = parseFloat(a['ОЦЕНКА'])||0, rb = parseFloat(b['ОЦЕНКА'])||0;
-          return (ra - rb) * mult;
-        }
+        if (field === 'rating') return ((parseFloat(a['ОЦЕНКА'])||0) - (parseFloat(b['ОЦЕНКА'])||0)) * mult;
         if (field === 'hours') {
           const ha = parseFloat((a['ЧАСОВ']||'').replace(',','.'))||0;
           const hb = parseFloat((b['ЧАСОВ']||'').replace(',','.'))||0;
           return (ha - hb) * mult;
         }
         if (field === 'date') {
-          const parse = d => {
-            if (!d) return 0;
-            const [day,mon,yr] = d.split('.');
-            return new Date(yr, mon-1, day).getTime() || 0;
-          };
+          const parse = d => { if (!d) return 0; const [day,mon,yr] = d.split('.'); return new Date(yr, mon-1, day).getTime() || 0; };
           return (parse(a['ДАТА ПРОХОЖДЕНИЯ']) - parse(b['ДАТА ПРОХОЖДЕНИЯ'])) * mult;
         }
         return 0;
