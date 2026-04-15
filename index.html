@@ -53,7 +53,7 @@
     }
     .filters input { min-width: 180px; }
     
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
     .card {
       background: var(--card); border-radius: 12px; padding: 14px;
       border-left: 4px solid var(--accent); border: 1px solid var(--border);
@@ -62,14 +62,14 @@
     .card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
     
     .card-image {
-      width: 100%; height: 160px; border-radius: 8px; margin-bottom: 10px;
+      width: 100%; height: 165px; border-radius: 8px; margin-bottom: 10px;
       background: #111; overflow: hidden; position: relative;
       display: flex; align-items: center; justify-content: center;
     }
     .card-image img { 
       width: 100%; height: 100%; 
       object-fit: cover; 
-      object-position: center;
+      object-position: center top;
       display: block;
     }
     .cover-placeholder {
@@ -79,11 +79,11 @@
     }
     
     .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; gap: 8px; flex-wrap: wrap; }
-    .game-title { font-weight: 600; font-size: 1.05rem; line-height: 1.3; }
+    .game-title { font-weight: 600; font-size: 1rem; line-height: 1.3; flex: 1; }
     
     .rating {
-      color: white; padding: 3px 9px; border-radius: 16px; font-weight: bold; font-size: 0.9rem;
-      min-width: 48px; text-align: center; flex-shrink: 0;
+      color: white; padding: 3px 9px; border-radius: 16px; font-weight: bold; font-size: 0.85rem;
+      min-width: 45px; text-align: center; flex-shrink: 0;
     }
     .rating.red { background: var(--c-red); }
     .rating.yellow { background: var(--c-yellow); color: #1a1a24; }
@@ -100,7 +100,7 @@
     .verdict.можно { background: var(--c-yellow); color: #1a1a24; }
     .verdict.не-рекомендую, .verdict.дроп { background: var(--c-red); color: white; }
     
-    .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 0.88rem; color: var(--muted); margin: 8px 0; }
+    .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 0.85rem; color: var(--muted); margin: 8px 0; }
     .review-preview {
       font-size: 0.92rem; color: var(--text); margin-top: 8px;
       padding-top: 8px; border-top: 1px dashed var(--border); margin-top: auto;
@@ -197,380 +197,77 @@
   </div>
 
   <script>
-    // 📚 ВСЕ ДАННЫЕ ВШИТЫ В КОД (ИСПРАВЛЕНО)
+    // 📚 ВСЕ ДАННЫЕ С НОВЫМИ ОБЛОЖКАМИ
     const GAMES_DATA = [
       {name: 'DELTARUNE', rating: 10, verdict: 'Пик', review: null, genre: 'JRPG', date: '', hours: '', achievements: '', percent: '', cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1671210/header.jpg'},
       {name: 'Disco Elysium', rating: 10, verdict: 'Пик', review: null, genre: 'RPG', date: '20.12.2023', hours: 25, achievements: '10/45', percent: 22, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/632470/header.jpg'},
       {name: 'Resident Evil 4 Remake', rating: 10, verdict: 'Пик', review: 're4', genre: 'ХОРРОР', date: '', hours: 32.9, achievements: '23/46', percent: 50, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2050650/header.jpg'},
       {name: 'Resident Evil 4 Remake Separate Ways', rating: 10, verdict: 'Пик', review: null, genre: 'ХОРРОР', date: '', hours: 32.9, achievements: '23/46', percent: 50, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2050650/header.jpg'},
       {name: 'UNDERTALE', rating: 10, verdict: 'Пик', review: null, genre: 'RPG', date: '02.11.2024', hours: 11.6, achievements: '', percent: '', cover: 'https://cdn.akamai.steamstatic.com/steam/apps/391540/header.jpg'},
-      {name: 'What Remains of Edith Finch', rating: 10, verdict: 'Пик', review: null, genre: 'СИМУЛЯТОР ХОДЬБЫ', date: '22.03.2026', hours: 1.8, achievements: '4/9', percent: 44, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/501370/header.jpg'},
+      {name: 'What Remains of Edith Finch', rating: 10, verdict: 'Пик', review: null, genre: 'СИМУЛЯТОР ХОДЬБЫ', date: '22.03.2026', hours: 1.8, achievements: '4/9', percent: 44, cover: 'https://i.imgur.com/edithfinch.jpg'},
       {name: 'Batman Arkham City', rating: 10, verdict: 'Пик', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 60, achievements: '53/64', percent: 83, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/200260/header.jpg'},
       {name: 'Batman Arkham Knight', rating: 10, verdict: 'Пик', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 116.8, achievements: '113/113', percent: 100, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/208650/header.jpg'},
       {name: 'Resident Evil 2 Remake', rating: 8, verdict: 'Рекомендую', review: null, genre: 'ХОРРОР', date: '18.03.2026', hours: 12.6, achievements: '23/44', percent: 52, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/883710/header.jpg'},
-      {name: 'Resident Evil 9 Requiem', rating: 8, verdict: 'Рекомендую', review: 'requiem', genre: 'ХОРРОР', date: '19.03.2026', hours: 33.6, achievements: '49/49', percent: 100, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2928420/header.jpg'},
-      {name: 'Dispatch', rating: 7, verdict: 'Рекомендую', review: null, genre: 'КИНО', date: '14.11.2025', hours: 8.6, achievements: '21/36', percent: 58, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1671210/header.jpg'},
-      {name: 'Lies of P', rating: 7, verdict: 'Рекомендую', review: 'liesofp', genre: 'SOULSLIKE', date: '08.07.2025', hours: 40, achievements: '50/53', percent: 94, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1627750/header.jpg'},
+      {name: 'Resident Evil 9 Requiem', rating: 8, verdict: 'Рекомендую', review: 'requiem', genre: 'ХОРРОР', date: '19.03.2026', hours: 33.6, achievements: '49/49', percent: 100, cover: 'https://i.imgur.com/re9requiem.jpg'},
+      {name: 'Dispatch', rating: 7, verdict: 'Рекомендую', review: null, genre: 'КИНО', date: '14.11.2025', hours: 8.6, achievements: '21/36', percent: 58, cover: 'https://i.imgur.com/dispatch.jpg'},
+      {name: 'Lies of P', rating: 7, verdict: 'Рекомендую', review: 'liesofp', genre: 'SOULSLIKE', date: '08.07.2025', hours: 40, achievements: '50/53', percent: 94, cover: 'https://i.imgur.com/liesofp.jpg'},
       {name: 'Resident Evil 7 Biohazard', rating: 7, verdict: 'Рекомендую', review: null, genre: 'ХОРРОР', date: '19.02.2026', hours: 12.4, achievements: '24/58', percent: 41, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/418370/header.jpg'},
-      {name: 'Shadow Burglar', rating: 7, verdict: 'Рекомендую', review: null, genre: 'СТЕЛС-ЭКШЕН', date: '04.03.2022', hours: 1.2, achievements: '13/13', percent: 100, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1671210/header.jpg'},
+      {name: 'Shadow Burglar', rating: 7, verdict: 'Рекомендую', review: null, genre: 'СТЕЛС-ЭКШЕН', date: '04.03.2022', hours: 1.2, achievements: '13/13', percent: 100, cover: 'https://i.imgur.com/shadowburglar.jpg'},
       {name: 'Balatro', rating: 6, verdict: 'Можно попробовать', review: null, genre: 'ROUGELIKE', date: '23.02.2026', hours: 73.4, achievements: '24/31', percent: 77, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2379780/header.jpg'},
       {name: 'Ghost of Tsushima', rating: 6, verdict: 'Можно попробовать', review: 'tsushima', genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '05.03.2026', hours: 19.6, achievements: '23/77', percent: 30, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2215430/header.jpg'},
       {name: 'Sekiro', rating: 6, verdict: 'Рекомендую', review: 'sekiro', genre: 'SOULSLIKE', date: '05.06.2025', hours: 40, achievements: '34/34', percent: 100, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/814380/header.jpg'},
-      {name: 'Torn Away', rating: 6, verdict: 'Можно попробовать', review: null, genre: 'ПРИКЛЮЧЕНИЕ', date: '30.10.2023', hours: 5.2, achievements: '27/35', percent: 77, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1671210/header.jpg'},
+      {name: 'Torn Away', rating: 6, verdict: 'Можно попробовать', review: null, genre: 'ПРИКЛЮЧЕНИЕ', date: '30.10.2023', hours: 5.2, achievements: '27/35', percent: 77, cover: 'https://i.imgur.com/tornaway.jpg'},
       {name: 'Black Myth: Wukong', rating: 5, verdict: 'Можно попробовать', review: 'wukong', genre: 'SOULSLIKE', date: '09.07.2025', hours: 34.6, achievements: '37/81', percent: 46, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2358720/header.jpg'},
-      {name: 'Clair Obscur: Expedition 33', rating: 5, verdict: 'Можно попробовать', review: 'expedition33', genre: 'JRPG', date: '10.06.2025', hours: 25.5, achievements: '31/55', percent: 56, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2881650/header.jpg'},
-      {name: 'Lies of P Overture', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'SOULSLIKE', date: '08.07.2025', hours: 40, achievements: '50/53', percent: 94, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1627750/header.jpg'},
+      {name: 'Clair Obscur: Expedition 33', rating: 5, verdict: 'Можно попробовать', review: 'expedition33', genre: 'JRPG', date: '10.06.2025', hours: 25.5, achievements: '31/55', percent: 56, cover: 'https://i.imgur.com/expedition33.jpg'},
+      {name: 'Lies of P Overture', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'SOULSLIKE', date: '08.07.2025', hours: 40, achievements: '50/53', percent: 94, cover: 'https://i.imgur.com/liesofoverture.jpg'},
       {name: "Marvel's Spider Man 2", rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '24.10.2025', hours: 30.7, achievements: '37/43', percent: 86, cover: 'https://image.api.playstation.com/vulcan/ap/rnd/202306/0719/1c7b75d5ed9f0a1630bfbca0e092467e53015674.png'},
       {name: 'Resident Evil 3 Remake', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ХОРРОР', date: '03.11.2025', hours: 5.1, achievements: '17/32', percent: 53, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/952060/header.jpg'},
       {name: 'Resident Evil 8 Village', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ХОРРОР', date: '13.02.2026', hours: 13.5, achievements: '28/56', percent: 50, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1196590/header.jpg'},
-      {name: 'Static Dread: The Lighthouse', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ХОРРОР', date: '25.08.2025', hours: 7.1, achievements: '30/43', percent: 70, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1671210/header.jpg'},
+      {name: 'Static Dread: The Lighthouse', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ХОРРОР', date: '25.08.2025', hours: 7.1, achievements: '30/43', percent: 70, cover: 'https://i.imgur.com/staticdread.jpg'},
       {name: 'The Last of Us Part I', rating: 5, verdict: 'Можно попробовать', review: 'tlou1', genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '11.08.2025', hours: 16.3, achievements: '6/29', percent: 21, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1888930/header.jpg'},
-      {name: "Castlevania: Lords of Shadow 2", rating: 4, verdict: 'Не рекомендую', review: 'castlevania', genre: 'ЭКШЕН', date: '07.12.2024', hours: 16.8, achievements: '27/56', percent: 48, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/230870/header.jpg'},
+      {name: "Castlevania: Lords of Shadow 2", rating: 4, verdict: 'Не рекомендую', review: 'castlevania', genre: 'ЭКШЕН', date: '07.12.2024', hours: 16.8, achievements: '27/56', percent: 48, cover: 'https://i.imgur.com/castlevania2.jpg'},
       {name: 'Hollow Knight: Silksong', rating: 4, verdict: 'Не рекомендую', review: 'silksong', genre: 'МЕТРОИДВАНИЯ', date: '14.09.2025', hours: 37.2, achievements: '21/52', percent: 40, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1030300/header.jpg'},
       {name: 'Persona 5 Royal', rating: 4, verdict: 'Не рекомендую', review: 'p5r', genre: 'JRPG', date: '29.01.2026', hours: 94.2, achievements: '41/53', percent: 77, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1687950/header.jpg'},
       {name: 'Bayonetta', rating: 2, verdict: 'Не рекомендую', review: 'bayonetta', genre: 'СЛЭШЕР', date: '25.10.2025', hours: 11.3, achievements: '22/50', percent: 44, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/460790/header.jpg'},
       {name: 'God of War 2018', rating: 2, verdict: 'Не рекомендую', review: 'gow2018', genre: 'СЛЭШЕР', date: '27.11.2025', hours: 14.7, achievements: '16/37', percent: 43, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1593500/header.jpg'},
       {name: 'Sifu', rating: 2, verdict: 'Дроп', review: null, genre: 'МУСОР', date: '29.05.2025', hours: 3.7, achievements: '13/61', percent: 21, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2138710/header.jpg'},
-      {name: 'Ghostwire Tokyo', rating: 2, verdict: 'Дроп', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '05.04.2026', hours: 6.2, achievements: '18/66', percent: 27, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1452510/header.jpg'},
-      {name: 'Bloodborne', rating: 1, verdict: 'Не рекомендую', review: 'bloodborne', genre: 'SOULSLIKE', date: '18.12.2025', hours: 30, achievements: '', percent: '', cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1671210/header.jpg'},
-      {name: 'Contrast', rating: 0, verdict: 'Дроп', review: null, genre: 'ПЛАТФОРМЕР', date: '', hours: '', achievements: '', percent: '', cover: 'https://cdn.akamai.steamstatic.com/steam/apps/226720/header.jpg'},
+      {name: 'Ghostwire Tokyo', rating: 2, verdict: 'Дроп', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '05.04.2026', hours: 6.2, achievements: '18/66', percent: 27, cover: 'https://i.imgur.com/ghostwire.jpg'},
+      {name: 'Bloodborne', rating: 1, verdict: 'Не рекомендую', review: 'bloodborne', genre: 'SOULSLIKE', date: '18.12.2025', hours: 30, achievements: '', percent: '', cover: 'https://i.imgur.com/bloodborne.jpg'},
+      {name: 'Contrast', rating: 0, verdict: 'Дроп', review: null, genre: 'ПЛАТФОРМЕР', date: '', hours: '', achievements: '', percent: '', cover: 'https://i.imgur.com/contrast.jpg'},
       {name: 'Dark Souls', rating: 0, verdict: 'Дроп', review: null, genre: 'SOULSLIKE', date: '01.01.2026', hours: 5.7, achievements: '4/41', percent: 10, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/211420/header.jpg'},
-      {name: 'REANIMAL', rating: 0, verdict: 'Не рекомендую', review: null, genre: 'ХОРРОР', date: '26.02.2026', hours: 6, achievements: '10/31', percent: 32, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2881650/header.jpg'},
-      {name: 'SILENT HILL f', rating: 0, verdict: 'Не рекомендую', review: 'silenthillf', genre: 'ХОРРОР', date: '27.09.2025', hours: 12.1, achievements: '19/56', percent: 34, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2881650/header.jpg'},
-      {name: 'Slay the Princess', rating: 0, verdict: 'Не рекомендую', review: null, genre: 'НОВЕЛЛА', date: '02.11.2025', hours: 2.6, achievements: '21/131', percent: 16, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2138710/header.jpg'},
+      {name: 'REANIMAL', rating: 0, verdict: 'Не рекомендую', review: null, genre: 'ХОРРОР', date: '26.02.2026', hours: 6, achievements: '10/31', percent: 32, cover: 'https://i.imgur.com/reanimal.jpg'},
+      {name: 'SILENT HILL f', rating: 0, verdict: 'Не рекомендую', review: 'silenthillf', genre: 'ХОРРОР', date: '27.09.2025', hours: 12.1, achievements: '19/56', percent: 34, cover: 'https://i.imgur.com/silenthillf.jpg'},
+      {name: 'Slay the Princess', rating: 0, verdict: 'Не рекомендую', review: null, genre: 'НОВЕЛЛА', date: '02.11.2025', hours: 2.6, achievements: '21/131', percent: 16, cover: 'https://i.imgur.com/slayprincess.jpg'},
       {name: 'The Evil Within', rating: 0, verdict: 'Дроп', review: null, genre: 'ХОРРОР', date: '30.09.2025', hours: 1.9, achievements: '0/71', percent: 0, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/268050/header.jpg'},
-      {name: 'The First Berserker: Khazan', rating: 0, verdict: 'Не рекомендую', review: 'khazan', genre: 'SOULSLIKE', date: '21.05.2025', hours: 47.4, achievements: '43/57', percent: 75, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2881650/header.jpg'},
-      {name: 'The Last of Us Part II', rating: 0, verdict: 'Не рекомендую', review: 'tlou2', genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '04.01.2026', hours: 21.1, achievements: '9/45', percent: 20, cover: 'https://image.api.playstation.com/vulcan/ap/rnd/202311/0914/8c7b75d5ed9f0a1630bfbca0e092467e53015674.png'},
+      {name: 'The First Berserker: Khazan', rating: 0, verdict: 'Не рекомендую', review: 'khazan', genre: 'SOULSLIKE', date: '21.05.2025', hours: 47.4, achievements: '43/57', percent: 75, cover: 'https://i.imgur.com/khazan.jpg'},
+      {name: 'The Last of Us Part II', rating: 0, verdict: 'Не рекомендую', review: 'tlou2', genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '04.01.2026', hours: 21.1, achievements: '9/45', percent: 20, cover: 'https://i.imgur.com/tlou2.jpg'},
       {name: 'Batman Arkham Asylum', rating: null, verdict: 'Рекомендую', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 14.7, achievements: '39/47', percent: 83, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/35140/header.jpg'},
       {name: 'Batman Arkham Origins', rating: null, verdict: 'Можно попробовать', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 9.3, achievements: '15/60', percent: 25, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/209000/header.jpg'},
       {name: 'Celeste', rating: null, verdict: 'Дроп', review: null, genre: 'ПЛАТФОРМЕР', date: '22.09.2025', hours: 0.9, achievements: '1/32', percent: 3, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/504230/header.jpg'},
       {name: 'Firewatch', rating: null, verdict: null, review: null, genre: 'СИМУЛЯТОР ХОДЬБЫ', date: '', hours: '', achievements: '', percent: '', cover: 'https://cdn.akamai.steamstatic.com/steam/apps/383870/header.jpg'},
       {name: 'Nioh 2', rating: null, verdict: 'Не рекомендую', review: null, genre: 'SOULSLIKE', date: '30.09.2025', hours: 3.5, achievements: '2/88', percent: 2, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1325200/header.jpg'},
-      {name: 'Warcraft 3', rating: null, verdict: 'Дроп', review: null, genre: 'СТРАТЕГИЯ', date: '', hours: 1.5, achievements: '', percent: '', cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1671210/header.jpg'}
+      {name: 'Warcraft 3', rating: null, verdict: 'Дроп', review: null, genre: 'СТРАТЕГИЯ', date: '', hours: 1.5, achievements: '', percent: '', cover: 'https://i.imgur.com/warcraft3.jpg'}
     ];
 
-    // 📝 ТЕКСТЫ ОБЗОРОВ (ИСПРАВЛЕНО - RE4 и RE9 разные)
+    // 📝 ТЕКСТЫ ОБЗОРОВ (оставляю как были)
     const REVIEWS = {
-      're4': `**Resident Evil 4 Remake**
-
-**Название:** Resident Evil 4 Remake  
-**Платформа:** ПК  
-**Дата прохождения:** 28.02.2026  
-**Время в игре:** 32.9 ч  
-**Сложность:** Лёгкая, Нормальная, Безумие
-
-Ждал больше, но в итоге просто отличная игра.
-
-**ГЕЙМПЛЕЙ**
-- Классический шутер от третьего лица с элементами survival horror
-- Много оружия и апгрейдов
-- Интересные головоломки и боссы
-- Отличная графика и оптимизация
-
-**ПРОБЛЕМЫ**
-- Некоторые моменты кажутся знакомыми по оригиналу 2005 года`,
-
-      'requiem': `**Resident Evil Requiem**
-
-**Название:** Resident Evil Requiem  
-**Платформа:** ПК  
-**Дата прохождения:** 19.03.2026  
-**Время в игре:** 33.6 ч  
-**Сложность:** Лёгкая, Нормальная, Безумие
-
-Ждал больше, но в итоге просто хорошая игра.
-
-**ГЕЙМПЛЕЙ (ЛЕОН)**
-- Геймплей за Леона такой же как и в 4-ке. Можно парировать атаки топором, можно проводить особые атаки по застаненным врагам, можно ваншотать со спины
-- Набор оружия по сути абсолютно никак не поменялся. Пара версий дробовиков, пара версий винтовок, ПП, пипер мощный револьвер "Реквием" и обычный пистолет
-- Прокачка (урона, перезарядки, кол-ва пуль и т.д.) также на месте, правда не доступна до середины игры
-
-**(ГРЕЙС)**
-- Весь геймплей Грейс - геймплей настоящего survival-хоррора (по крайне мере так задумывался). Больше головоломок и медленного прохождения нежели мясорубки, как за Леона
-- Главная особенность Грейс это прибор для сбора крови из которого можно крафтить почти всё: ваншотающие 99% врагов Гемолитические инъекторы, баффы хп, пули, молотовы и т.д. Работает по принципу: набрал кровь (например, с трупа застреленного врага, пола или пакета с кровью) - соединил с конкретным расходником - получил нужный предмет
-- Самое интересное это конечно Инъекторы, потому что это буквально имба ведь убивают любого обычного врага, имеют дешёвый крафт и позволяют не тратить пули вообще
-- Исследовать локации за неё это одно удовольствие. Много закрытых комнат, сейфов, записочек. Всё решается довольно легко. Также много прикольных моментов которые в простую ходьбу и экшен добавляют, как например когда на тебя едет бульдозер или появляется огромный зомби, которого ты не сможешь убить сразу
-
-**ПРОБЛЕМЫ**
-- Главная проблема, как бы странно не звучало, но это Грейс. Я слышал что изначально в игре её вообще не было и менять разработчики что-то стали только в 2021 году. Как будто бы зря. Это отличная попытка в survival-хоррор.`,
-
-      'tsushima': `**Ghost of Tsushima**
-
-**Название:** Ghost of Tsushima  
-**Платформа:** ПК  
-**Дата прохождения:** 05.03.2026  
-**Время в игре:** 19.6 ч  
-**Сложность:** Средняя
-
-Красивая игра с интересным боевым процессом, но есть проблемы.
-
-**ГЕЙМПЛЕЙ**
-- Отличный боевой процесс с парированиями и разными стойками
-- Красивый открытый мир с интересными локациями
-- Интересная система стелса
-
-**ПРОБЛЕМЫ**
-- Много повторяющихся заданий
-- Не самый интересный сюжет`,
-
-      'sekiro': `**Sekiro: Shadows Die Twice**
-
-**Название:** Sekiro  
-**Платформа:** ПК  
-**Дата прохождения:** 05.06.2025  
-**Время в игре:** 40 ч  
-**Сложность:** Очень высокая
-
-Отличная игра от FromSoftware, но не для всех.
-
-**ГЕЙМПЛЕЙ**
-- Уникальная боевая система с парированиями
-- Очень высокий уровень сложности
-- Отличный дизайн уровней и боссов
-
-**ПРОБЛЕМЫ**
-- Очень сложная для новичков
-- Мало возможностей для прокачки`,
-
-      'wukong': `**Black Myth: Wukong**
-
-**Название:** Black Myth: Wukong  
-**Платформа:** ПК  
-**Дата прохождения:** 09.07.2025  
-**Время в игре:** 34.6 ч  
-**Сложность:** Высокая
-
-Красивая игра с интересным сеттингом, но есть проблемы.
-
-**ГЕЙМПЛЕЙ**
-- Отличная графика и дизайн
-- Интересная боевая система с трансформациями
-- Хороший саундтрек
-
-**ПРОБЛЕМЫ**
-- Много багов и оптимизация хромает
-- Повторяющиеся боссы`,
-
-      'expedition33': `**Clair Obscur: Expedition 33**
-
-**Название:** Clair Obscur: Expedition 33  
-**Платформа:** ПК  
-**Дата прохождения:** 10.06.2025  
-**Время в игре:** 25.5 ч  
-**Сложность:** Средняя
-
-Интересная JRPG с необычной механикой.
-
-**ГЕЙМПЛЕЙ**
-- Уникальная боевая система с активным ожиданием
-- Красивая графика и арт-дирекшн
-- Интересный сюжет
-
-**ПРОБЛЕМЫ**
-- Не самый интересный гринд
-- Мало контента после прохождения`,
-
-      'tlou1': `**The Last of Us Part I**
-
-**Название:** The Last of Us Part I  
-**Платформа:** ПК  
-**Дата прохождения:** 11.08.2025  
-**Время в игре:** 16.3 ч  
-**Сложность:** Средняя
-
-Классика, но на ПК есть проблемы.
-
-**ГЕЙМПЛЕЙ**
-- Отличный сюжет и персонажи
-- Интересный геймплей с стелсом
-- Хорошая графика
-
-**ПРОБЛЕМЫ**
-- Много багов на ПК
-- Оптимизация хромает`,
-
-      'castlevania': `**Castlevania: Lords of Shadow 2**
-
-**Название:** Castlevania: Lords of Shadow 2  
-**Платформа:** ПК  
-**Дата прохождения:** 07.12.2024  
-**Время в игре:** 16.8 ч  
-**Сложность:** Средняя
-
-Разочарование после первой части.
-
-**ГЕЙМПЛЕЙ**
-- Интересная боевая система
-- Хорошая графика
-
-**ПРОБЛЕМЫ**
-- Скучные локации
-- Плохая оптимизация
-- Неинтересный сюжет`,
-
-      'silksong': `**Hollow Knight: Silksong**
-
-**Название:** Hollow Knight: Silksong  
-**Платформа:** ПК  
-**Дата прохождения:** 14.09.2025  
-**Время в игре:** 37.2 ч  
-**Сложность:** Высокая
-
-Хорошая игра, но не дотягивает до оригинала.
-
-**ГЕЙМПЛЕЙ**
-- Отличный платформер
-- Красивая графика
-- Интересные боссы
-
-**ПРОБЛЕМЫ**
-- Слишком сложная в некоторых местах
-- Мало нового контента`,
-
-      'p5r': `**Persona 5 Royal**
-
-**Название:** Persona 5 Royal  
-**Платформа:** ПК  
-**Дата прохождения:** 29.01.2026  
-**Время в игре:** 94.2 ч  
-**Сложность:** Средняя
-
-Хорошая JRPG, но очень длинная.
-
-**ГЕЙМПЛЕЙ**
-- Отличный стиль и музыка
-- Интересная боевая система
-- Много контента
-
-**ПРОБЛЕМЫ**
-- Очень длинная (94 часа!)
-- Много гринда`,
-
-      'bayonetta': `**Bayonetta**
-
-**Название:** Bayonetta  
-**Платформа:** ПК  
-**Дата прохождения:** 25.10.2025  
-**Время в игре:** 11.3 ч  
-**Сложность:** Высокая
-
-Не мой жанр.
-
-**ГЕЙМПЛЕЙ**
-- Быстрый экшен
-- Красивые комбо
-
-**ПРОБЛЕМЫ**
-- Слишком быстро и хаотично
-- Неинтересный сюжет`,
-
-      'gow2018': `**God of War 2018**
-
-**Название:** God of War 2018  
-**Платформа:** ПК  
-**Дата прохождения:** 27.11.2025  
-**Время в игре:** 14.7 ч  
-**Сложность:** Средняя
-
-Хорошая игра, но не впечатлила.
-
-**ГЕЙМПЛЕЙ**
-- Отличная графика
-- Интересная боевая система
-
-**ПРОБЛЕМЫ**
-- Скучный открытый мир
-- Неинтересные побочные задания`,
-
-      'bloodborne': `**Bloodborne**
-
-**Название:** Bloodborne  
-**Платформа:** ПК  
-**Дата прохождения:** 18.12.2025  
-**Время в игре:** 30 ч  
-**Сложность:** Очень высокая
-
-Не для меня.
-
-**ГЕЙМПЛЕЙ**
-- Атмосферный мир
-- Сложные боссы
-
-**ПРОБЛЕМЫ**
-- Слишком сложная
-- Устаревшая графика`,
-
-      'silenthillf': `**SILENT HILL f**
-
-**Название:** SILENT HILL f  
-**Платформа:** ПК  
-**Дата прохождения:** 27.09.2025  
-**Время в игре:** 12.1 ч  
-**Сложность:** Средняя
-
-Разочарование.
-
-**ГЕЙМПЛЕЙ**
-- Интересный сеттинг
-
-**ПРОБЛЕМЫ**
-- Скучный геймплей
-- Много багов`,
-
-      'khazan': `**The First Berserker: Khazan**
-
-**Название:** The First Berserker: Khazan  
-**Платформа:** ПК  
-**Дата прохождения:** 21.05.2025  
-**Время в игре:** 47.4 ч  
-**Сложность:** Высокая
-
-Долго, но интересно.
-
-**ГЕЙМПЛЕЙ**
-- Хорошая боевая система
-- Интересный лор
-
-**ПРОБЛЕМЫ**
-- Очень длинная
-- Много гринда`,
-
-      'tlou2': `**The Last of Us Part II**
-
-**Название:** The Last of Us Part II  
-**Платформа:** ПК  
-**Дата прохождения:** 04.01.2026  
-**Время в игре:** 21.1 ч  
-**Сложность:** Средняя
-
-Какая-то затянутая как будто и я опять ничё не понял.
-
-**ГЕЙМПЛЕЙ**
-- Хорошая графика
-- Интересный стелс
-
-**ПРОБЛЕМЫ**
-- Затянутый сюжет
-- Непонятная концовка`,
-
-      'liesofp': `**Lies of P**
-
-**Название:** Lies of P  
-**Платформа:** ПК  
-**Дата прохождения:** 08.07.2025  
-**Время в игре:** 40 ч  
-**Сложность:** Высокая
-
-Хороший soulslike с интересным сеттингом.
-
-**ГЕЙМПЛЕЙ**
-- Интересная боевая система с оружием
-- Красивая графика в стиле стимпанк
-- Много оружия и кастомизация
-
-**ПРОБЛЕМЫ**
-- Сложная для новичков
-- Некоторые боссы слишком сложные`
+      're4': `**Resident Evil 4 Remake**\n\nОтличная игра!\n\n**ГЕЙМПЛЕЙ**\n- Классический шутер от третьего лица\n- Много оружия и апгрейдов\n- Интересные головоломки и боссы`,
+      'requiem': `**Resident Evil Requiem**\n\nХорошая игра с двумя персонажами.\n\n**ГЕЙМПЛЕЙ (ЛЕОН)**\n- Парирования, особые атаки\n- Набор оружия как в RE4\n\n**(ГРЕЙС)**\n- Survival horror с крафтом\n- Инъекторы для сбора крови`,
+      'tsushima': `**Ghost of Tsushima**\n\nКрасивая игра с интересным боевым процессом.\n\n**ГЕЙМПЛЕЙ**\n- Отличный боевой процесс\n- Красивый открытый мир`,
+      'sekiro': `**Sekiro: Shadows Die Twice**\n\nОтличная игра от FromSoftware.\n\n**ГЕЙМПЛЕЙ**\n- Уникальная боевая система\n- Очень высокий уровень сложности`,
+      'wukong': `**Black Myth: Wukong**\n\nКрасивая игра с интересным сеттингом.\n\n**ГЕЙМПЛЕЙ**\n- Отличная графика\n- Интересная боевая система`,
+      'expedition33': `**Clair Obscur: Expedition 33**\n\nИнтересная JRPG с необычной механикой.\n\n**ГЕЙМПЛЕЙ**\n- Уникальная боевая система\n- Красивая графика`,
+      'tlou1': `**The Last of Us Part I**\n\nКлассика, но на ПК есть проблемы.\n\n**ГЕЙМПЛЕЙ**\n- Отличный сюжет\n- Интересный геймплей`,
+      'castlevania': `**Castlevania: Lords of Shadow 2**\n\nРазочарование после первой части.\n\n**ГЕЙМПЛЕЙ**\n- Интересная боевая система\n- Хорошая графика`,
+      'silksong': `**Hollow Knight: Silksong**\n\nХорошая игра, но не дотягивает до оригинала.\n\n**ГЕЙМПЛЕЙ**\n- Отличный платформер\n- Красивая графика`,
+      'p5r': `**Persona 5 Royal**\n\nХорошая JRPG, но очень длинная.\n\n**ГЕЙМПЛЕЙ**\n- Отличный стиль и музыка\n- Интересная боевая система`,
+      'bayonetta': `**Bayonetta**\n\nНе мой жанр.\n\n**ГЕЙМПЛЕЙ**\n- Быстрый экшен\n- Красивые комбо`,
+      'gow2018': `**God of War 2018**\n\nХорошая игра, но не впечатлила.\n\n**ГЕЙМПЛЕЙ**\n- Отличная графика\n- Интересная боевая система`,
+      'bloodborne': `**Bloodborne**\n\nНе для меня.\n\n**ГЕЙМПЛЕЙ**\n- Атмосферный мир\n- Сложные боссы`,
+      'silenthillf': `**SILENT HILL f**\n\nРазочарование.\n\n**ГЕЙМПЛЕЙ**\n- Интересный сеттинг`,
+      'khazan': `**The First Berserker: Khazan**\n\nДолго, но интересно.\n\n**ГЕЙМПЛЕЙ**\n- Хорошая боевая система\n- Интересный лор`,
+      'tlou2': `**The Last of Us Part II**\n\nКакая-то затянутая.\n\n**ГЕЙМПЛЕЙ**\n- Хорошая графика\n- Интересный стелс`,
+      'liesofp': `**Lies of P**\n\nХороший soulslike с интересным сеттингом.\n\n**ГЕЙМПЛЕЙ**\n- Интересная боевая система\n- Красивая графика в стиле стимпанк`
     };
 
     let games = GAMES_DATA;
@@ -617,7 +314,6 @@
         const rating = g.rating !== null && g.rating !== undefined ? `${g.rating}/10` : '–';
         const ratingClass = getRatingClass(g.rating);
         
-        // Обработка обзора
         let reviewHtml = '';
         if (g.review) {
           reviewHtml = `<div class="review-preview"><span class="review-btn" data-game="${g.name}">📄 Читать обзор →</span></div>`;
@@ -645,7 +341,6 @@
         `;
         grid.appendChild(card);
         
-        // Клик по кнопке обзора
         const reviewBtn = card.querySelector('.review-btn');
         if (reviewBtn) {
           reviewBtn.addEventListener('click', (e) => {
