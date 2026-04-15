@@ -1,66 +1,567 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🎮 Библиотека Вани</title>
-  <style>
-    :root {
-      --bg: #0f0f13; --card: #1a1a24; --text: #e6e6ef;
-      --accent: #7c5cff; --border: #3a3a50; --muted: #8888aa;
-      --c-red: #ef4444; --c-yellow: #fbbf24; --c-green: #4ade80; --c-purple: #7c5cff;
-      --review-bg: #15151c; --review-text: #e0e0f0;
-    }
-    [data-theme="light"] {
-      --bg: #f5f5fa; --card: #ffffff; --text: #1a1a2e;
-      --accent: #6c5ce7; --border: #d0d0e0; --muted: #666688;
-      --c-red: #dc2626; --c-yellow: #d97706; --c-green: #16a34a; --c-purple: #7c3aed;
-      --review-bg: #f8f8ff; --review-text: #2a2a4a;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg); color: var(--text);
-      padding: 16px; line-height: 1.5; transition: background 0.3s, color 0.3s;
-    }
-    header {
-      text-align: center; margin-bottom: 20px; padding: 20px;
-      background: linear-gradient(135deg, var(--card), #252535);
-      border-radius: 16px; border: 1px solid var(--border);
-      position: relative;
-    }
-    [data-theme="light"] header { background: linear-gradient(135deg, var(--card), #e8e8f5); }
-    h1 { font-size: 1.6rem; margin-bottom: 6px; }
-    #stats { color: var(--muted); font-size: 0.95rem; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Библиотека Вани</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filters select, .filters input {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .filters select option {
+            background: #2d2d44;
+            color: #fff;
+        }
+
+        .filters input {
+            min-width: 200px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .game-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .game-cover {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .game-cover-placeholder {
+            width: 100%;
+            height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-size: 3em;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .game-info {
+            padding: 15px;
+        }
+
+        .game-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .game-meta {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .game-rating {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .game-rating.high { background: #10b981; }
+        .game-rating.medium { background: #f59e0b; }
+        .game-rating.low { background: #ef4444; }
+
+        .game-verdict {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .verdict-pick { background: #8b5cf6; color: #fff; }
+        .verdict-recommend { background: #10b981; color: #fff; }
+        .verdict-try { background: #f59e0b; color: #000; }
+        .verdict-not-recommend { background: #ef4444; color: #fff; }
+        .verdict-drop { background: #6b7280; color: #fff; }
+
+        .game-stats {
+            display: flex;
+            gap: 15px;
+            color: #888;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+
+        .game-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            color: #888;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+            
+            .game-cover, .game-cover-placeholder {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓 Тема</button>
     
-    #themeToggle {
-      position: absolute; top: 12px; right: 16px;
-      background: var(--accent); color: white; border: none;
-      padding: 6px 12px; border-radius: 20px; cursor: pointer;
-      font-size: 0.9rem; display: flex; align-items: center; gap: 4px;
-    }
-    #themeToggle:hover { opacity: 0.9; }
-    
-    .filters {
-      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
-      margin: 12px 0; padding: 12px; background: var(--card);
-      border-radius: 12px; border: 1px solid var(--border);
-    }
-    .filters select, .filters input {
-      padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border);
-      background: var(--bg); color: var(--text); font-size: 0.9rem;
-      min-width: 140px;
-    }
-    .filters input { min-width: 180px; }
-    
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
-    .card {
-      background: var(--card); border-radius: 12px; padding: 14px;
-      border-left: 4px solid var(--accent); border: 1px solid var(--border);
-      transition: transform 0.2s; display: flex; flex-direction: column; cursor: pointer;
-    }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
-    
+    <div class="header">
+        <h1>🎮 Библиотека пройденных игр</h1>
+        <div class="stats" id="stats">Загрузка...</div>
+    </div>
+
+    <div class="filters">
+        <select id="verdictFilter">
+            <option value="all">Все вердикты</option>
+            <option value="pick">🔥 Пик</option>
+            <option value="recommend">✅ Рекомендую</option>
+            <option value="try">🤔 Можно попробовать</option>
+            <option value="not-recommend">❌ Не рекомендую</option>
+            <option value="drop">🗑️ Дроп</option>
+        </select>
+        
+        <select id="genreFilter">
+            <option value="all">Все жанры</option>
+        </select>
+        
+        <input type="text" id="searchInput" placeholder="🔍 Поиск по названию...">
+        
+        <select id="sortFilter">
+            <option value="newest">Сначала новые</option>
+            <option value="oldest">Сначала старые</option>
+            <option value="rating-high">По оценке ↑</option>
+            <option value="rating-low">По оценке ↓</option>
+            <option value="hours-high">По часам ↑</option>
+            <option value="hours-low">По часам ↓</option>
+        </select>
+    </div>
+
+    <div class="games-grid" id="gamesGrid">
+        <div class="loading">Загрузка...</div>
+    </div>
+
+    <script>
+        // База данных игр с обложками
+        const games = [
+            {
+                id: 1,
+                title: "Ghostwire: Tokyo",
+                cover: "https://cdn.cloudflare.steamstatic.com/steam/apps/1092790/header.jpg",
+                rating: 2,
+                verdict: "drop",
+                genre: "action",
+                genreName: "Экшен-приключение",
+                hours: 6.2,
+                achievements: 18,
+                totalAchievements: 66,
+                date: "2026-04-05"
+            },
+            {
+                id: 2,
+                title: "What Remains of Edith Finch",
+                cover: "https://cdn.cloudflare.steamstatic.com/steam/apps/501370/header.jpg",
+                rating: 10,
+                verdict: "pick",
+                genre: "simulator",
+                genreName: "Симулятор ходьбы",
+                hours: 1.8,
+                achievements: 4,
+                totalAchievements: 9,
+                date: "2026-03-22"
+            },
+            {
+                id: 3,
+                title: "Resident Evil 9 Requiem",
+                cover: "https://cdn.cloudflare.steamstatic.com/steam/apps/883710/header.jpg",
+                rating: 8,
+                verdict: "recommend",
+                genre: "horror",
+                genreName: "Хоррор",
+                hours: 33.6,
+                achievements: 49,
+                totalAchievements: 49,
+                date: "2026-03-19"
+            },
+            {
+                id: 4,
+                title: "Resident Evil 2 Remake",
+                cover: "https://cdn.cloudflare.steamstatic.com/steam/apps/883710/header.jpg",
+                rating: 8,
+                verdict: "recommend",
+                genre: "horror",
+                genreName: "Хоррор",
+                hours: 12.6,
+                achievements: 23,
+                totalAchievements: 44,
+                date: "2026-03-18"
+            },
+            {
+                id: 5,
+                title: "Ghost of Tsushima",
+                cover: "https://cdn.cloudflare.steamstatic.com/steam/apps/1458140/header.jpg",
+                rating: 6,
+                verdict: "try",
+                genre: "action",
+                genreName: "Экшен-приключение",
+                hours: 19.6,
+                achievements: 23,
+                totalAchievements: 77,
+                date: "2026-03-05"
+            },
+            {
+                id: 6,
+                title: "REANIMAL",
+                cover: "https://cdn.akamai.steamstatic.com/steam/apps/2379780/header.jpg",
+                rating: 0,
+                verdict: "not-recommend",
+                genre: "horror",
+                genreName: "Хоррор",
+                hours: 6,
+                achievements: 10,
+                totalAchievements: 31,
+                date: "2026-02-26"
+            },
+            {
+                id: 7,
+                title: "Balatro",
+                cover: "https://cdn.cloudflare.steamstatic.com/steam/apps/2379780/header.jpg",
+                rating: 6,
+                verdict: "try",
+                genre: "roguelike",
+                genreName: "Roguelike",
+                hours: 73.4,
+                achievements: 24,
+                totalAchievements: 31,
+                date: "2026-02-23"
+            },
+            {
+                id: 8,
+                title: "Resident Evil 7 Biohazard",
+                cover: "https://cdn.cloudflare.steamstatic.com/steam/apps/418370/header.jpg",
+                rating: 7,
+                verdict: "recommend",
+                genre: "horror",
+                genreName: "Хоррор",
+                hours: 12.4,
+                achievements: 24,
+                totalAchievements: 58,
+                date: "2026-02-19"
+            },
+            {
+                id: 9,
+                title: "Resident Evil 8 Village",
+                cover: "https://cdn.cloudflare.steamstatic.com/steam/apps/1196590/header.jpg",
+                rating: 5,
+                verdict: "try",
+                genre: "horror",
+                genreName: "Хоррор",
+                hours: 13.5,
+                achievements: 28,
+                totalAchievements: 56,
+                date: "2026-02-13"
+            },
+            {
+                id: 10,
+                title: "Persona 5 Royal",
+                cover: "https://cdn.cloudflare.steamstatic.com/steam/apps/1687950/header.jpg",
+                rating: 4,
+                verdict: "not-recommend",
+                genre: "jrpg",
+                genreName: "JRPG",
+                hours: 94.2,
+                achievements: 41,
+                totalAchievements: 53,
+                date: "2026-01-29"
+            },
+            {
+                id: 11,
+                title: "The Last of Us Part II",
+                cover: "https://image.api.playstation.com/vulcan/ap/rnd/202010/0114/3DAKDNl0oR8V1LmVPw6bZCIj.png",
+                rating: 0,
+                verdict: "not-recommend",
+                genre: "action",
+                genreName: "Экшен-приключение",
+                hours: 21.1,
+                achievements: 9,
+                totalAchievements: 45,
+                date: "2026-01-04"
+            },
+            {
+                id: 12,
+                title: "Dark Souls: Prepare to Die Edition",
+                cover: "https://cdn.cloudflare.steamstatic.com/steam/apps/211420/header.jpg",
+                rating: 0,
+                verdict: "drop",
+                genre: "soulslike",
+                genreName: "Soulslike",
+                hours: 5.7,
+                achievements: 4,
+                totalAchievements: 41,
+                date: "2026-01-01"
+            }
+        ];
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            renderGames(games);
+            updateStats();
+            populateGenreFilter();
+            setupFilters();
+        });
+
+        // Рендеринг игр
+        function renderGames(gamesToRender) {
+            const grid = document.getElementById('gamesGrid');
+            grid.innerHTML = '';
+
+            gamesToRender.forEach(game => {
+                const card = createGameCard(game);
+                grid.appendChild(card);
+            });
+        }
+
+        // Создание карточки игры
+        function createGameCard(game) {
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            
+            const initials = getInitials(game.title);
+            const ratingClass = game.rating >= 7 ? 'high' : game.rating >= 4 ? 'medium' : 'low';
+            const verdictText = getVerdictText(game.verdict);
+            const verdictClass = `verdict-${game.verdict}`;
+            
+            card.innerHTML = `
+                <img 
+                    src="${game.cover}" 
+                    alt="${game.title}"
+                    class="game-cover"
+                    loading="lazy"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                >
+                <div class="game-cover-placeholder" style="display: none;">
+                    ${initials}
+                </div>
+                <div class="game-info">
+                    <div class="game-title">${game.title}</div>
+                    <div class="game-meta">
+                        <span class="game-rating ${ratingClass}">${game.rating}/10</span>
+                        <span class="game-verdict ${verdictClass}">${verdictText}</span>
+                    </div>
+                    <div class="game-stats">
+                        <span class="game-stat">🎮 ${game.genreName}</span>
+                        <span class="game-stat">📅 ${formatDate(game.date)}</span>
+                    </div>
+                    <div class="game-stats">
+                        <span class="game-stat">⏱️ ${game.hours} ч</span>
+                        <span class="game-stat">🏆 ${game.achievements}/${game.totalAchievements} (${Math.round(game.achievements/game.totalAchievements*100)}%)</span>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Вспомогательные функции
+        function getInitials(title) {
+            return title.split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        function getVerdictText(verdict) {
+            const texts = {
+                'pick': 'Пик',
+                'recommend': 'Рекомендую',
+                'try': 'Можно попробовать',
+                'not-recommend': 'Не рекомендую',
+                'drop': 'Дроп'
+            };
+            return texts[verdict] || verdict;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU');
+        }
+
+        function updateStats() {
+            const totalGames = games.length;
+            const avgRating = (games.reduce((sum, g) => sum + g.rating, 0) / totalGames).toFixed(1);
+            const totalHours = games.reduce((sum, g) => sum + g.hours, 0).toFixed(1);
+            
+            document.getElementById('stats').textContent = 
+                `Игр: ${totalGames} | Ср. оценка: ${avgRating} | Всего часов: ${totalHours}`;
+        }
+
+        function populateGenreFilter() {
+            const genres = [...new Set(games.map(g => g.genre))];
+            const select = document.getElementById('genreFilter');
+            
+            genres.forEach(genre => {
+                const game = games.find(g => g.genre === genre);
+                const option = document.createElement('option');
+                option.value = genre;
+                option.textContent = game.genreName;
+                select.appendChild(option);
+            });
+        }
+
+        function setupFilters() {
+            const filters = {
+                verdict: document.getElementById('verdictFilter'),
+                genre: document.getElementById('genreFilter'),
+                search: document.getElementById('searchInput'),
+                sort: document.getElementById('sortFilter')
+            };
+
+            Object.values(filters).forEach(filter => {
+                filter.addEventListener('change', applyFilters);
+            });
+
+            filters.search.addEventListener('input', applyFilters);
+        }
+
+        function applyFilters() {
+            let filtered = [...games];
+
+            // Фильтр по вердикту
+            const verdict = document.getElementById('verdictFilter').value;
+            if (verdict !== 'all') {
+                filtered = filtered.filter(g => g.verdict === verdict);
+            }
+
+            // Фильтр по жанру
+            const genre = document.getElementById('genreFilter').value;
+            if (genre !== 'all') {
+                filtered = filtered.filter(g => g.genre === genre);
+            }
+
+            // Поиск
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            if (search) {
+                filtered = filtered.filter(g => g.title.toLowerCase().includes(search));
+            }
+
+            // Сортировка
+            const sort = document.getElementById('sortFilter').value;
+            filtered.sort((a, b) => {
+                switch(sort) {
+                    case 'newest': return new Date(b.date) - new Date(a.date);
+                    case 'oldest': return new Date(a.date) - new Date(b.date);
+                    case 'rating-high': return a.rating - b.rating;
+                    case 'rating-low': return b.rating - a.rating;
+                    case 'hours-high': return a.hours - b.hours;
+                    case 'hours-low': return b.hours - a.hours;
+                    default: return 0;
+                }
+            });
+
+            renderGames(filtered);
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+        }
+    </script>
+</body>
+</html>    
     .card-image {
       width: 100%; height: 165px; border-radius: 8px; margin-bottom: 10px;
       background: #111; overflow: hidden; position: relative;
