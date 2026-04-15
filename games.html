@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎮 Библиотека Вани</title>
+  <style>
+    :root {
+      --bg: #0f0f13; --card: #1a1a24; --text: #e6e6ef;
+      --accent: #7c5cff; --good: #4ade80; --mid: #fbbf24; --bad: #f87171;
+      --border: #3a3a50; --muted: #8888aa;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg); color: var(--text);
+      padding: 16px; line-height: 1.5;
+    }
+    header {
+      text-align: center; margin-bottom: 20px; padding: 20px;
+      background: linear-gradient(135deg, var(--card), #252535);
+      border-radius: 16px; border: 1px solid var(--border);
+    }
+    h1 { font-size: 1.6rem; margin-bottom: 6px; }
+    #stats { color: var(--muted); font-size: 0.95rem; }
+    
+    .filters {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      margin: 12px 0; padding: 12px; background: var(--card);
+      border-radius: 12px; border: 1px solid var(--border);
+    }
+    .filters select, .filters input {
+      padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 0.9rem;
+      min-width: 140px;
+    }
+    .filters input { min-width: 180px; }
+    
+    .grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 14px;
+    }
+    .card {
+      background: var(--card); border-radius: 12px; padding: 14px;
+      border-left: 4px solid var(--accent);
+      border: 1px solid var(--border);
+      transition: transform 0.2s;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+    
+    .card-header {
+      display: flex; justify-content: space-between; align-items: start;
+      margin-bottom: 8px; gap: 8px; flex-wrap: wrap;
+    }
+    .game-title { font-weight: 600; font-size: 1.05rem; }
+    .rating {
+      background: var(--accent); color: white; padding: 3px 9px;
+      border-radius: 16px; font-weight: bold; font-size: 0.9rem;
+      min-width: 48px; text-align: center;
+    }
+    .rating.empty { background: var(--border); }
+    
+    .verdict {
+      display: inline-block; padding: 2px 9px; border-radius: 10px;
+      font-size: 0.82rem; font-weight: 500; margin-bottom: 8px;
+    }
+    .verdict.пик { background: rgba(74, 222, 128, 0.15); color: var(--good); }
+    .verdict.рекомендую { background: rgba(251, 191, 36, 0.15); color: var(--mid); }
+    .verdict.можно { background: rgba(124, 92, 255, 0.15); color: var(--accent); }
+    .verdict.не-рекомендую, .verdict.дроп { background: rgba(248, 113, 113, 0.15); color: var(--bad); }
+    
+    .meta {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px;
+      font-size: 0.88rem; color: var(--muted); margin: 8px 0;
+    }
+    .review {
+      font-size: 0.92rem; color: var(--text); margin-top: 8px;
+      padding-top: 8px; border-top: 1px dashed var(--border);
+    }
+    .review a {
+      color: var(--accent); text-decoration: none; font-weight: 500;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .review a:hover { text-decoration: underline; }
+    
+    @media (max-width: 600px) {
+      .meta { grid-template-columns: 1fr; }
+      .filters { flex-direction: column; align-items: stretch; }
+      .filters select, .filters input { min-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎮 Библиотека пройденных игр</h1>
+    <p id="stats">Загрузка...</p>
+  </header>
+
+  <div class="filters">
+    <select id="filterVerdict">
+      <option value="">Все вердикты</option>
+      <option value="пик">🔥 Пик</option>
+      <option value="рекомендую">✅ Рекомендую</option>
+      <option value="можно попробовать">🤔 Можно попробовать</option>
+      <option value="не рекомендую">❌ Не рекомендую</option>
+      <option value="дроп">🗑️ Дроп</option>
+    </select>
+    <select id="filterGenre"><option value="">Все жанры</option></select>
+    <input type="text" id="search" placeholder="🔍 Поиск по названию..." />
+    <select id="sortBy">
+      <option value="date-desc">Сначала новые</option>
+      <option value="date-asc">Сначала старые</option>
+      <option value="rating-desc">По оценке ↑</option>
+      <option value="rating-asc">По оценке ↓</option>
+      <option value="hours-desc">По часам ↑</option>
+    </select>
+  </div>
+
+  <div id="gamesGrid" class="grid"></div>
+
+  <script>
+    const CSV_DATA = `ИГРА,ОЦЕНКА,ВЫВОД,ОБЗОР,Жанр,ДАТА ПРОХОЖДЕНИЯ,ЧАСОВ,ДОСТИЖЕНИЯ,%
+DELTARUNE,10,Пик,,JRPG,,,,
+Disco Elysium,10,Пик,,RPG,20.12.2023,25,10/45,22%
+Resident Evil 4 Remake,10,Пик,Resident Evil 4 Remake + Separate Ways,ХОРРОР,,"32,9",23/46,50%
+Resident Evil 4 Remake Separate Ways,10,Пик,Resident Evil 4 Remake + Separate Ways,ХОРРОР,,"32,9",23/46,50%
+UNDERTALE,10,Пик,,RPG,02.11.2024,"11,6",,
+What Remains of Edith Finch,10,Пик,,СИМУЛЯТОР ХОДЬБЫ,22.03.2026,"1,8",4/9,44%
+Batman Arkham City,10,Пик,,"ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС",,60,53/64,83%
+Batman Arkham Knight,10,Пик,,"ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС",,"116,8",113/113,100%
+Resident Evil 2 Remake,8,Рекомендую,,ХОРРОР,18.03.2026,"12,6",23/44,52%
+Resident Evil 9 Requiem,8,Рекомендую,Resident Evil Requiem,ХОРРОР,19.03.2026,"33,6",49/49,100%
+Dispatch,7,Рекомендую,"Сюжет в конце слился в мусорку, хоть геймплей хороший",КИНО,14.11.2025,"8,6",21/36,58%
+Lies of P,7,Рекомендую,Lies of P,SOULSLIKE,08.07.2025,40,50/53,94%
+Resident Evil 7 Biohazard,7,Рекомендую,,ХОРРОР,19.02.2026,"12,4",24/58,41%
+Shadow Burglar,7,Рекомендую,Индюшка от студента. Прикольная и лёгкая,СТЕЛС-ЭКШЕН,04.03.2022,"1,2",13/13,100%
+Balatro,6,Можно попробовать,"Рогалик где мало что решает скилл, всё зависит от удачи",ROUGELIKE,23.02.2026,"73,4",24/31,77%
+Ghost of Tsushima,6,Можно попробовать,Ghost of Tsushima,ЭКШЕН-ПРИКЛЮЧЕНИЕ,05.03.2026,"19,6",23/77,30%
+Sekiro,6,Рекомендую,Sekiro,SOULSLIKE,05.06.2025,40,34/34,100%
+Torn Away,6,Можно попробовать,,ПРИКЛЮЧЕНИЕ,30.10.2023,"5,2",27/35,77%
+Black Myth: Wukong,5,Можно попробовать,Black Myth: Wukong,SOULSLIKE,09.07.2025,"34,6",37/81,46%
+Clair Obscur: Expedition 33,5,Можно попробовать,Clair Obscur: Expedition 33,JRPG,10.06.2025,"25,5",31/55,56%
+Lies of P Overture,5,Можно попробовать,Lies of P Overture,SOULSLIKE,08.07.2025,40,50/53,94%
+Marvel's Spider Man 2,5,Можно попробовать,,ЭКШЕН-ПРИКЛЮЧЕНИЕ,24.10.2025,"30,7",37/43,86%
+Resident Evil 3 Remake,5,Можно попробовать,,ХОРРОР,03.11.2025,"5,1",17/32,53%
+Resident Evil 8 Village,5,Рекомендую,Call of Duty взявший почти всё из RE 4,ХОРРОР,13.02.2026,"13,5",28/56,50%
+Static Dread: The Lighthouse,5,Можно попробовать,,ХОРРОР,25.08.2025,"7,1",30/43,70%
+The Last of Us Part I,5,Можно попробовать,The Last of Us Part 1,ЭКШЕН-ПРИКЛЮЧЕНИЕ,11.08.2025,"16,3",6/29,21%
+Castlevania: Lords of Shadow 2,4,Не рекомендую,Castlevania: Lords of Shadow 2,ЭКШЕН,07.12.2024,"16,8",27/56,48%
+Hollow Knight: Silksong,4,Не рекомендую,Hollow Knight Silksong,МЕТРОИДВАНИЯ,14.09.2025,"37,2",21/52,40%
+Persona 5 Royal,4,Не рекомендую,Persona 5 Royal,JRPG,29.01.2026,"94,2",41/53,77%
+Bayonetta,2,Не рекомендую,Bayonetta,СЛЭШЕР,25.10.2025,"11,3",22/50,44%
+God of War 2018,2,Не рекомендую,God of War 2018,СЛЭШЕР,27.11.2025,"14,7",16/37,43%
+Sifu,2,Дроп,,МУСОР,29.05.2025,"3,7",13/61,21%
+Ghostwire Tokyo,2,Дроп,"Красивые пострелушки, однообразная боёвка и мир",ЭКШЕН-ПРИКЛЮЧЕНИЕ,05.04.2026,"6,2",18/66,27%
+Bloodborne,1,Не рекомендую,Bloodborne,SOULSLIKE,18.12.2025,30,,
+Contrast,0,Дроп,Старьё с не самыми понятными головоломками,ПЛАТФОРМЕР,,,,
+Dark Souls,0,Дроп,Мусор от Бабадзаки,SOULSLIKE,01.01.2026,"5,7",4/41,10%
+REANIMAL,0,Не рекомендую,"Сюжет - непонятный, геймплей - ходьба, баги - дохуя",ХОРРОР,26.02.2026,6,10/31,32%
+SILENT HILL f,0,Не рекомендую,Silent Hill f,ХОРРОР,27.09.2025,"12,1",19/56,34%
+Slay the Princess,0,Не рекомендую,Визуальная новелла без геймплея,НОВЕЛЛА,02.11.2025,"2,6",21/131,16%
+The Evil Within,0,Дроп,Устаревшая душнейшая игра,ХОРРОР,30.09.2025,"1,9",0/71,0%
+The First Berserker: Khazan,0,Не рекомендую,The First Berserker: Khazan,SOULSLIKE,21.05.2025,"47,4",43/57,75%
+The Last of Us Part II,0,Не рекомендую,Какая-то затянутая как будто и я опять ничё не понял,ЭКШЕН-ПРИКЛЮЧЕНИЕ,04.01.2026,"21,1",9/45,20%
+Batman Arkham Asylum,,Рекомендую,,"ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС",,"14,7",39/47,83%
+Batman Arkham Origins,,Можно попробовать,,"ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС",,"9,3",15/60,25%
+Celeste,,Дроп,"Хз, просто скучно. Не прям фанат платформеров",ПЛАТФОРМЕР,22.09.2025,"0,9",1/32,3%
+Firewatch,,,,СИМУЛЯТОР ХОДЬБЫ,,,,
+Nioh 2,,Не рекомендую,,SOULSLIKE,30.09.2025,"3,5",2/88,2%
+Warcraft 3,,Дроп,Поиграл час и понял что вообще не люблю стратегии,СТРАТЕГИЯ,,"1,5",,`;
+
+    let games = [];
+
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
+      if (lines.length < 2) return [];
+      const headers = parseLine(lines[0]);
+      const result = [];
+      for (let i = 1; i < lines.length; i++) {
+        const values = parseLine(lines[i]);
+        if (values.length !== headers.length) continue;
+        const game = {};
+        headers.forEach((h, idx) => {
+          let val = values[idx] || '';
+          if ((h === 'ЧАСОВ' || h === '%') && val && val.includes(',')) {
+            val = val.replace(',', '.');
+          }
+          game[h.trim()] = val.trim();
+        });
+        if (game['ИГРА']) result.push(game);
+      }
+      return result;
+    }
+
+    function parseLine(line) {
+      const result = [];
+      let cur = '', inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        const c = line[i], n = line[i+1];
+        if (c === '"') {
+          if (inQ && n === '"') { cur += '"'; i++; }
+          else inQ = !inQ;
+        } else if (c === ',' && !inQ) {
+          result.push(cur.trim());
+          cur = '';
+        } else cur += c;
+      }
+      result.push(cur.trim());
+      return result.map(v => v.replace(/^"|"$/g, ''));
+    }
+
+    function fmtVerdict(v) {
+      if (!v) return '';
+      const map = {
+        'пик': '🔥 Пик', 'рекомендую': '✅ Рекомендую',
+        'можно попробовать': '🤔 Можно попробовать',
+        'не рекомендую': '❌ Не рекомендую', 'дроп': '🗑️ Дроп'
+      };
+      const key = v.toLowerCase().trim();
+      return `<span class="verdict ${key}">${map[key] || v}</span>`;
+    }
+
+    function fmtNum(val) {
+      if (!val) return '';
+      const n = parseFloat(val);
+      return isNaN(n) ? val : n % 1 === 0 ? n.toString() : n.toFixed(1);
+    }
+
+    function renderGames(list) {
+      const grid = document.getElementById('gamesGrid');
+      grid.innerHTML = '';
+      if (!list.length) {
+        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted)">Ничего не найдено 😕</p>';
+        return;
+      }
+      list.forEach(g => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        const hours = g['ЧАСОВ'] ? `⏱ ${fmtNum(g['ЧАСОВ'])} ч` : '';
+        const ach = g['ДОСТИЖЕНИЯ'] || '';
+        const pct = g['%'] ? `(${g['%']}%)` : '';
+        const rating = g['ОЦЕНКА'] ? `${g['ОЦЕНКА']}/10` : '–';
+        const ratingClass = g['ОЦЕНКА'] ? '' : 'empty';
+        
+        // 🔗 Исправленная обработка ссылок
+        let reviewHtml = '';
+        if (g['ОБЗОР']) {
+          const text = g['ОБЗОР'].trim();
+          // Проверяем, есть ли в тексте ссылка (http)
+          if (text.includes('http')) {
+            const url = text.match(/https?:\/\/[^\s]+/)?.[0] || text;
+            const linkText = text.replace(url, '').trim() || '📄 Читать обзор';
+            reviewHtml = `<div class="review">💬 <a href="${url}" target="_blank" rel="noopener">${linkText} →</a></div>`;
+          } else if (text && text !== '–') {
+            // Если это просто текст (название документа), ищем его в таблице
+            reviewHtml = `<div class="review">💬 ${text}</div>`;
+          }
+        }
+        
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="game-title">${g['ИГРА']}</div>
+            <div class="rating ${ratingClass}">${rating}</div>
+          </div>
+          ${fmtVerdict(g['ВЫВОД'])}
+          <div class="meta">
+            <div>🎭 ${g['Жанр'] || '—'}</div>
+            <div>📅 ${g['ДАТА ПРОХОЖДЕНИЯ'] || '—'}</div>
+            <div>${hours}</div>
+            <div>${ach ? '🏆 ' + ach : ''} ${pct}</div>
+          </div>
+          ${reviewHtml}
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function updateStats(list) {
+      const statsEl = document.getElementById('stats');
+      const total = list.length;
+      const rated = list.filter(g => g['ОЦЕНКА'] && !isNaN(+g['ОЦЕНКА']));
+      const avg = rated.length ? (rated.reduce((s,g) => s + +g['ОЦЕНКА'], 0) / rated.length).toFixed(1) : '–';
+      const totalHours = list.reduce((s,g) => {
+        const h = parseFloat((g['ЧАСОВ']||'').replace(',','.'));
+        return s + (isNaN(h) ? 0 : h);
+      }, 0).toFixed(1);
+      statsEl.textContent = `Игр: ${total} | Ср. оценка: ${avg} | Всего часов: ${totalHours}`;
+    }
+
+    function populateGenres(list) {
+      const select = document.getElementById('filterGenre');
+      while (select.options.length > 1) select.remove(1);
+      const genres = [...new Set(list.map(g => g['Жанр']).filter(Boolean))].sort();
+      genres.forEach(genre => {
+        const opt = document.createElement('option');
+        opt.value = genre;
+        opt.textContent = genre;
+        select.appendChild(opt);
+      });
+    }
+
+    function filterAndRender() {
+      const verdict = document.getElementById('filterVerdict').value.toLowerCase();
+      const genre = document.getElementById('filterGenre').value;
+      const search = document.getElementById('search').value.toLowerCase();
+      const sort = document.getElementById('sortBy').value;
+      let filtered = games.filter(g => {
+        const v = (g['ВЫВОД']||'').toLowerCase();
+        const matchV = !verdict || v.includes(verdict);
+        const matchG = !genre || g['Жанр'] === genre;
+        const matchS = !search || g['ИГРА'].toLowerCase().includes(search);
+        return matchV && matchG && matchS;
+      });
+      const [field, order] = sort.split('-');
+      const mult = order === 'asc' ? 1 : -1;
+      filtered.sort((a,b) => {
+        if (field === 'rating') {
+          const ra = parseFloat(a['ОЦЕНКА'])||0, rb = parseFloat(b['ОЦЕНКА'])||0;
+          return (ra - rb) * mult;
+        }
+        if (field === 'hours') {
+          const ha = parseFloat((a['ЧАСОВ']||'').replace(',','.'))||0;
+          const hb = parseFloat((b['ЧАСОВ']||'').replace(',','.'))||0;
+          return (ha - hb) * mult;
+        }
+        if (field === 'date') {
+          const parse = d => {
+            if (!d) return 0;
+            const [day,mon,yr] = d.split('.');
+            return new Date(yr, mon-1, day).getTime() || 0;
+          };
+          return (parse(a['ДАТА ПРОХОЖДЕНИЯ']) - parse(b['ДАТА ПРОХОЖДЕНИЯ'])) * mult;
+        }
+        return 0;
+      });
+      renderGames(filtered);
+    }
+
+    function init() {
+      games = parseCSV(CSV_DATA);
+      populateGenres(games);
+      updateStats(games);
+      filterAndRender();
+      console.log(`✅ Загружено ${games.length} игр`);
+    }
+
+    ['filterVerdict','filterGenre','search','sortBy'].forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', filterAndRender);
+      el.addEventListener('change', filterAndRender);
+    });
+
+    init();
+  </script>
+</body>
+</html>
