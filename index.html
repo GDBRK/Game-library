@@ -9,7 +9,7 @@
       --bg: #0f0f13; --card: #1a1a24; --text: #e6e6ef;
       --accent: #7c5cff; --border: #3a3a50; --muted: #8888aa;
       --c-red: #ef4444; --c-yellow: #fbbf24; --c-green: #4ade80; --c-purple: #7c5cff;
-      --review-bg: #15151c; --review-text: #e0e0f0;
+      --review-bg: #1a1a24; --review-text: #e0e0f0;
     }
     [data-theme="light"] {
       --bg: #f5f5fa; --card: #ffffff; --text: #1a1a2e;
@@ -32,7 +32,13 @@
     [data-theme="light"] header { background: linear-gradient(135deg, var(--card), #e8e8f5); }
     h1 { font-size: 1.6rem; margin-bottom: 6px; }
     #stats { color: var(--muted); font-size: 0.95rem; }
-    
+    #refreshBtn {
+      position: absolute; top: 12px; left: 16px;
+      background: var(--accent); color: white; border: none;
+      padding: 6px 12px; border-radius: 20px; cursor: pointer;
+      font-size: 0.9rem; display: flex; align-items: center; gap: 4px;
+    }
+    #refreshBtn:hover { opacity: 0.9; }
     #themeToggle {
       position: absolute; top: 12px; right: 16px;
       background: var(--accent); color: white; border: none;
@@ -107,19 +113,63 @@
     }
     .review-btn {
       display: inline-flex; align-items: center; gap: 4px;
-      color: var(--accent); text-decoration: none; font-weight: 500;
+      color: var(--accent); text-decoration: none; font-weight: 500; cursor: pointer;
     }
     .review-btn:hover { text-decoration: underline; }
+    
+    /* 📄 Модальное окно обзора */
+    #reviewModal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9); z-index: 1000; overflow-y: auto;
+      backdrop-filter: blur(5px);
+    }
+    #reviewModal.active { display: block; }
+    .review-container {
+      max-width: 900px; margin: 40px auto; padding: 20px;
+      background: var(--review-bg); border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .review-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px; padding-bottom: 16px;
+      border-bottom: 2px solid var(--border);
+    }
+    #reviewTitle { font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+    #closeReview {
+      background: var(--c-red); color: white; border: none;
+      padding: 8px 16px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; font-weight: 600;
+    }
+    #closeReview:hover { opacity: 0.9; }
+    #reviewContent {
+      color: var(--review-text); line-height: 1.8; font-size: 1.05rem;
+      white-space: pre-wrap;
+    }
+    #reviewContent h1, #reviewContent h2, #reviewContent h3 {
+      color: var(--accent); margin: 1.5em 0 0.8em; font-weight: 700;
+    }
+    #reviewContent p { margin: 0.8em 0; }
+    #reviewContent ul, #reviewContent ol { margin: 0.8em 0; padding-left: 2em; }
+    #reviewContent li { margin: 0.4em 0; }
+    #reviewContent strong { color: var(--accent); font-weight: 700; }
+    .loading-review { text-align: center; padding: 40px; color: var(--muted); font-size: 1.1rem; }
+    
+    .error-msg {
+      background: var(--c-red); color: white; padding: 12px;
+      border-radius: 8px; margin: 10px 0; text-align: center;
+    }
     
     @media (max-width: 600px) {
       .meta { grid-template-columns: 1fr; }
       .filters { flex-direction: column; align-items: stretch; }
       .filters select, .filters input { min-width: 100%; }
+      .review-header { flex-direction: column; gap: 12px; align-items: flex-start; }
     }
   </style>
 </head>
 <body>
   <header>
+    <button id="refreshBtn">🔄 Обновить</button>
     <h1>🎮 Библиотека пройденных игр</h1>
     <p id="stats">Загрузка...</p>
     <button id="themeToggle">🌓 Тема</button>
@@ -147,79 +197,67 @@
 
   <div id="gamesGrid" class="grid"></div>
 
-  <script>
-    const CSV_DATA = `ИГРА,ОЦЕНКА,ВЫВОД,ОБЗОР,Жанр,ДАТА ПРОХОЖДЕНИЯ,ЧАСОВ,ДОСТИЖЕНИЯ,%
-DELTARUNE,10,Пик,,JRPG,,,,
-Disco Elysium,10,Пик,,RPG,20.12.2023,25,10/45,22%
-Resident Evil 4 Remake,10,Пик,Resident Evil 4 Remake + Separate Ways,ХОРРОР,,"32,9",23/46,50%
-Resident Evil 4 Remake Separate Ways,10,Пик,Resident Evil 4 Remake + Separate Ways,ХОРРОР,,"32,9",23/46,50%
-UNDERTALE,10,Пик,,RPG,02.11.2024,"11,6",,
-What Remains of Edith Finch,10,Пик,,СИМУЛЯТОР ХОДЬБЫ,22.03.2026,"1,8",4/9,44%
-Batman Arkham City,10,Пик,,"ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС",,60,53/64,83%
-Batman Arkham Knight,10,Пик,,"ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС",,"116,8",113/113,100%
-Resident Evil 2 Remake,8,Рекомендую,,ХОРРОР,18.03.2026,"12,6",23/44,52%
-Resident Evil 9 Requiem,8,Рекомендую,Resident Evil Requiem,ХОРРОР,19.03.2026,"33,6",49/49,100%
-Dispatch,7,Рекомендую,"Сюжет в конце слился в мусорку, хоть геймплей хороший",КИНО,14.11.2025,"8,6",21/36,58%
-Lies of P,7,Рекомендую,Lies of P,SOULSLIKE,08.07.2025,40,50/53,94%
-Resident Evil 7 Biohazard,7,Рекомендую,,ХОРРОР,19.02.2026,"12,4",24/58,41%
-Shadow Burglar,7,Рекомендую,Индюшка от студента. Прикольная и лёгкая,СТЕЛС-ЭКШЕН,04.03.2022,"1,2",13/13,100%
-Balatro,6,Можно попробовать,"Рогалик где мало что решает скилл, всё зависит от удачи",ROUGELIKE,23.02.2026,"73,4",24/31,77%
-Ghost of Tsushima,6,Можно попробовать,Ghost of Tsushima,ЭКШЕН-ПРИКЛЮЧЕНИЕ,05.03.2026,"19,6",23/77,30%
-Sekiro,6,Рекомендую,Sekiro,SOULSLIKE,05.06.2025,40,34/34,100%
-Torn Away,6,Можно попробовать,,ПРИКЛЮЧЕНИЕ,30.10.2023,"5,2",27/35,77%
-Black Myth: Wukong,5,Можно попробовать,Black Myth: Wukong,SOULSLIKE,09.07.2025,"34,6",37/81,46%
-Clair Obscur: Expedition 33,5,Можно попробовать,Clair Obscur: Expedition 33,JRPG,10.06.2025,"25,5",31/55,56%
-Lies of P Overture,5,Можно попробовать,Lies of P Overture,SOULSLIKE,08.07.2025,40,50/53,94%
-Marvel's Spider Man 2,5,Можно попробовать,,ЭКШЕН-ПРИКЛЮЧЕНИЕ,24.10.2025,"30,7",37/43,86%
-Resident Evil 3 Remake,5,Можно попробовать,,ХОРРОР,03.11.2025,"5,1",17/32,53%
-Resident Evil 8 Village,5,Рекомендую,Call of Duty взявший почти всё из RE 4,ХОРРОР,13.02.2026,"13,5",28/56,50%
-Static Dread: The Lighthouse,5,Можно попробовать,,ХОРРОР,25.08.2025,"7,1",30/43,70%
-The Last of Us Part I,5,Можно попробовать,The Last of Us Part 1,ЭКШЕН-ПРИКЛЮЧЕНИЕ,11.08.2025,"16,3",6/29,21%
-Castlevania: Lords of Shadow 2,4,Не рекомендую,Castlevania: Lords of Shadow 2,ЭКШЕН,07.12.2024,"16,8",27/56,48%
-Hollow Knight: Silksong,4,Не рекомендую,Hollow Knight Silksong,МЕТРОИДВАНИЯ,14.09.2025,"37,2",21/52,40%
-Persona 5 Royal,4,Не рекомендую,Persona 5 Royal,JRPG,29.01.2026,"94,2",41/53,77%
-Bayonetta,2,Не рекомендую,Bayonetta,СЛЭШЕР,25.10.2025,"11,3",22/50,44%
-God of War 2018,2,Не рекомендую,God of War 2018,СЛЭШЕР,27.11.2025,"14,7",16/37,43%
-Sifu,2,Дроп,,МУСОР,29.05.2025,"3,7",13/61,21%
-Ghostwire Tokyo,2,Дроп,"Красивые пострелушки, однообразная боёвка и мир",ЭКШЕН-ПРИКЛЮЧЕНИЕ,05.04.2026,"6,2",18/66,27%
-Bloodborne,1,Не рекомендую,Bloodborne,SOULSLIKE,18.12.2025,30,,
-Contrast,0,Дроп,Старьё с не самыми понятными головоломками,ПЛАТФОРМЕР,,,,
-Dark Souls,0,Дроп,Мусор от Бабадзаки,SOULSLIKE,01.01.2026,"5,7",4/41,10%
-REANIMAL,0,Не рекомендую,"Сюжет - непонятный, геймплей - ходьба, баги - дохуя",ХОРРОР,26.02.2026,6,10/31,32%
-SILENT HILL f,0,Не рекомендую,Silent Hill f,ХОРРОР,27.09.2025,"12,1",19/56,34%
-Slay the Princess,0,Не рекомендую,Визуальная новелла без геймплея,НОВЕЛЛА,02.11.2025,"2,6",21/131,16%
-The Evil Within,0,Дроп,Устаревшая душнейшая игра,ХОРРОР,30.09.2025,"1,9",0/71,0%
-The First Berserker: Khazan,0,Не рекомендую,The First Berserker: Khazan,SOULSLIKE,21.05.2025,"47,4",43/57,75%
-The Last of Us Part II,0,Не рекомендую,Какая-то затянутая как будто и я опять ничё не понял,ЭКШЕН-ПРИКЛЮЧЕНИЕ,04.01.2026,"21,1",9/45,20%
-Batman Arkham Asylum,,Рекомендую,,"ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС",,"14,7",39/47,83%
-Batman Arkham Origins,,Можно попробовать,,"ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС",,"9,3",15/60,25%
-Celeste,,Дроп,"Хз, просто скучно. Не прям фанат платформеров",ПЛАТФОРМЕР,22.09.2025,"0,9",1/32,3%
-Firewatch,,,,СИМУЛЯТОР ХОДЬБЫ,,,,
-Nioh 2,,Не рекомендую,,SOULSLIKE,30.09.2025,"3,5",2/88,2%
-Warcraft 3,,Дроп,Поиграл час и понял что вообще не люблю стратегии,СТРАТЕГИЯ,,"1,5",,`;
+  <!-- 📄 Модальное окно обзора -->
+  <div id="reviewModal">
+    <div class="review-container">
+      <div class="review-header">
+        <h2 id="reviewTitle">Название игры</h2>
+        <button id="closeReview">✕ Закрыть</button>
+      </div>
+      <div id="reviewContent"><div class="loading-review">⏳ Загрузка обзора...</div></div>
+    </div>
+  </div>
 
-    // 🔗 Ссылки на обзоры (исправленные)
+  <script>
+    // 🔗 Ссылка на твою опубликованную таблицу
+    const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSciyV_DMHERawDqSkbql2-VRBBoJtKk6oci3j5YIq0xH08LynohFZM8TMvExAqVJXOaqSNrKugIgkn/pub?output=csv';
+    
+    // 🔗 Ссылки на обзоры
     const REVIEW_LINKS = {
-      'Resident Evil 4 Remake': 'https://docs.google.com/document/d/e/2PACX-1vQfFqOvbjSJVYbIRZCitrcJIVpwYheES82b4n2T5mlb005--xZKB3n4kKllAYXDzD-zysm5Mu3paDl8/pub',
-      'Resident Evil 9 Requiem': 'https://docs.google.com/document/d/e/2PACX-1vSV53Isdo5_eX-mWad1gdBomF1MHDHlNLYoeGJO9EO84iRMkZtnue-Wv_XBwbpcdn4vEs54HxNKTbun/pub',
-      'Lies of P': 'https://docs.google.com/document/d/e/2PACX-1vSqi0ZivoRO_0WjMW9lscZxDxkgtV2NopwhhfXKZ4y2t6kmSyTqSjgHHQMOOZI-eH4geG9-SHVm_vMz/pub',
-      'Ghost of Tsushima': 'https://docs.google.com/document/d/e/2PACX-1vTl_erKecH-Z_6ZnwpapQ3uCiqsZBAyAKNN_HP8Q80BtOco9I2rdtVooNGNWdfLLCTX4f1UOpAnaslz/pub',
-      'Sekiro': 'https://docs.google.com/document/d/e/2PACX-1vTxCM8Sx1GTKqF1bYJYWC9KIl3RruAQsCp1ootAPyfrjVMil19_WwQR_s_KuNLLfLvGTDY966wbZlPa/pub',
-      'Black Myth: Wukong': 'https://docs.google.com/document/d/e/2PACX-1vS24EHezBL2T-moSXMxugV5Mh-kya9orSip-1IhIXOINnJ54t_N-cqIT2LNV1FVD6-uQylSWs3YFdZi/pub',
-      'Clair Obscur: Expedition 33': 'https://docs.google.com/document/d/e/2PACX-1vTn4_qJI36p5mYDMkWFY0RK7RZqyej9GRpUGOCEhyqt2emWeKcBjdJr6P8fsLX3Glem0GB9zXLzR37T/pub',
-      'The Last of Us Part I': 'https://docs.google.com/document/d/e/2PACX-1vTk-JtsIIup1ffLV3c28bTTjdTyv5VLt3IIoAqKIrlVhLMgtZxvs33whw_wkgjg8ROqDQAFCSqACB6n/pub',
-      'Castlevania: Lords of Shadow 2': 'https://docs.google.com/document/d/e/2PACX-1vTdsRaa3_fcIzyUonUnUEWMvUh9pn4D-VJ4QOIGFFkPH3uVs3ipjLn7EK6osnz4ty0GQgVlEfqmPKxF/pub',
-      'Hollow Knight: Silksong': 'https://docs.google.com/document/d/e/2PACX-1vRFzpuwtzznTpxAACc57PeKUoxXsu48zpcpN-4657uYlqugJiLzOx1_hjLP4DLvtVmTgiPxQIHNXt2v/pub',
-      'Persona 5 Royal': 'https://docs.google.com/document/d/e/2PACX-1vRG8iRjYXm3vlwy-yWkZrIvSitqHhkZjaKU4xamhSsPmwaMuo6Vi53qkN1QP2sxk9cQUP_L07_0QdAT/pub',
-      'Bayonetta': 'https://docs.google.com/document/d/e/2PACX-1vSpGmSws1wbCo_tB2kuD-GDT7cBi5nafi45m2T7OWH1F9FZSIS9d-QBtZ_RkKmMb3m0d-TNi6nagUcu/pub',
-      'God of War 2018': 'https://docs.google.com/document/d/e/2PACX-1vRYTFMGq9QRhNTeUYelPqxgQ-cxAV0jPIs5t8KAK2xR_QBIrjfCKDx3Zn2eAo0bjJDYSAZn3AxxWIdq/pub',
-      'Bloodborne': 'https://docs.google.com/document/d/e/2PACX-1vTzRgfDSsAI5PT2c103bmO7UnW9bBluvgPZLJD_GnPuXS4RxNeJyk144B4UvVTN_KYETv0LQQEZ7-KN/pub',
-      'SILENT HILL f': 'https://docs.google.com/document/d/e/2PACX-1vQn_4O2U7aGv0WvYhNqJj1Wz9QE5APMMqzeDczLzkuqWpcKJ2cLv5lQh0Ag3gDIL4JIYqeKq96AVJU8/pub',
-      'The First Berserker: Khazan': 'https://docs.google.com/document/d/e/2PACX-1vTtRrXtG9S99uxYC4OeMbPSgoVu4fz2axq2xu0whszX4NnzNqqSwhitOyMLlusV3oeRdE7zQyK2WcK1/pub'
+      'Resident Evil 4 Remake': 'https://docs.google.com/document/d/e/2PACX-1vQfFqOvbjSJVYbIRZCitrcJIVpwYheES82b4n2T5mlb005--xZKB3n4kKllAYXDzD-zysm5Mu3paDl8/pub?output=txt',
+      'Resident Evil 9 Requiem': 'https://docs.google.com/document/d/e/2PACX-1vSV53Isdo5_eX-mWad1gdBomF1MHDHlNLYoeGJO9EO84iRMkZtnue-Wv_XBwbpcdn4vEs54HxNKTbun/pub?output=txt',
+      'Lies of P': 'https://docs.google.com/document/d/e/2PACX-1vSqi0ZivoRO_0WjMW9lscZxDxkgtV2NopwhhfXKZ4y2t6kmSyTqSjgHHQMOOZI-eH4geG9-SHVm_vMz/pub?output=txt',
+      'Ghost of Tsushima': 'https://docs.google.com/document/d/e/2PACX-1vTl_erKecH-Z_6ZnwpapQ3uCiqsZBAyAKNN_HP8Q80BtOco9I2rdtVooNGNWdfLLCTX4f1UOpAnaslz/pub?output=txt',
+      'Sekiro': 'https://docs.google.com/document/d/e/2PACX-1vTxCM8Sx1GTKqF1bYJYWC9KIl3RruAQsCp1ootAPyfrjVMil19_WwQR_s_KuNLLfLvGTDY966wbZlPa/pub?output=txt',
+      'Black Myth: Wukong': 'https://docs.google.com/document/d/e/2PACX-1vS24EHezBL2T-moSXMxugV5Mh-kya9orSip-1IhIXOINnJ54t_N-cqIT2LNV1FVD6-uQylSWs3YFdZi/pub?output=txt',
+      'Clair Obscur: Expedition 33': 'https://docs.google.com/document/d/e/2PACX-1vTn4_qJI36p5mYDMkWFY0RK7RZqyej9GRpUGOCEhyqt2emWeKcBjdJr6P8fsLX3Glem0GB9zXLzR37T/pub?output=txt',
+      'The Last of Us Part I': 'https://docs.google.com/document/d/e/2PACX-1vTk-JtsIIup1ffLV3c28bTTjdTyv5VLt3IIoAqKIrlVhLMgtZxvs33whw_wkgjg8ROqDQAFCSqACB6n/pub?output=txt',
+      'Castlevania: Lords of Shadow 2': 'https://docs.google.com/document/d/e/2PACX-1vTdsRaa3_fcIzyUonUnUEWMvUh9pn4D-VJ4QOIGFFkPH3uVs3ipjLn7EK6osnz4ty0GQgVlEfqmPKxF/pub?output=txt',
+      'Hollow Knight: Silksong': 'https://docs.google.com/document/d/e/2PACX-1vRFzpuwtzznTpxAACc57PeKUoxXsu48zpcpN-4657uYlqugJiLzOx1_hjLP4DLvtVmTgiPxQIHNXt2v/pub?output=txt',
+      'Persona 5 Royal': 'https://docs.google.com/document/d/e/2PACX-1vRG8iRjYXm3vlwy-yWkZrIvSitqHhkZjaKU4xamhSsPmwaMuo6Vi53qkN1QP2sxk9cQUP_L07_0QdAT/pub?output=txt',
+      'Bayonetta': 'https://docs.google.com/document/d/e/2PACX-1vSpGmSws1wbCo_tB2kuD-GDT7cBi5nafi45m2T7OWH1F9FZSIS9d-QBtZ_RkKmMb3m0d-TNi6nagUcu/pub?output=txt',
+      'God of War 2018': 'https://docs.google.com/document/d/e/2PACX-1vRYTFMGq9QRhNTeUYelPqxgQ-cxAV0jPIs5t8KAK2xR_QBIrjfCKDx3Zn2eAo0bjJDYSAZn3AxxWIdq/pub?output=txt',
+      'Bloodborne': 'https://docs.google.com/document/d/e/2PACX-1vTzRgfDSsAI5PT2c103bmO7UnW9bBluvgPZLJD_GnPuXS4RxNeJyk144B4UvVTN_KYETv0LQQEZ7-KN/pub?output=txt',
+      'SILENT HILL f': 'https://docs.google.com/document/d/e/2PACX-1vQn_4O2U7aGv0WvYhNqJj1Wz9QE5APMMqzeDczLzkuqWpcKJ2cLv5lQh0Ag3gDIL4JIYqeKq96AVJU8/pub?output=txt',
+      'The First Berserker: Khazan': 'https://docs.google.com/document/d/e/2PACX-1vTtRrXtG9S99uxYC4OeMbPSgoVu4fz2axq2xu0whszX4NnzNqqSwhitOyMLlusV3oeRdE7zQyK2WcK1/pub?output=txt'
     };
 
     let games = [];
     const coverCache = JSON.parse(localStorage.getItem('gameCovers') || '{}');
+
+    // 📥 Загрузка данных из таблицы
+    async function loadGamesData() {
+      try {
+        // Используем CORS-прокси
+        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+        const response = await fetch(proxyUrl + encodeURIComponent(SHEET_CSV));
+        if (!response.ok) throw new Error('Не удалось загрузить таблицу');
+        const csvText = await response.text();
+        return parseCSV(csvText);
+      } catch (error) {
+        console.error('Ошибка загрузки:', error);
+        // Если не получилось через прокси, пробуем напрямую
+        try {
+          const response = await fetch(SHEET_CSV + '&t=' + Date.now());
+          if (!response.ok) throw new Error('Не удалось загрузить таблицу');
+          const csvText = await response.text();
+          return parseCSV(csvText);
+        } catch (e) {
+          console.error('Ошибка (прямой доступ):', e);
+          throw e;
+        }
+      }
+    }
 
     function parseCSV(text) {
       const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
@@ -277,7 +315,7 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
       return 'purple';
     }
 
-    // 🖼️ Загрузка обложек с кэшем
+    // 🖼️ Загрузка обложек
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -291,10 +329,19 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
     async function loadCover(img, title) {
       img.classList.add('loading-cover');
       
+      // Проверяем кэш
       if (coverCache[title]) {
         img.src = coverCache[title];
-        img.onload = () => img.classList.remove('loading-cover');
-        img.onerror = () => setPlaceholder(img, title);
+        img.onload = () => {
+          img.classList.remove('loading-cover');
+          console.log(`✅ Обложка загружена из кэша: ${title}`);
+        };
+        img.onerror = () => {
+          console.warn(`❌ Ошибка кэша для: ${title}`);
+          delete coverCache[title];
+          localStorage.setItem('gameCovers', JSON.stringify(coverCache));
+          setPlaceholder(img, title);
+        };
         return;
       }
       
@@ -303,29 +350,42 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
 
     async function tryNextSource(img, title, attempt = 0) {
       const sources = [
-        () => fetchFromRAWG(title),
-        () => fetchFromGOG(title),
-        () => fetchFromSteam(title)
+        { name: 'RAWG', fn: () => fetchFromRAWG(title) },
+        { name: 'GOG', fn: () => fetchFromGOG(title) },
+        { name: 'Steam', fn: () => fetchFromSteam(title) },
+        { name: 'IGDB', fn: () => fetchFromIGDB(title) }
       ];
       
       if (attempt >= sources.length) {
+        console.warn(`⚠️ Не удалось найти обложку: ${title}`);
         setPlaceholder(img, title);
         return;
       }
       
       try {
-        await new Promise(r => setTimeout(r, 300 * attempt));
-        const url = await sources[attempt]();
+        await new Promise(r => setTimeout(r, 400 * attempt));
+        const source = sources[attempt];
+        console.log(`🔍 Поиск обложки в ${source.name}: ${title}`);
+        const url = await source.fn();
+        
         if (url) {
           coverCache[title] = url;
           localStorage.setItem('gameCovers', JSON.stringify(coverCache));
           img.src = url;
-          img.onload = () => img.classList.remove('loading-cover');
-          img.onerror = () => tryNextSource(img, title, attempt + 1);
+          img.onload = () => {
+            img.classList.remove('loading-cover');
+            console.log(`✅ Обложка найдена в ${source.name}: ${title}`);
+          };
+          img.onerror = () => {
+            console.warn(`❌ Ошибка загрузки из ${source.name}`);
+            tryNextSource(img, title, attempt + 1);
+          };
         } else {
+          console.log(`⚠️ Не найдено в ${source.name}, пробуем следующий...`);
           tryNextSource(img, title, attempt + 1);
         }
       } catch (e) {
+        console.warn(`❌ Ошибка ${sources[attempt].name}:`, e.message);
         tryNextSource(img, title, attempt + 1);
       }
     }
@@ -361,14 +421,72 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
       return null;
     }
 
+    async function fetchFromIGDB(title) {
+      try {
+        // Упрощённый запрос без авторизации
+        const res = await fetch(`https://www.igdb.com/api/games?search=${encodeURIComponent(title)}&fields=cover.url&limit=1`);
+        const data = await res.json();
+        if (data.length > 0 && data[0].cover?.url) {
+          return `https:${data[0].cover.url.replace('t_thumb', 't_cover_big')}`;
+        }
+      } catch (e) {}
+      return null;
+    }
+
     function setPlaceholder(img, title) {
       img.classList.remove('loading-cover');
       const initials = title.split(' ').filter(Boolean).map(w => w[0]).join('').substring(0, 2).toUpperCase();
       img.outerHTML = `<div class="cover-placeholder">${initials}</div>`;
     }
 
+    // 📄 Функции обзоров
     function getReviewLink(gameTitle) {
       return REVIEW_LINKS[gameTitle] || null;
+    }
+
+    async function loadReviewContent(gameTitle) {
+      const link = getReviewLink(gameTitle);
+      if (!link) return '<div class="error-msg">❌ Обзор для этой игры пока не добавлен</div>';
+      
+      try {
+        // Используем прокси для обхода CORS
+        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+        const response = await fetch(proxyUrl + encodeURIComponent(link));
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const text = await response.text();
+        
+        // Форматируем текст (простая разметка)
+        let formatted = text
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/__(.+?)__/g, '<strong>$1</strong>')
+          .replace(/\n\n/g, '</p><p>')
+          .replace(/\n/g, '<br>');
+        
+        return '<p>' + formatted + '</p>';
+      } catch (e) {
+        console.error('Ошибка загрузки обзора:', e);
+        return '<div class="error-msg">❌ Не удалось загрузить обзор. Попробуйте позже.</div>';
+      }
+    }
+
+    function openReview(gameTitle) {
+      const modal = document.getElementById('reviewModal');
+      const titleEl = document.getElementById('reviewTitle');
+      const contentEl = document.getElementById('reviewContent');
+      
+      titleEl.textContent = gameTitle;
+      contentEl.innerHTML = '<div class="loading-review">⏳ Загрузка обзора...</div>';
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      loadReviewContent(gameTitle).then(content => {
+        contentEl.innerHTML = content;
+      });
+    }
+
+    function closeReview() {
+      document.getElementById('reviewModal').classList.remove('active');
+      document.body.style.overflow = '';
     }
 
     // 🌓 Тема
@@ -406,8 +524,7 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
         if (reviewVal) {
           const link = getReviewLink(g['ИГРА']);
           if (link) {
-            // 🔗 Настоящая ссылка для открытия в новой вкладке
-            reviewHtml = `<div class="review"><a href="${link}" target="_blank" rel="noopener" class="review-btn">📄 Читать обзор →</a></div>`;
+            reviewHtml = `<div class="review"><span class="review-btn" data-game="${g['ИГРА']}">📄 Читать обзор →</span></div>`;
           } else if (reviewVal !== '–' && !reviewVal.startsWith('http')) {
             reviewHtml = `<div class="review">💬 ${reviewVal}</div>`;
           }
@@ -430,6 +547,15 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
         `;
         grid.appendChild(card);
         observer.observe(card.querySelector('img'));
+        
+        // Клик по кнопке обзора
+        const reviewBtn = card.querySelector('.review-btn');
+        if (reviewBtn) {
+          reviewBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openReview(g['ИГРА']);
+          });
+        }
       });
     }
 
@@ -490,13 +616,54 @@ Warcraft 3,,Дроп,Поиграл час и понял что вообще н�
       renderGames(filtered);
     }
 
-    function init() {
+    async function init() {
       initTheme();
-      games = parseCSV(CSV_DATA);
-      populateGenres(games);
-      updateStats(games);
-      filterAndRender();
-      console.log(`✅ Загружено ${games.length} игр`);
+      
+      const refreshBtn = document.getElementById('refreshBtn');
+      const statusEl = document.createElement('div');
+      statusEl.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--accent);color:white;padding:10px 20px;border-radius:20px;z-index:100;display:none;';
+      document.body.appendChild(statusEl);
+      
+      async function loadData(showStatus = false) {
+        if (showStatus) {
+          statusEl.textContent = '🔄 Обновление...';
+          statusEl.style.display = 'block';
+        }
+        
+        try {
+          games = await loadGamesData();
+          populateGenres(games);
+          updateStats(games);
+          filterAndRender();
+          console.log(`✅ Загружено ${games.length} игр из таблицы`);
+          
+          if (showStatus) {
+            statusEl.textContent = '✅ Обновлено!';
+            setTimeout(() => statusEl.style.display = 'none', 2000);
+          }
+        } catch (e) {
+          console.error('Ошибка загрузки:', e);
+          if (showStatus) {
+            statusEl.textContent = '❌ Ошибка обновления';
+            statusEl.style.background = 'var(--c-red)';
+            setTimeout(() => statusEl.style.display = 'none', 3000);
+          }
+        }
+      }
+      
+      refreshBtn.addEventListener('click', () => loadData(true));
+      await loadData(false);
+      
+      // Закрытие обзора
+      document.getElementById('closeReview').addEventListener('click', closeReview);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeReview();
+      });
+      
+      // Закрытие по клику вне модалки
+      document.getElementById('reviewModal').addEventListener('click', (e) => {
+        if (e.target.id === 'reviewModal') closeReview();
+      });
     }
 
     ['filterVerdict','filterGenre','search','sortBy'].forEach(id => {
