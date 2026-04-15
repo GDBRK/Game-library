@@ -376,14 +376,17 @@
       });
     }
 
-    function filterAndRender() {
-      let filtered = games.filter(g => {
-        const v = (g.verdict||'').toLowerCase();
-        const matchV = !currentFilter.verdict || v.includes(currentFilter.verdict);
-        const matchG = !currentFilter.genre || g.genre === currentFilter.genre;
-        const matchS = !currentFilter.search || g.name.toLowerCase().includes(currentFilter.search);
-        return matchV && matchG && matchS;
-      });
+   function filterAndRender() {
+  let filtered = games.filter(g => {
+    const v = (g.verdict || '').toLowerCase();
+    const filterV = currentFilter.verdict.toLowerCase();
+    
+    const matchV = !currentFilter.verdict || v === filterV;
+    const matchG = !currentFilter.genre || g.genre === currentFilter.genre;
+    const matchS = !currentFilter.search || g.name.toLowerCase().includes(currentFilter.search);
+    
+    return matchV && matchG && matchS;
+  });
       
       const [field, order] = currentFilter.sort.split('-');
       const mult = order === 'asc' ? 1 : -1;
