@@ -137,6 +137,38 @@
       .review-header { flex-direction: column; gap: 12px; align-items: flex-start; }
       .review-container { margin: 20px; padding: 20px; }
     }
+        /* Стили для текста обзоров */
+    #reviewContent {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--review-text);
+    }
+
+    #reviewContent h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 24px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    #reviewContent h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 18px 0 10px;
+    }
+
+    #reviewContent strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    #reviewContent p {
+      margin: 10px 0;
+    }
   </style>
 </head>
 <body>
@@ -424,9 +456,12 @@
       const reviewText = REVIEWS[reviewKey];
       if (reviewText) {
         let formatted = reviewText
-          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\n\n/g, '</p><p>')
-          .replace(/\n/g, '<br>');
+  .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+  .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+  .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+  .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  .replace(/\n\n/g, '</p><p>')
+  .replace(/\n/g, '<br>');
         contentEl.innerHTML = '<p>' + formatted + '</p>';
       } else {
         contentEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--c-red);">❌ Обзор не найден</div>';
