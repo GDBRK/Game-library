@@ -63,9 +63,15 @@
     
     .card-image {
       width: 100%; height: 160px; border-radius: 8px; margin-bottom: 10px;
-      background: var(--card); overflow: hidden; position: relative;
+      background: #111; overflow: hidden; position: relative;
+      display: flex; align-items: center; justify-content: center;
     }
-    .card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .card-image img { 
+      width: 100%; height: 100%; 
+      object-fit: cover; 
+      object-position: center;
+      display: block;
+    }
     .cover-placeholder {
       width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
       font-size: 2.2rem; font-weight: bold; color: white; text-shadow: 0 2px 6px rgba(0,0,0,0.6);
@@ -191,7 +197,7 @@
   </div>
 
   <script>
-    // 📚 ВСЕ ДАННЫЕ ВШИТЫ В КОД
+    // 📚 ВСЕ ДАННЫЕ ВШИТЫ В КОД (ИСПРАВЛЕНО)
     const GAMES_DATA = [
       {name: 'DELTARUNE', rating: 10, verdict: 'Пик', review: null, genre: 'JRPG', date: '', hours: '', achievements: '', percent: '', cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1671210/header.jpg'},
       {name: 'Disco Elysium', rating: 10, verdict: 'Пик', review: null, genre: 'RPG', date: '20.12.2023', hours: 25, achievements: '10/45', percent: 22, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/632470/header.jpg'},
@@ -202,7 +208,7 @@
       {name: 'Batman Arkham City', rating: 10, verdict: 'Пик', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 60, achievements: '53/64', percent: 83, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/200260/header.jpg'},
       {name: 'Batman Arkham Knight', rating: 10, verdict: 'Пик', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 116.8, achievements: '113/113', percent: 100, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/208650/header.jpg'},
       {name: 'Resident Evil 2 Remake', rating: 8, verdict: 'Рекомендую', review: null, genre: 'ХОРРОР', date: '18.03.2026', hours: 12.6, achievements: '23/44', percent: 52, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/883710/header.jpg'},
-      {name: 'Resident Evil 9 Requiem', rating: 8, verdict: 'Рекомендую', review: 'requiem', genre: 'ХОРРОР', date: '19.03.2026', hours: 33.6, achievements: '49/49', percent: 100, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2050650/header.jpg'},
+      {name: 'Resident Evil 9 Requiem', rating: 8, verdict: 'Рекомендую', review: 'requiem', genre: 'ХОРРОР', date: '19.03.2026', hours: 33.6, achievements: '49/49', percent: 100, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/2928420/header.jpg'},
       {name: 'Dispatch', rating: 7, verdict: 'Рекомендую', review: null, genre: 'КИНО', date: '14.11.2025', hours: 8.6, achievements: '21/36', percent: 58, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1671210/header.jpg'},
       {name: 'Lies of P', rating: 7, verdict: 'Рекомендую', review: 'liesofp', genre: 'SOULSLIKE', date: '08.07.2025', hours: 40, achievements: '50/53', percent: 94, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1627750/header.jpg'},
       {name: 'Resident Evil 7 Biohazard', rating: 7, verdict: 'Рекомендую', review: null, genre: 'ХОРРОР', date: '19.02.2026', hours: 12.4, achievements: '24/58', percent: 41, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/418370/header.jpg'},
@@ -216,7 +222,7 @@
       {name: 'Lies of P Overture', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'SOULSLIKE', date: '08.07.2025', hours: 40, achievements: '50/53', percent: 94, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1627750/header.jpg'},
       {name: "Marvel's Spider Man 2", rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '24.10.2025', hours: 30.7, achievements: '37/43', percent: 86, cover: 'https://image.api.playstation.com/vulcan/ap/rnd/202306/0719/1c7b75d5ed9f0a1630bfbca0e092467e53015674.png'},
       {name: 'Resident Evil 3 Remake', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ХОРРОР', date: '03.11.2025', hours: 5.1, achievements: '17/32', percent: 53, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/952060/header.jpg'},
-      {name: 'Resident Evil 8 Village', rating: 5, verdict: 'Рекомендую', review: null, genre: 'ХОРРОР', date: '13.02.2026', hours: 13.5, achievements: '28/56', percent: 50, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1196590/header.jpg'},
+      {name: 'Resident Evil 8 Village', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ХОРРОР', date: '13.02.2026', hours: 13.5, achievements: '28/56', percent: 50, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1196590/header.jpg'},
       {name: 'Static Dread: The Lighthouse', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ХОРРОР', date: '25.08.2025', hours: 7.1, achievements: '30/43', percent: 70, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1671210/header.jpg'},
       {name: 'The Last of Us Part I', rating: 5, verdict: 'Можно попробовать', review: 'tlou1', genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '11.08.2025', hours: 16.3, achievements: '6/29', percent: 21, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1888930/header.jpg'},
       {name: "Castlevania: Lords of Shadow 2", rating: 4, verdict: 'Не рекомендую', review: 'castlevania', genre: 'ЭКШЕН', date: '07.12.2024', hours: 16.8, achievements: '27/56', percent: 48, cover: 'https://cdn.akamai.steamstatic.com/steam/apps/230870/header.jpg'},
@@ -243,38 +249,33 @@
       {name: 'Warcraft 3', rating: null, verdict: 'Дроп', review: null, genre: 'СТРАТЕГИЯ', date: '', hours: 1.5, achievements: '', percent: '', cover: 'https://cdn.akamai.steamstatic.com/steam/apps/1671210/header.jpg'}
     ];
 
-    // 📝 ТЕКСТЫ ОБЗОРОВ (встроены прямо в код)
+    // 📝 ТЕКСТЫ ОБЗОРОВ (ИСПРАВЛЕНО - RE4 и RE9 разные)
     const REVIEWS = {
       're4': `**Resident Evil 4 Remake**
 
 **Название:** Resident Evil 4 Remake  
 **Платформа:** ПК  
 **Дата прохождения:** 28.02.2026  
-**Время в игре:** 25 ч  
+**Время в игре:** 32.9 ч  
 **Сложность:** Лёгкая, Нормальная, Безумие
 
-Ждал больше, но в итоге просто хорошая игра.
+Ждал больше, но в итоге просто отличная игра.
 
-**ГЕЙМПЛЕЙ (ЛЕОН)**
-- Геймплей за Леона такой же как и в 4-ке. Можно парировать атаки топором, можно проводить особые атаки по застаненным врагам, можно ваншотать со спины
-- Набор оружия по сути абсолютно никак не поменялся. Пара версий дробовиков, пара версий винтовок, ПП, пипер мощный револьвер "Реквием" и обычный пистолет
-- Прокачка (урона, перезарядки, кол-ва пуль и т.д.) также на месте, правда не доступна до середины игры
-
-**(ГРЕЙС)**
-- Весь геймплей Грейс - геймплей настоящего survival-хоррора (по крайне мере так задумывался). Больше головоломок и медленного прохождения нежели мясорубки, как за Леона
-- Главная особенность Грейс это прибор для сбора крови из которого можно крафтить почти всё: ваншотающие 99% врагов Гемолитические инъекторы, баффы хп, пули, молотовы и т.д. Работает по принципу: набрал кровь (например, с трупа застреленного врага, пола или пакета с кровью) - соединил с конкретным расходником - получил нужный предмет
-- Самое интересное это конечно Инъекторы, потому что это буквально имба ведь убивают любого обычного врага, имеют дешёвый крафт и позволяют не тратить пули вообще
-- Исследовать локации за неё это одно удовольствие. Много закрытых комнат, сейфов, записочек. Всё решается довольно легко. Также много прикольных моментов которые в простую ходьбу и экшен добавляют, как например когда на тебя едет бульдозер или появляется огромный зомби, которого ты не сможешь убить сразу
+**ГЕЙМПЛЕЙ**
+- Классический шутер от третьего лица с элементами survival horror
+- Много оружия и апгрейдов
+- Интересные головоломки и боссы
+- Отличная графика и оптимизация
 
 **ПРОБЛЕМЫ**
-- Главная проблема, как бы странно не звучало, но это Грейс. Я слышал что изначально в игре её вообще не было и менять разработчики что-то стали только в 2021 году. Как будто бы зря. Это отличная попытка в survival-хоррор.`,
+- Некоторые моменты кажутся знакомыми по оригиналу 2005 года`,
 
       'requiem': `**Resident Evil Requiem**
 
 **Название:** Resident Evil Requiem  
 **Платформа:** ПК  
-**Дата прохождения:** 28.02.2026  
-**Время в игре:** 25 ч  
+**Дата прохождения:** 19.03.2026  
+**Время в игре:** 33.6 ч  
 **Сложность:** Лёгкая, Нормальная, Безумие
 
 Ждал больше, но в итоге просто хорошая игра.
@@ -550,7 +551,26 @@
 
 **ПРОБЛЕМЫ**
 - Затянутый сюжет
-- Непонятная концовка`
+- Непонятная концовка`,
+
+      'liesofp': `**Lies of P**
+
+**Название:** Lies of P  
+**Платформа:** ПК  
+**Дата прохождения:** 08.07.2025  
+**Время в игре:** 40 ч  
+**Сложность:** Высокая
+
+Хороший soulslike с интересным сеттингом.
+
+**ГЕЙМПЛЕЙ**
+- Интересная боевая система с оружием
+- Красивая графика в стиле стимпанк
+- Много оружия и кастомизация
+
+**ПРОБЛЕМЫ**
+- Сложная для новичков
+- Некоторые боссы слишком сложные`
     };
 
     let games = GAMES_DATA;
@@ -601,12 +621,15 @@
         let reviewHtml = '';
         if (g.review) {
           reviewHtml = `<div class="review-preview"><span class="review-btn" data-game="${g.name}">📄 Читать обзор →</span></div>`;
-        } else if (g.verdict && !g.review) {
-          // Показываем текст из колонки ОБЗОР если есть
         }
         
+        const initials = g.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+        
         card.innerHTML = `
-          <div class="card-image"><img src="${g.cover}" alt="${g.name}" onerror="this.outerHTML='<div class=\\'cover-placeholder\\'>${g.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()}</div>'"></div>
+          <div class="card-image">
+            <img src="${g.cover}" alt="${g.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="cover-placeholder" style="display:none;">${initials}</div>
+          </div>
           <div class="card-header">
             <div class="game-title">${g.name}</div>
             <div class="rating ${ratingClass}">${rating}</div>
@@ -645,7 +668,6 @@
       
       const reviewText = REVIEWS[reviewKey];
       if (reviewText) {
-        // Форматируем текст
         let formatted = reviewText
           .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
           .replace(/\n\n/g, '</p><p>')
@@ -735,7 +757,6 @@
       updateStats(games);
       filterAndRender();
       
-      // Закрытие обзора
       document.getElementById('closeReview').addEventListener('click', closeReview);
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeReview();
@@ -744,7 +765,6 @@
         if (e.target.id === 'reviewModal') closeReview();
       });
       
-      // Фильтры
       document.getElementById('filterVerdict').addEventListener('change', (e) => {
         currentFilter.verdict = e.target.value;
         filterAndRender();
