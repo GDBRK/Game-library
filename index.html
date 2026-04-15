@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🎮 Библиотека Вани</title>
+  <title>🎮 Пройденные игры</title>
   <style>
     :root {
       --bg: #0f0f13; --card: #1a1a24; --text: #e6e6ef;
@@ -950,11 +950,11 @@ DMC для девочек…
           };
           return (parse(a.date) - parse(b.date)) * mult;
         }
-      if (field === 'has') {
-        const aHas = a.review ? 1 : 0;
-        const bHas = b.review ? 1 : 0;
-        return (bHas - aHas);
-      }
+     if (field === 'has' || currentFilter.sort === 'has-review') {
+  const aHas = a.review ? 1 : 0;
+  const bHas = b.review ? 1 : 0;
+  return (bHas - aHas);
+}
         return 0;
       });
       
