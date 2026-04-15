@@ -190,6 +190,7 @@
     <select id="filterGenre"><option value="">Все жанры</option></select>
     <input type="text" id="search" placeholder="🔍 Поиск по названию..." />
     <select id="sortBy">
+      <option value="has-review">Есть обзор ↓</option>
       <option value="date-desc">Сначала новые</option>
       <option value="date-asc">Сначала старые</option>
       <option value="rating-desc">По оценке ↑</option>
@@ -745,11 +746,49 @@ DMC для девочек…
 
 Единственное за что эту игру правда можно похвалить это за визуальный стиль и анимации. Всё выглядит очень красиво и плавно. Если бы миллард эфеектов на экране ещё не мешал играть, вообще было бы круто.`,
 
-      'dispatch': `**Dispatch**\n\nКиноигра.\n\n**ГЕЙМПЛЕЙ**\n- Интересный сюжет\n- Выбор влияет на концовку`,
-      'liesofp': `**Lies of P**\n\nХороший soulslike с интересным сеттингом.\n\n**ГЕЙМПЛЕЙ**\n- Интересная боевая система\n- Красивая графика в стиле стимпанк`,
-      'shadow_burglar': `**Shadow Burglar**\n\nКороткий стелс-экшен.\n\n**ГЕЙМПЛЕЙ**\n- Простая механика`,
-      'balatro': `**Balatro**\n\nЗалипательный рогалик.\n\n**ГЕЙМПЛЕЙ**\n- Покер + рогалик\n- Очень затягивает`,
-      'ghostwire_tokyo': `**Ghostwire Tokyo**\n\nНеожиданный опыт.\n\n**ГЕЙМПЛЕЙ**\n- Стрельба пальцами\n- Открытый мир`
+      'dispatch': `**Dispatch**
+
+Сюжет в конце слился в мусорку, хоть геймплей хороший`,
+
+'shadow_burglar': `**Shadow Burglar**
+
+Индиушка от студента. Прикольная и лёгкая`,
+
+'balatro': `**Balatro**
+
+Рогалик где мало что решает скилл, всё зависит от удачи`,
+
+'reanimal': `**REANIMAL**
+
+Сюжет - непонятный, геймплей - ходьба, баги - дохуя`,
+
+'slay_princess': `**Slay the Princess**
+
+Визуальная новелла без геймплея`,
+
+'evil_within': `**The Evil Within**
+
+Устаревшая душнейшая игра`,
+
+'tlou2': `**The Last of Us Part II**
+
+Какая-то затянутая как будто и я опять ничё не понял`,
+
+'celeste': `**Celeste**
+
+Ха, просто скучно. Не прям фанат платформеров`,
+
+'warcraft3': `**Warcraft 3**
+
+Поиграл час и понял что вообще не люблю стратегии`,
+
+'nioh2': `**Nioh 2**
+
+`,
+
+'firewatch': `**Firewatch**
+
+`
     };
 
     let games = GAMES_DATA;
@@ -911,6 +950,11 @@ DMC для девочек…
           };
           return (parse(a.date) - parse(b.date)) * mult;
         }
+      if (field === 'has') {
+        const aHas = a.review ? 1 : 0;
+        const bHas = b.review ? 1 : 0;
+        return (bHas - aHas);
+      }
         return 0;
       });
       
