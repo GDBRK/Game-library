@@ -1307,17 +1307,17 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const gameData = {
-      игра: document.getElementById('gameName').value,
-      оценка: document.getElementById('gameRating').value,
-      вывод: document.getElementById('gameVerdict').value,
-      жанр: document.getElementById('gameGenre').value,
-      часов: document.getElementById('gameHours').value,
-      достижения: document.getElementById('gameAchievements').value,
-      '%': document.getElementById('gamePercent').value,
+        const gameData = {
+      name: document.getElementById('gameName').value,
+      rating: document.getElementById('gameRating').value,
+      verdict: document.getElementById('gameVerdict').value,
+      review: document.getElementById('gameReview').value,
+      genre: document.getElementById('gameGenre').value,
+      hours: document.getElementById('gameHours').value,
+      achievements: document.getElementById('gameAchievements').value,
+      percent: document.getElementById('gamePercent').value,
       steamUrl: document.getElementById('gameSteamUrl').value,
-      cover: document.getElementById('gameCover').value,
-      обзор: document.getElementById('gameReview').value
+      cover: document.getElementById('gameCover').value
     };
     
     const submitBtn = e.target.querySelector('button[type="submit"]');
