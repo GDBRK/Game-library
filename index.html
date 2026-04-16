@@ -1293,6 +1293,61 @@ function openAddModal() {
 
 function closeAddModal() {
   const modal = document.getElementById('addGameModal');
+  // ... (код выше)
+
+function closeAddModal() {
+  const modal = document.getElementById('addGameModal');
+  if (modal) {
+    modal.close();
+    document.getElementById('addGameForm')?.reset();
+  }
+}  // <--- Строка 1295
+
+// ----------------------------------------------------
+// ВСТАВЬ СЮДА НОВЫЙ КОД (Обработка отправки формы):
+// ----------------------------------------------------
+
+// Ждём, пока страница загрузится
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('addGameForm');
+  
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Собираем данные из формы (используем английские ключи для скрипта)
+      const gameData = {
+        name: document.getElementById('gameName').value,
+        rating: document.getElementById('gameRating').value,
+        verdict: document.getElementById('gameVerdict').value,
+        review: document.getElementById('gameReview').value,
+        genre: document.getElementById('gameGenre').value,
+        hours: document.getElementById('gameHours').value,
+        achievements: document.getElementById('gameAchievements').value,
+        percent: document.getElementById('gamePercent').value,
+        steamUrl: document.getElementById('gameSteamUrl').value,
+        cover: document.getElementById('gameCover').value
+      };
+      
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = '⏳ Сохранение...';
+      submitBtn.disabled = true;
+      
+      try {
+        await addGameToSheets(gameData);
+        alert('✅ Игра добавлена! Обнови страницу (F5).');
+        closeAddModal();
+      } catch (error) {
+        console.error('Ошибка:', error);
+        alert('❌ Ошибка при сохранении.');
+      }
+      
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+    });
+  }
+});
   if (modal) {
     modal.close();
     document.getElementById('addGameForm')?.reset();
