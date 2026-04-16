@@ -169,6 +169,34 @@
     #reviewContent p {
       margin: 10px 0;
     }
+    
+    /* 🎮 Кнопка Steam */
+.steam-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #1b2838, #2a475e);
+  color: #66c0f4;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+  border: 1px solid #1b2838;
+  width: fit-content;
+}
+.steam-link:hover {
+  background: linear-gradient(135deg, #2a475e, #1b2838);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(102, 192, 244, 0.2);
+}
+[data-theme="light"] .steam-link {
+  background: linear-gradient(135deg, #e8f0fe, #d2e3fc);
+  color: #1a73e8;
+  border-color: #d2e3fc;
+}
   </style>
 </head>
 <body>
@@ -215,7 +243,7 @@
   <script>
     // 📚 ВСЕ ДАННЫЕ
     const GAMES_DATA = [
-      {name: 'DELTARUNE', rating: 10, verdict: 'Пик', review: null, genre: 'JRPG', date: '', hours: '', achievements: '', percent: ''},
+      {name: 'Resident Evil 4 Remake', rating: 10, verdict: 'Пик', review: 're4', genre: 'ХОРРОР', date: '', hours: 32.9, achievements: '23/46', percent: 50, steamUrl: https://store.steampowered.com/app/2050650/Resident_Evil_4/},
       {name: 'Disco Elysium', rating: 10, verdict: 'Пик', review: null, genre: 'RPG', date: '20.12.2023', hours: 25, achievements: '10/45', percent: 22},
       {name: 'Resident Evil 4 Remake', rating: 10, verdict: 'Пик', review: 're4', genre: 'ХОРРОР', date: '', hours: 32.9, achievements: '23/46', percent: 50},
       {name: 'Resident Evil 4 Remake Separate Ways', rating: 10, verdict: 'Пик', review: null, genre: 'ХОРРОР', date: '', hours: 32.9, achievements: '23/46', percent: 50},
@@ -839,21 +867,23 @@ DMC для девочек…
         if (g.review) {
           reviewHtml = `<div class="review-preview"><span class="review-btn" data-game="${g.name}">📄 Читать обзор →</span></div>`;
         }
-        
-        card.innerHTML = `
-          <div class="card-header">
-            <div class="game-title">${g.name}</div>
-            <div class="rating ${ratingClass}">${rating}</div>
-          </div>
-          ${fmtVerdict(g.verdict)}
-          <div class="meta">
-            <div>🎭 ${g.genre || '—'}</div>
-            <div>📅 ${g.date || '—'}</div>
-            <div>${hours}</div>
-            <div>${ach ? '🏆 ' + ach : ''} ${pct}</div>
-          </div>
-          ${reviewHtml}
-        `;
+        const steamBtn = g.steamUrl ? `<a href="${g.steamUrl}" target="_blank" class="steam-link">🎮 Steam</a>` : '';
+
+       card.innerHTML = `
+       <div class="card-header">
+    <div class="game-title">${g.name}</div>
+    <div class="rating ${ratingClass}">${rating}</div>
+  </div>
+  ${steamBtn}
+  ${fmtVerdict(g.verdict)}
+  <div class="meta">
+    <div>🎭 ${g.genre || '-'}</div>
+    <div>📅 ${g.date || '-'}</div>
+    <div>⏱ ${hours}</div>
+    <div>${ach ? '🏆 ' + ach : ''} ${pct}</div>
+  </div>
+  ${reviewHtml}
+`;
         grid.appendChild(card);
         
         const reviewBtn = card.querySelector('.review-btn');
