@@ -1242,28 +1242,27 @@ async function loadGamesFromSheets() {
   try {
     const response = await fetch(SHEETS_API);
     const sheetGames = await response.json();
-    
-    // Преобразуем данные из таблицы в формат GAMES_DATA
-    return sheetGames.map(g => ({
-      // Вспомогательная функция: превращает "32,9" в 32.9
-const parseNum = (val) => {
-  if (val === '' || val === null || val === undefined) return null;
-  return Number(String(val).replace(',', '.'));
-};
-
-return sheetGames.map(g => ({
-  name: g.игра || g.name || 'Без названия',
-  rating: parseNum(g.оценка || g.rating),  // Теперь поймёт запятые
-  verdict: g.вывод || g.verdict || '',
-  review: g.обзор || g.review || null,
-  genre: g.жанр || g.genre || '',
-  date: g.дата || g.date || '',
-  hours: parseNum(g.часов || g.hours),     // Теперь поймёт запятые
-  achievements: g.достижения || g.achievements || '',
-  percent: parseNum(g['%'] || g.percent),
-  steamUrl: g.steamurl || g.steamUrl || '',
-  cover: g.cover || ''
-}));
+   return sheetGames.map(g => {
+  // Вспомогательная функция прямо внутри map
+  const toNum = (val) => {
+    if (val === '' || val === null || val === undefined) return null;
+    return Number(String(val).replace(',', '.'));
+  };
+  
+  return {
+    name: g.игра || g.name || 'Без названия',
+    rating: toNum(g.оценка || g.rating),
+    verdict: g.вывод || g.verdict || '',
+    review: g.обзор || g.review || null,
+    genre: g.жанр || g.genre || '',
+    date: g.дата || g.date || '',
+    hours: toNum(g.часов || g.hours),
+    achievements: g.достижения || g.achievements || '',
+    percent: toNum(g['%'] || g.percent),
+    steamUrl: g.steamurl || g.steamUrl || '',
+    cover: g.cover || ''
+  };
+});
   } catch (error) {
     console.error('Ошибка загрузки из Sheets:', error);
     return [];
