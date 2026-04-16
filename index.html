@@ -197,6 +197,42 @@
   color: #1a73e8;
   border-color: #d2e3fc;
 }
+    /* 🎮 Обложки игр */
+.cover-wrapper {
+  width: 100%;
+  height: 400px;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.game-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s;
+}
+
+.cover-wrapper:hover .game-cover {
+  transform: scale(1.05);
+}
+
+.cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent), #4a3dff);
+  font-size: 4rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.3);
+  text-align: center;
+  padding: 20px;
+}
   </style>
 </head>
 <body>
@@ -245,7 +281,7 @@
     const GAMES_DATA = [
       {name: 'DELTARUNE', rating: 10, verdict: 'Пик', review: null, genre: 'JRPG', date: '', hours: '', achievements: '', percent: '', steamUrl: 'https://store.steampowered.com/app/1671210/DELTARUNE/'},
       {name: 'Disco Elysium', rating: 10, verdict: 'Пик', review: null, genre: 'RPG', date: '20.12.2023', hours: 25, achievements: '10/45', percent: 22,steamUrl:'https://store.steampowered.com/app/632470/Disco_Elysium__The_Final_Cut/'},
-      {name: 'Resident Evil 4 Remake', rating: 10, verdict: 'Пик', review: 're4', genre: 'ХОРРОР', date: '', hours: 32.9, achievements: '23/46', percent: 50,steamUrl:'https://store.steampowered.com/app/2050650/Resident_Evil_4/'},
+      {name: 'Resident Evil 4 Remake', rating: 10, verdict: 'Пик', review: 're4', genre: 'ХОРРОР', date: '', hours: 32.9, achievements: '23/46', percent: 50,steamUrl:'https://store.steampowered.com/app/2050650/Resident_Evil_4/',cover: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2050650/header.jpg'},
       {name: 'Resident Evil 4 Remake Separate Ways', rating: 10, verdict: 'Пик', review: null, genre: 'ХОРРОР', date: '', hours: 32.9, achievements: '23/46', percent: 50,steamUrl:'https://store.steampowered.com/app/2109300/Resident_Evil_4__Separate_Ways/'},
       {name: 'UNDERTALE', rating: 10, verdict: 'Пик', review: null, genre: 'RPG', date: '02.11.2024', hours: 11.6, achievements: '', percent: '',steamUrl:'https://store.steampowered.com/app/391540/Undertale/'},
       {name: 'What Remains of Edith Finch', rating: 10, verdict: 'Пик', review: null, genre: 'СИМУЛЯТОР ХОДЬБЫ', date: '22.03.2026', hours: 1.8, achievements: '4/9', percent: 44,steamUrl:'https://store.steampowered.com/app/501300/What_Remains_of_Edith_Finch/'},
