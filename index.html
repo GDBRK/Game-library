@@ -932,10 +932,19 @@ const ratingClass = getRatingClass(g.rating);
         const steamBtn = g.steamUrl ? `<a href="${g.steamUrl}" target="_blank" class="steam-link">🎮 Steam</a>` : '';
 
        card.innerHTML = `
-       <div class="card-header">
+  <div class="cover-wrapper">
+    ${g.cover 
+      ? `<img src="${g.cover}" alt="${g.name}" class="game-cover" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+         <div class="cover-placeholder" style="display:none;">${getInitials(g.name)}</div>`
+      : `<div class="cover-placeholder">${getInitials(g.name)}</div>`
+    }
+  </div>
+  <div class="card-header">
     <div class="game-title">${g.name}</div>
     <div class="rating ${ratingClass}">${rating}</div>
   </div>
+  ...
+`;
   ${steamBtn}
   ${fmtVerdict(g.verdict)}
   <div class="meta">
