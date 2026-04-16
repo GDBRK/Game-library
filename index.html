@@ -1066,6 +1066,16 @@ const ratingClass = getRatingClass(g.rating);
       
       renderGames(filtered);
     }
+    // Функция для получения инициалов названия игры
+function getInitials(name) {
+  if (!name) return '??';
+  return name
+    .split(' ')
+    .map(word => word[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+}
 
     function initTheme() {
       const saved = localStorage.getItem('theme');
