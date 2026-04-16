@@ -857,11 +857,37 @@ DMC для девочек…
       list.forEach(g => {
         const card = document.createElement('div');
         card.className = 'card';
-        const hours = g.hours ? `⏱ ${fmtNum(g.hours)} ч` : '';
-        const ach = g.achievements || '';
-        const pct = g.percent ? `(${g.percent}%)` : '';
-        const rating = g.rating !== null && g.rating !== undefined ? `${g.rating}/10` : '–';
-        const ratingClass = getRatingClass(g.rating);
+        // Часы (только цифры, без иконки)
+const hours = g.hours ? `${fmtNum(g.hours)} ч` : '';
+
+// Жанр (убираем ", Стелс")
+let displayGenre = g.genre || '—';
+displayGenre = displayGenre.replace(', Стелс', '').trim();
+
+// Иконки для жанров
+const genreIcons = {
+  'ХОРРОР': '👻',
+  'SOULSLIKE': '💀',
+  'RPG': '🛡️',
+  'JRPG': '🏯',
+  'ROUGELIKE': '🎲',
+  'ЭКШЕН-ПРИКЛЮЧЕНИЕ': '🗡️',
+  'ЭКШЕН': '⚔️',
+  'КИНО': '🎬',
+  'ПЛАТФОРМЕР': '🏃',
+  'СТРАТЕГИЯ': '♟️',
+  'НОВЕЛЛА': '📖',
+  'СЛЭШЕР': '🗡️',
+  'МЕТРОИДВАНИЯ': '🦇',
+  'СИМУЛЯТОР ХОДЬБЫ': '🚶'
+};
+const genreIcon = genreIcons[displayGenre] || '🎮';
+
+// Остальное
+const ach = g.achievements || '';
+const pct = g.percent ? `(${g.percent}%)` : '';
+const rating = g.rating !== null && g.rating !== undefined ? `${g.rating}/10` : '–';
+const ratingClass = getRatingClass(g.rating);
         
         let reviewHtml = '';
         if (g.review) {
@@ -877,10 +903,10 @@ DMC для девочек…
   ${steamBtn}
   ${fmtVerdict(g.verdict)}
   <div class="meta">
-    <div>🎭 ${g.genre || '-'}</div>
-    <div>📅 ${g.date || '-'}</div>
-    <div>⏱ ${hours}</div>
-    <div>${ach ? '🏆 ' + ach : ''} ${pct}</div>
+    <div>${genreIcon} ${displayGenre}</div>
+<div>📅 ${g.date || '—'}</div>
+<div>⏱ ${hours}</div>
+<div>${ach ? '🏆 ' + ach : ''} ${pct}</div>
   </div>
   ${reviewHtml}
 `;
