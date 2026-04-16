@@ -1242,29 +1242,33 @@ async function loadGamesFromSheets() {
   try {
     const response = await fetch(SHEETS_API);
     const sheetGames = await response.json();
-   return sheetGames.map(g => {
-  // Вспомогательная функция прямо внутри map
-  const toNum = (val) => {
-    if (val === '' || val === null || val === undefined) return null;
-    return Number(String(val).replace(',', '.'));
-  };
-  
-  return {
-    name: g.игра || g.name || 'Без названия',
-    rating: toNum(g.оценка || g.rating),
-    verdict: g.вывод || g.verdict || '',
-    review: g.обзор || g.review || null,
-    genre: g.жанр || g.genre || '',
-    date: g.дата || g.date || '',
-    hours: toNum(g.часов || g.hours),
-    achievements: g.достижения || g.achievements || '',
-    percent: toNum(g['%'] || g.percent),
-    steamUrl: g.steamurl || g.steamUrl || '',
-    cover: g.cover || ''
-  };
-});
+    
+    console.log('✅ Загружено из Sheets:', sheetGames.length);
+    console.log('Пример:', sheetGames[0]);
+    
+    return sheetGames.map(g => {
+      const toNum = (val) => {
+        if (val === '' || val === null || val === undefined) return null;
+        return Number(String(val).replace(',', '.'));
+      };
+      
+      return {
+        name: g.игра || 'Без названия',
+        rating: toNum(g.оценка),
+        verdict: g.вывод || '',
+        review: g.обзор || null,
+        genre: g.жанр || '',
+        date: '',
+        hours: toNum(g.часов),
+        achievements: g.достижения || '',
+        percent: toNum(g['%']),
+        steamUrl: g.steamurl || '',
+        cover: g.cover || ''
+      };
+    });
+    
   } catch (error) {
-    console.error('Ошибка загрузки из Sheets:', error);
+    console.error('❌ Ошибка:', error);
     return [];
   }
 }
