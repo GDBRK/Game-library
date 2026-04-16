@@ -1245,18 +1245,25 @@ async function loadGamesFromSheets() {
     
     // Преобразуем данные из таблицы в формат GAMES_DATA
     return sheetGames.map(g => ({
-      name: g.игра || g.name || 'Без названия',
-      rating: g.оценка !== '' && g.оценка !== null ? Number(g.оценка) : null,
-      verdict: g.вывод || g.verdict || '',
-      review: g.обзор || g.review || null,
-      genre: g.жанр || g.genre || '',
-      date: g.дата || g.date || '',
-      hours: g.часов !== '' && g.часов !== null ? Number(g.часов) : '',
-      achievements: g.достижения || g.achievements || '',
-      percent: g['%'] !== '' && g['%'] !== null ? Number(g['%']) : '',
-      steamUrl: g.steamurl || g.steamUrl || '',
-      cover: g.cover || ''
-    }));
+      // Вспомогательная функция: превращает "32,9" в 32.9
+const parseNum = (val) => {
+  if (val === '' || val === null || val === undefined) return null;
+  return Number(String(val).replace(',', '.'));
+};
+
+return sheetGames.map(g => ({
+  name: g.игра || g.name || 'Без названия',
+  rating: parseNum(g.оценка || g.rating),  // Теперь поймёт запятые
+  verdict: g.вывод || g.verdict || '',
+  review: g.обзор || g.review || null,
+  genre: g.жанр || g.genre || '',
+  date: g.дата || g.date || '',
+  hours: parseNum(g.часов || g.hours),     // Теперь поймёт запятые
+  achievements: g.достижения || g.achievements || '',
+  percent: parseNum(g['%'] || g.percent),
+  steamUrl: g.steamurl || g.steamUrl || '',
+  cover: g.cover || ''
+}));
   } catch (error) {
     console.error('Ошибка загрузки из Sheets:', error);
     return [];
