@@ -359,10 +359,30 @@
 .btn-secondary:hover {
   background: var(--hover);
 }
+    .btn-add {
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 10px;
+}
+
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
   </style>
 </head>
 <body>
   <header>
+    <button class="btn-add" onclick="openAddModal()">➕ Добавить игру</button>
     <h1>🎮 Библиотека пройденных игр</h1>
     <p id="stats">Загрузка...</p>
     <button id="themeToggle">🌓 Тема</button>
@@ -1264,11 +1284,115 @@ async function getAllGames() {
   // Объединяем: сначала игры из таблицы, потом статические (чтобы не дублировать)
   return [...sheetGames];
 }
-    function init() {
-      initTheme();
-      populateGenres(games);
-      updateStats(games);
-      filterAndRender();
+       // 🎮 Открыть/закрыть модальное окно
+function openAddModal() {
+  const modal = document.getElementById('addGameModal');
+  if (modal) modal.showModal();
+}
+
+function closeAddModal() {
+  const modal = document.getElementById('addGameModal');
+  if (modal) {
+    modal.close();
+    document.getElementById('addGameForm')?.reset();
+  }
+}
+
+// 💾 Обработка отправки формы
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('addGameForm');
+  if (!form) return;
+  
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const gameData = {
+      игра: document.getElementById('gameName').value,
+      оценка: document.getElementById('gameRating').value,
+      вывод: document.getElementById('gameVerdict').value,
+      жанр: document.getElementById('gameGenre').value,
+      часов: document.getElementById('gameHours').value,
+      достижения: document.getElementById('gameAchievements').value,
+      '%': document.getElementById('gamePercent').value,
+      steamUrl: document.getElementById('gameSteamUrl').value,
+      cover: document.getElementById('gameCover').value,
+      обзор: document.getElementById('gameReview').value
+    };
+    
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = '⏳ Сохранение...';
+    submitBtn.disabled = true;
+    
+    try {
+      await fetch(SHEETS_API, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(gameData)
+      });
+      
+      alert('✅ Игра добавлена! Обнови страницу (F5), чтобы увидеть.');
+      closeAddModal();
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('❌ Ошибка при сохранении. Проверь консоль (F12).');
+    }
+    
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+  });
+});
+    async function init() {
+  initTheme();
+  
+  // Показываем загрузку
+  const gamesContainer = document.getElementById('gamesGrid');
+  if (gamesContainer) {
+    gamesContainer.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-secondary);">🔄 Загрузка игр из таблицы...</div>';
+  }
+  
+  // Загружаем игры из Google Sheets
+  let allGames = [];
+  try {
+    if (typeof SHEETS_API !== 'undefined') {
+      const response = await fetch(SHEETS_API);
+      const sheetGames = await response.json();
+      
+      // Преобразуем данные из таблицы
+      allGames = sheetGames.map(g => ({
+        name: g.игра || g.name || 'Без названия',
+        rating: g.оценка !== '' && g.оценка !== null ? Number(g.оценка) : null,
+        verdict: g.вывод || g.verdict || '',
+        review: g.обзор || g.review || null,
+        genre: g.жанр || g.genre || '',
+        date: g.дата || g.date || '',
+        hours: g.часов !== '' && g.часов !== null ? Number(g.часов) : '',
+        achievements: g.достижения || g.achievements || '',
+        percent: g['%'] !== '' && g['%'] !== null ? Number(g['%']) : '',
+        steamUrl: g.steamurl || g.steamUrl || '',
+        cover: g.cover || ''
+      }));
+      
+      console.log('✅ Загружено игр из таблицы:', allGames.length);
+    }
+  } catch (error) {
+    console.error('❌ Ошибка загрузки из Sheets:', error);
+    allGames = [];
+  }
+  
+  // Если из Sheets ничего не загрузилось — используем GAMES_DATA
+  const gamesToShow = allGames.length > 0 ? allGames : GAMES_DATA;
+  
+  // Обновляем глобальную переменную games
+  window.games = gamesToShow;
+  
+  // Рендерим
+  populateGenres(gamesToShow);
+  updateStats(gamesToShow);
+  filterAndRender();
+  
+  // ... остальной код (event listeners) остаётся без изменений;
       
       document.getElementById('closeReview').addEventListener('click', closeReview);
       document.addEventListener('keydown', (e) => {
