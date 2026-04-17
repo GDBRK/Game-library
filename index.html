@@ -233,14 +233,140 @@
   text-align: center;
   padding: 20px;
 }
+    /* 🔥 Стили для вкладок */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.tab-btn {
+  padding: 12px 24px;
+  background: var(--bg);
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tab-btn:hover {
+  background: var(--hover);
+  transform: translateY(-2px);
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  color: white;
+  border-color: var(--accent);
+}
+
+/* 🔥 Стили для статистики */
+.stats-container {
+  padding: 20px;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stats-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.stats-header h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.stat-card h3 {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.stat-card p {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--accent);
+  margin: 0;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+.chart-container {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.chart-container h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .tabs {
+    flex-direction: column;
+  }
+  
+  .tab-btn {
+    width: 100%;
+  }
+}
   </style>
 </head>
 <body>
   <header>
-    <h1>🎮 Библиотека пройденных игр</h1>
-    <p id="stats">Загрузка...</p>
-    <button id="themeToggle">🌓 Тема</button>
-  </header>
+  <h1>🎮 Библиотека пройденных игр</h1>
+  <p id="stats">Загрузка...</p>
+  <button id="themeToggle">🌞 Тема</button>
+  <button class="btn-add" onclick="openAddModal()">➕ Добавить игру</button>
+  
+  <!-- 🔥 НОВЫЕ ВКЛАДКИ -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('games')">🎮 Все игры</button>
+    <button class="tab-btn" onclick="switchTab('stats')">📊 Статистика</button>
+  </div>
+</header>
 
   <div class="filters">
     <select id="filterVerdict">
@@ -262,6 +388,56 @@
       <option value="has-review">Есть обзор ↓</option>
     </select>
   </div>
+  <!-- Контейнер для игр (уже есть) -->
+<div id="gamesGrid" class="games-grid"></div>
+
+<!-- 🔥 НОВЫЙ контейнер для статистики -->
+<div id="statsContainer" class="stats-container" style="display: none;">
+  <div class="stats-header">
+    <h2>📈 Общая статистика</h2>
+  </div>
+  
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>🎮 Всего игр</h3>
+      <p id="totalGames">0</p>
+    </div>
+    <div class="stat-card">
+      <h3>⏱️ Всего часов</h3>
+      <p id="totalHours">0</p>
+    </div>
+    <div class="stat-card">
+      <h3>⭐ Средняя оценка</h3>
+      <p id="avgRating">0</p>
+    </div>
+    <div class="stat-card">
+      <h3>🏆 Средний % достижений</h3>
+      <p id="avgAchievements">0%</p>
+    </div>
+  </div>
+  
+  <div class="charts-grid">
+    <div class="chart-container">
+      <h3>📊 Игры по жанрам</h3>
+      <canvas id="genreChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+      <h3>🎯 Распределение оценок</h3>
+      <canvas id="ratingChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+      <h3>📅 Игр пройдено по годам</h3>
+      <canvas id="yearChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+      <h3>⏱️ Часов по жанрам</h3>
+      <canvas id="hoursChart"></canvas>
+    </div>
+  </div>
+</div>
 
   <div id="gamesGrid" class="grid"></div>
 
@@ -275,8 +451,12 @@
       <div id="reviewContent"></div>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  
 
   <script>
+    
     // 📚 ВСЕ ДАННЫЕ
     const GAMES_DATA = [
       {name: 'DELTARUNE', rating: 10, verdict: 'Пик', review: null, genre: 'JRPG', date: '', hours: '', achievements: '', percent: '', steamUrl: 'https://store.steampowered.com/app/1671210/DELTARUNE/',cover:'https://cdn2.steamgriddb.com/thumb/ea3be1a50c84a14973ef45e4b50ced89.jpg'},
@@ -1124,6 +1304,169 @@ function getInitials(name) {
     }
 
     init();
+
+    // 🔥 Переключение вкладок
+function switchTab(tab) {
+  const gamesGrid = document.getElementById('gamesGrid');
+  const statsContainer = document.getElementById('statsContainer');
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  
+  if (tab === 'games') {
+    gamesGrid.style.display = 'grid';
+    statsContainer.style.display = 'none';
+    tabBtns[0].classList.add('active');
+    tabBtns[1].classList.remove('active');
+  } else {
+    gamesGrid.style.display = 'none';
+    statsContainer.style.display = 'block';
+    tabBtns[0].classList.remove('active');
+    tabBtns[1].classList.add('active');
+    renderStatistics();
+  }
+}
+
+// 🔥 Отрисовка статистики
+function renderStatistics() {
+  const totalGames = games.length;
+  const totalHours = games.reduce((sum, g) => sum + (parseFloat(g.hours) || 0), 0);
+  const ratedGames = games.filter(g => g.rating !== null && g.rating !== undefined);
+  const avgRating = ratedGames.length ? (ratedGames.reduce((sum, g) => sum + g.rating, 0) / ratedGames.length).toFixed(1) : 0;
+  const avgAchievements = games.length ? (games.reduce((sum, g) => sum + (parseFloat(g.percent) || 0), 0) / games.length).toFixed(1) : 0;
+  
+  // Обновляем карточки
+  document.getElementById('totalGames').textContent = totalGames;
+  document.getElementById('totalHours').textContent = totalHours.toFixed(1) + ' ч';
+  document.getElementById('avgRating').textContent = avgRating + '/10';
+  document.getElementById('avgAchievements').textContent = avgAchievements + '%';
+  
+  // Очищаем старые графики
+  document.querySelectorAll('canvas').forEach(canvas => {
+    const chart = Chart.getChart(canvas);
+    if (chart) chart.destroy();
+  });
+  
+  // 📊 График 1: Игры по жанрам
+  const genreCount = {};
+  games.forEach(g => {
+    const genre = g.genre || 'Без жанра';
+    genreCount[genre] = (genreCount[genre] || 0) + 1;
+  });
+  
+  new Chart(document.getElementById('genreChart'), {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(genreCount),
+      datasets: [{
+        data: Object.values(genreCount),
+        backgroundColor: [
+          '#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b',
+          '#fa709a', '#fee140', '#30cfd0', '#a8edea', '#fed6e3'
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: getComputedStyle(document.body).getPropertyValue('--text') } }
+      }
+    }
+  });
+  
+  // 🎯 График 2: Распределение оценок
+  const ratingRanges = { '0-2': 0, '3-4': 0, '5-6': 0, '7-8': 0, '9-10': 0 };
+  ratedGames.forEach(g => {
+    if (g.rating <= 2) ratingRanges['0-2']++;
+    else if (g.rating <= 4) ratingRanges['3-4']++;
+    else if (g.rating <= 6) ratingRanges['5-6']++;
+    else if (g.rating <= 8) ratingRanges['7-8']++;
+    else ratingRanges['9-10']++;
+  });
+  
+  new Chart(document.getElementById('ratingChart'), {
+    type: 'bar',
+    data: {
+      labels: Object.keys(ratingRanges),
+      datasets: [{
+        label: 'Количество игр',
+        data: Object.values(ratingRanges),
+        backgroundColor: '#667eea'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } },
+        x: { ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } }
+      }
+    }
+  });
+  
+  // 📅 График 3: Игр пройдено по годам
+  const yearCount = {};
+  games.forEach(g => {
+    if (g.date) {
+      const year = g.date.split('.').pop();
+      yearCount[year] = (yearCount[year] || 0) + 1;
+    }
+  });
+  
+  new Chart(document.getElementById('yearChart'), {
+    type: 'line',
+    data: {
+      labels: Object.keys(yearCount).sort(),
+      datasets: [{
+        label: 'Игр пройдено',
+        data: Object.keys(yearCount).sort().map(y => yearCount[y]),
+        borderColor: '#667eea',
+        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } },
+        x: { ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } }
+      }
+    }
+  });
+  
+  // ⏱️ График 4: Часов по жанрам
+  const genreHours = {};
+  games.forEach(g => {
+    const genre = g.genre || 'Без жанра';
+    genreHours[genre] = (genreHours[genre] || 0) + (parseFloat(g.hours) || 0);
+  });
+  
+  new Chart(document.getElementById('hoursChart'), {
+    type: 'bar',
+    data: {
+      labels: Object.keys(genreHours),
+      datasets: [{
+        label: 'Часов',
+        data: Object.values(genreHours),
+        backgroundColor: '#764ba2'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } },
+        x: { ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } }
+      }
+    }
+  });
+}
   </script>
 </body>
 </html>
