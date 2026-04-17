@@ -53,12 +53,12 @@
     }
     .filters input { min-width: 180px; }
     
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
-    .card {
-      background: var(--card); border-radius: 12px; padding: 14px;
-      border-left: 4px solid var(--accent); border: 1px solid var(--border);
-      transition: transform 0.2s; display: flex; flex-direction: column; cursor: pointer;
-    }
+    .games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
     .card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
     
     .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; gap: 8px; flex-wrap: wrap; }
@@ -359,7 +359,6 @@
   <h1>🎮 Библиотека пройденных игр</h1>
   <p id="stats">Загрузка...</p>
   <button id="themeToggle">🌞 Тема</button>
-  <button class="btn-add" onclick="openAddModal()">➕ Добавить игру</button>
   
   <!-- 🔥 НОВЫЕ ВКЛАДКИ -->
   <div class="tabs">
@@ -439,7 +438,6 @@
   </div>
 </div>
 
-  <div id="gamesGrid" class="grid"></div>
 
   <!-- 📄 Модальное окно обзора -->
   <div id="reviewModal">
