@@ -1256,16 +1256,40 @@ function getInitials(name) {
     .slice(0, 2);
 }
 
-    function initTheme() {
-      const saved = localStorage.getItem('theme');
-      if (saved) document.documentElement.setAttribute('data-theme', saved);
-      document.getElementById('themeToggle').addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme');
-        const next = current === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
-      });
-    }
+   function initTheme() {
+  const saved = localStorage.getItem('theme');
+  const toggle = document.getElementById('themeToggle');
+  
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    updateThemeIcon('dark');
+  }
+  
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeIcon(next);
+      
+      const statsContainer = document.getElementById('statsContainer');
+      if (statsContainer && statsContainer.style.display !== 'none') {
+        renderStatistics();
+      }
+    });
+  }
+}
+    function updateThemeIcon(theme) {
+  const toggle = document.getElementById('themeToggle');
+  if (toggle) {
+    toggle.textContent = theme === 'dark' ? '🌞 Тема' : '🌙 Тема';
+  }
+}
 
     function init() {
       initTheme();
@@ -1460,15 +1484,33 @@ function renderStatistics() {
       },
       scales: {
         y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } },
-        x: {
-  ticks: { 
-            color: '#888'
-          }
+                x: {
+          ticks: { color: getThemeColor() }
         }
       }
     }
-});
+  });
   
+} // ← закрывает renderStatistics
+
+// 🎨 Вспомогательные функции для тем
+function getThemeColor() {
+  const theme = document.documentElement.getAttribute('data-theme');
+  return theme === 'dark' ? '#aaa' : '#333';
+}
+
+function getGridColor() {
+  const theme = document.documentElement.getAttribute('data-theme');
+  return theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+}
+
+function updateThemeIcon(theme) {
+  const toggle = document.getElementById('themeToggle');
+  if (toggle) {
+    toggle.textContent = theme === 'dark' ? '🌞 Тема' : '🌙 Тема';
+  }
+}
+
   </script>
 </body>
 </html>
