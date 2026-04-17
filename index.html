@@ -1460,8 +1460,11 @@ function renderStatistics() {
       },
       scales: {
         y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } },
-        x: { ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } }
-      }
+        x: {
+  ticks: { 
+    color: '#888'  // или '#aaa', '#999' — светло-серый
+  }
+}
     }
   });
 }
