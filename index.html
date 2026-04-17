@@ -1404,27 +1404,30 @@ function renderStatistics() {
     else ratingRanges['9-10']++;
   });
   
- new Chart(document.getElementById('ratingChart'), {
-  type: 'bar',
-  data: {
-    labels: Object.keys(ratingRanges),
-    datasets: [{
-      label: 'Количество игр',
-      data: Object.values(ratingRanges),
-      backgroundColor: '#667eea'
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { display: false }
+   // Определяем цвета прямо здесь
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  const txtColor = isDark ? '#d0d0d0' : '#333333';
+  const gridCol = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+
+  new Chart(document.getElementById('ratingChart'), {
+    type: 'bar',
+    data: {
+      labels: Object.keys(ratingRanges),
+      datasets: [{
+        label: 'Количество игр',
+        data: Object.values(ratingRanges),
+        backgroundColor: isDark ? 'rgba(124, 92, 255, 0.8)' : 'rgba(102, 126, 234, 0.8)'
+      }]
     },
-    scales: {
-      y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } },
-      x: { ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } }
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, grid: { color: gridCol }, ticks: { color: txtColor } },
+        x: { grid: { display: false }, ticks: { color: txtColor } }
+      }
     }
-  }
-});
+  });
   
   // 📅 График 3: Игр пройдено по годам
   const yearCount = {};
