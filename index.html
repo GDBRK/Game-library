@@ -1404,27 +1404,27 @@ function renderStatistics() {
     else ratingRanges['9-10']++;
   });
   
-  new Chart(document.getElementById('ratingChart'), {
-    type: 'bar',
-    data: {
-      labels: Object.keys(ratingRanges),
-      datasets: [{
-        label: 'Количество игр',
-        data: Object.values(ratingRanges),
-        backgroundColor: '#667eea'
-      }]
+ new Chart(document.getElementById('ratingChart'), {
+  type: 'bar',
+  data: {
+    labels: Object.keys(ratingRanges),
+    datasets: [{
+      label: 'Количество игр',
+      data: Object.values(ratingRanges),
+      backgroundColor: '#667eea'
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false }
     },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } },
-        x: { ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } }
-      }
+    scales: {
+      y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } },
+      x: { ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } }
     }
-  });
+  }
+});
   
   // 📅 График 3: Игр пройдено по годам
   const yearCount = {};
@@ -1436,29 +1436,36 @@ function renderStatistics() {
   });
   
   new Chart(document.getElementById('yearChart'), {
-    type: 'line',
-    data: {
-      labels: Object.keys(yearCount).sort(),
-      datasets: [{
-        label: 'Игр пройдено',
-        data: Object.keys(yearCount).sort().map(y => yearCount[y]),
-        borderColor: '#667eea',
-        backgroundColor: 'rgba(102, 126, 234, 0.2)',
-        fill: true,
-        tension: 0.4
-      }]
+  type: 'line',
+  data: {
+    labels: Object.keys(yearCount).sort(),
+    datasets: [{
+      label: 'Игр пройдено',
+      data: Object.keys(yearCount).sort().map(y => yearCount[y]),
+      borderColor: getThemeColor() === '#aaa' ? '#7c5cff' : '#667eea',
+      backgroundColor: getThemeColor() === '#aaa' ? 'rgba(124, 92, 255, 0.2)' : 'rgba(102, 126, 234, 0.2)',
+      fill: true,
+      tension: 0.4
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false }
     },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false }
+    scales: {
+      y: { 
+        beginAtZero: true,
+        grid: { color: getGridColor() },
+        ticks: { color: getThemeColor() }
       },
-      scales: {
-        y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } },
-        x: { ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } }
+      x: { 
+        grid: { display: false },
+        ticks: { color: getThemeColor() }
       }
     }
-  });
+  }
+});
   
   // ⏱️ График 4: Часов по жанрам
   const genreHours = {};
