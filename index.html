@@ -444,7 +444,7 @@
   <p id="stats">Загрузка...</p>
   <button id="themeToggle">🌞 Тема</button>
     
-  <button id="randomBtn" class="random-btn" onclick="pickRandomGame()">🎲 Случайная</button>
+  <button id="randomBtn" class="random-btn">🎲 Случайная</button>
   
   <!-- 🔥 НОВЫЕ ВКЛАДКИ -->
   <div class="tabs">
@@ -541,6 +541,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js">
     // 🎲 Функция случайной игры
+    
 function pickRandomGame() {
   if (games.length === 0) return;
   
@@ -1653,6 +1654,8 @@ function updateThemeIcon(theme) {
     toggle.textContent = theme === 'dark' ? '🌞 Тема' : '🌙 Тема';
   }
 }
+    // Назначаем обработчик на кнопку
+document.getElementById('randomBtn').addEventListener('click', pickRandomGame);
 
 </script>
   <!-- 🎲 Окно случайной игры -->
