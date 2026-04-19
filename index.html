@@ -538,51 +538,49 @@
     </div>
   </div>
   
+<!-- 1. Подключение Chart.js (пустой тег) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js">
-    // 🎲 Функция случайной игры
+  <!-- 2. Твой код для случайной игры (отдельный скрипт) -->
+<script>
+  // 🎲 Функция случайной игры
+  function pickRandomGame() {
+    if (games.length === 0) {
+      alert('Библиотека пуста!');
+      return;
+    }
     
-function pickRandomGame() {
-  if (games.length === 0) return;
-  
-  // Выбираем случайную игру
-  const randomIndex = Math.floor(Math.random() * games.length);
-  const game = games[randomIndex];
-  
-  // Заполняем окно данными
-  const modal = document.getElementById('randomModal');
-  const title = document.getElementById('randomGameTitle');
-  const info = document.getElementById('randomGameInfo');
-  const cover = document.getElementById('randomGameCover');
-  const link = document.getElementById('randomGameLink');
-  
-  title.textContent = game.name;
-  info.textContent = `${game.genre} • ${game.rating || '?'} / 10 • ${game.hours || '?'} ч`;
-  
-  if (game.cover) {
-    cover.style.backgroundImage = `url('${game.cover}')`;
-    cover.style.display = 'block';
-  } else {
-    cover.style.display = 'none';
+    const randomIndex = Math.floor(Math.random() * games.length);
+    const game = games[randomIndex];
+    
+    document.getElementById('randomGameTitle').textContent = game.name;
+    document.getElementById('randomGameInfo').textContent = `${game.genre || '—'} • ${game.rating || '?'} / 10 • ${game.hours || '?'} ч`;
+    
+    const cover = document.getElementById('randomGameCover');
+    if (game.cover) {
+      cover.style.backgroundImage = `url('${game.cover}')`;
+      cover.style.display = 'block';
+    } else {
+      cover.style.display = 'none';
+    }
+    
+    const link = document.getElementById('randomGameLink');
+    if (game.steamUrl) {
+      link.href = game.steamUrl;
+      link.style.display = 'inline-block';
+    } else {
+      link.style.display = 'none';
+    }
+    
+    document.getElementById('randomModal').style.display = 'flex';
   }
-  
-  if (game.steamUrl) {
-    link.href = game.steamUrl;
-    link.style.display = 'inline-block';
-  } else {
-    link.style.display = 'none';
-  }
-  
-  // Показываем окно
-  modal.style.display = 'flex';
-}
 
-function closeRandomModal(e) {
-  // Закрываем если кликнули по фону или крестику
-  if (!e || e.target.id === 'randomModal' || e.target.classList.contains('close-random')) {
-    document.getElementById('randomModal').style.display = 'none';
+  function closeRandomModal(e) {
+    if (!e || e.target.id === 'randomModal' || e.target.classList.contains('close-random')) {
+      document.getElementById('randomModal').style.display = 'none';
+    }
   }
-}
+</script>
   </script>
 
   
@@ -1658,7 +1656,7 @@ function updateThemeIcon(theme) {
 document.getElementById('randomBtn').addEventListener('click', pickRandomGame);
 
 </script>
-  <!-- 🎲 Окно случайной игры -->
+<!-- 🎲 Окно случайной игры -->
 <div id="randomModal" class="random-modal" onclick="closeRandomModal(event)">
   <div class="random-content" onclick="event.stopPropagation()">
     <button class="close-random" onclick="closeRandomModal()">✕</button>
@@ -1671,5 +1669,4 @@ document.getElementById('randomBtn').addEventListener('click', pickRandomGame);
 
 </body>
 </html>
-</body>
-</html>
+
