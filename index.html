@@ -525,6 +525,8 @@
 </div>
 
 
+
+
   <!-- 📄 Модальное окно обзора -->
   <div id="reviewModal">
     <div class="review-container">
@@ -535,7 +537,10 @@
       <div id="reviewContent"></div>
     </div>
   </div>
-  // 🎲 Функция случайной игры
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js">
+    // 🎲 Функция случайной игры
 function pickRandomGame() {
   if (games.length === 0) return;
   
@@ -577,7 +582,7 @@ function closeRandomModal(e) {
     document.getElementById('randomModal').style.display = 'none';
   }
 }
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </script>
 
   
 
