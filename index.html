@@ -352,6 +352,90 @@
     width: 100%;
   }
 }
+    /* 🎲 Стили для кнопки */
+.random-btn {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  color: #333;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+  margin-left: 10px;
+}
+.random-btn:hover {
+  transform: scale(1.05);
+}
+
+/* 🎲 Стили для окна */
+.random-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+}
+
+.random-content {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+  max-width: 350px;
+  width: 90%;
+  position: relative;
+  border: 2px solid var(--accent);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.close-random {
+  position: absolute;
+  top: 10px; right: 15px;
+  background: none; border: none;
+  color: var(--text);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.random-cover {
+  width: 100%;
+  height: 200px;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 15px;
+}
+
+.random-title {
+  font-size: 1.4rem;
+  margin: 10px 0;
+  color: var(--accent);
+}
+
+.random-info {
+  color: var(--muted);
+  margin-bottom: 15px;
+}
+
+.random-link {
+  display: inline-block;
+  padding: 8px 20px;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-radius: 20px;
+  font-weight: bold;
+}
   </style>
 </head>
 <body>
@@ -359,6 +443,8 @@
   <h1>🎮 Библиотека пройденных игр</h1>
   <p id="stats">Загрузка...</p>
   <button id="themeToggle">🌞 Тема</button>
+    
+  <button id="randomBtn" class="random-btn" onclick="pickRandomGame()">🎲 Случайная</button>
   
   <!-- 🔥 НОВЫЕ ВКЛАДКИ -->
   <div class="tabs">
@@ -449,6 +535,48 @@
       <div id="reviewContent"></div>
     </div>
   </div>
+  // 🎲 Функция случайной игры
+function pickRandomGame() {
+  if (games.length === 0) return;
+  
+  // Выбираем случайную игру
+  const randomIndex = Math.floor(Math.random() * games.length);
+  const game = games[randomIndex];
+  
+  // Заполняем окно данными
+  const modal = document.getElementById('randomModal');
+  const title = document.getElementById('randomGameTitle');
+  const info = document.getElementById('randomGameInfo');
+  const cover = document.getElementById('randomGameCover');
+  const link = document.getElementById('randomGameLink');
+  
+  title.textContent = game.name;
+  info.textContent = `${game.genre} • ${game.rating || '?'} / 10 • ${game.hours || '?'} ч`;
+  
+  if (game.cover) {
+    cover.style.backgroundImage = `url('${game.cover}')`;
+    cover.style.display = 'block';
+  } else {
+    cover.style.display = 'none';
+  }
+  
+  if (game.steamUrl) {
+    link.href = game.steamUrl;
+    link.style.display = 'inline-block';
+  } else {
+    link.style.display = 'none';
+  }
+  
+  // Показываем окно
+  modal.style.display = 'flex';
+}
+
+function closeRandomModal(e) {
+  // Закрываем если кликнули по фону или крестику
+  if (!e || e.target.id === 'randomModal' || e.target.classList.contains('close-random')) {
+    document.getElementById('randomModal').style.display = 'none';
+  }
+}
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   
@@ -1520,6 +1648,16 @@ function updateThemeIcon(theme) {
     toggle.textContent = theme === 'dark' ? '🌞 Тема' : '🌙 Тема';
   }
 }
+      <!-- 🎲 Окно случайной игры -->
+<div id="randomModal" class="random-modal" onclick="closeRandomModal(event)">
+  <div class="random-content" onclick="event.stopPropagation()">
+    <button class="close-random" onclick="closeRandomModal()">✕</button>
+    <div id="randomGameCover" class="random-cover"></div>
+    <h2 id="randomGameTitle" class="random-title">Название</h2>
+    <p id="randomGameInfo" class="random-info">Инфо</p>
+    <a id="randomGameLink" href="#" target="_blank" class="random-link">🎮 Открыть в Steam</a>
+  </div>
+</div>
 
   </script>
 </body>
