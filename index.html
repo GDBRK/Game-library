@@ -32,6 +32,7 @@
     [data-theme="light"] header { background: linear-gradient(135deg, var(--card), #e8e8f5); }
     h1 { font-size: 1.6rem; margin-bottom: 6px; }
     #stats { color: var(--muted); font-size: 0.95rem; }
+    
     #themeToggle {
       position: absolute; top: 12px; right: 16px;
       background: var(--accent); color: white; border: none;
@@ -39,6 +40,7 @@
       font-size: 0.9rem; display: flex; align-items: center; gap: 4px;
     }
     #themeToggle:hover { opacity: 0.9; }
+    
     .filters {
       display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
       margin: 12px 0; padding: 12px; background: var(--card);
@@ -50,24 +52,18 @@
       min-width: 140px;
     }
     .filters input { min-width: 180px; }
+    
     .games-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      padding: 20px;
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: flex;
-      flex-direction: column;
-    }
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
     .card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
-    .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; gap: 8px; flex-wrap: wrap; padding: 12px 12px 0; }
+    
+    .card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; gap: 8px; flex-wrap: wrap; }
     .game-title { font-weight: 600; font-size: 1rem; line-height: 1.3; flex: 1; }
+    
     .rating {
       color: white; padding: 3px 9px; border-radius: 16px; font-weight: bold; font-size: 0.85rem;
       min-width: 45px; text-align: center; flex-shrink: 0;
@@ -77,17 +73,19 @@
     .rating.green { background: var(--c-green); color: #1a1a24; }
     .rating.purple { background: var(--c-purple); }
     .rating.empty { background: var(--border); color: var(--muted); }
+
     .verdict {
       display: inline-block; padding: 2px 9px; border-radius: 10px;
-      font-size: 0.82rem; font-weight: 600; margin: 0 12px 8px;
+      font-size: 0.82rem; font-weight: 600; margin-bottom: 8px;
     }
     .verdict.пик { background: var(--c-purple); color: white; }
     .verdict.рекомендую { background: var(--c-green); color: #1a1a24; }
     .verdict.можно { background: var(--c-yellow); color: #1a1a24; }
     .verdict.не-рекомендую, .verdict.дроп { background: var(--c-red); color: white; }
-    .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 0.85rem; color: var(--muted); margin: 0 12px 8px; }
+    
+    .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 0.85rem; color: var(--muted); margin: 8px 0; }
     .review-preview {
-      font-size: 0.92rem; color: var(--text); margin: 8px 12px 12px;
+      font-size: 0.92rem; color: var(--text); margin-top: 8px;
       padding-top: 8px; border-top: 1px dashed var(--border); margin-top: auto;
     }
     .review-btn {
@@ -95,6 +93,7 @@
       color: var(--accent); text-decoration: none; font-weight: 500; cursor: pointer;
     }
     .review-btn:hover { text-decoration: underline; }
+    
     /* 📄 Модальное окно обзора */
     #reviewModal {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -130,6 +129,7 @@
     #reviewContent ul, #reviewContent ol { margin: 0.8em 0; padding-left: 2em; }
     #reviewContent li { margin: 0.4em 0; }
     #reviewContent strong { color: var(--accent); font-weight: 700; }
+    
     @media (max-width: 600px) {
       .meta { grid-template-columns: 1fr; }
       .filters { flex-direction: column; align-items: stretch; }
@@ -137,12 +137,14 @@
       .review-header { flex-direction: column; gap: 12px; align-items: flex-start; }
       .review-container { margin: 20px; padding: 20px; }
     }
+        /* Стили для текста обзоров */
     #reviewContent {
       font-family: 'Segoe UI', system-ui, sans-serif;
       font-size: 16px;
       line-height: 1.7;
       color: var(--review-text);
     }
+
     #reviewContent h2 {
       font-size: 20px;
       font-weight: 700;
@@ -151,105 +153,219 @@
       padding-bottom: 8px;
       border-bottom: 2px solid var(--border);
     }
+
     #reviewContent h3 {
       font-size: 18px;
       font-weight: 600;
       color: var(--text);
       margin: 18px 0 10px;
     }
+
     #reviewContent strong {
       color: var(--accent);
       font-weight: 600;
     }
-    #reviewContent p { margin: 10px 0; }
+
+    #reviewContent p {
+      margin: 10px 0;
+    }
+    
     /* 🎮 Кнопка Steam */
-    .steam-link {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px; margin: 0 12px 8px;
-      background: linear-gradient(135deg, #1b2838, #2a475e);
-      color: #66c0f4; text-decoration: none; border-radius: 6px;
-      font-size: 0.8rem; font-weight: 600; width: fit-content;
-      transition: all 0.2s; border: 1px solid #1b2838;
-    }
-    .steam-link:hover {
-      background: linear-gradient(135deg, #2a475e, #1b2838);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgba(102, 192, 244, 0.2);
-    }
-    [data-theme="light"] .steam-link {
-      background: linear-gradient(135deg, #e8f0fe, #d2e3fc);
-      color: #1a73e8; border-color: #d2e3fc;
-    }
+.steam-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #1b2838, #2a475e);
+  color: #66c0f4;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+  border: 1px solid #1b2838;
+  width: fit-content;
+}
+.steam-link:hover {
+  background: linear-gradient(135deg, #2a475e, #1b2838);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(102, 192, 244, 0.2);
+}
+[data-theme="light"] .steam-link {
+  background: linear-gradient(135deg, #e8f0fe, #d2e3fc);
+  color: #1a73e8;
+  border-color: #d2e3fc;
+}
     /* 🎮 Обложки игр */
-    .cover-wrapper {
-      width: 100%; height: 400px; border-radius: 12px 12px 0 0;
-      overflow: hidden; background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
-      position: relative; margin-bottom: 12px;
-    }
-    .game-cover {
-      width: 100%; height: 100%; object-fit: cover;
-      object-position: center; transition: transform 0.3s;
-    }
-    .cover-wrapper:hover .game-cover { transform: scale(1.05); }
-    .cover-placeholder {
-      width: 100%; height: 100%; display: flex;
-      align-items: center; justify-content: center;
-      background: linear-gradient(135deg, var(--accent), #4a3dff);
-      font-size: 4rem; font-weight: bold;
-      color: rgba(255, 255, 255, 0.3); text-align: center; padding: 20px;
-    }
+.cover-wrapper {
+  width: 100%;
+  height: 400px;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.game-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s;
+}
+
+.cover-wrapper:hover .game-cover {
+  transform: scale(1.05);
+}
+
+.cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent), #4a3dff);
+  font-size: 4rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.3);
+  text-align: center;
+  padding: 20px;
+}
     /* 🔥 Стили для вкладок */
-    .tabs { display: flex; gap: 10px; margin-top: 20px; justify-content: center; }
-    .tab-btn {
-      padding: 12px 24px; background: var(--bg); color: var(--text);
-      border: 2px solid var(--border); border-radius: 10px;
-      font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
-    }
-    .tab-btn:hover { background: var(--hover); transform: translateY(-2px); }
-    .tab-btn.active {
-      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-      color: white; border-color: var(--accent);
-    }
-    /* 🔥 Стили для статистики */
-    .stats-container { padding: 20px; animation: fadeIn 0.3s; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .stats-header { text-align: center; margin-bottom: 30px; }
-    .stats-header h2 { font-size: 2rem; margin-bottom: 10px; }
-    .stats-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px; margin-bottom: 40px;
-    }
-    .stat-card {
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: 12px; padding: 20px; text-align: center;
-      transition: transform 0.2s;
-    }
-    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
-    .stat-card h3 { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 10px; }
-    .stat-card p { font-size: 2rem; font-weight: bold; color: var(--accent); margin: 0; }
-    .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
-    .chart-container {
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: 12px; padding: 20px;
-    }
-    .chart-container h3 { text-align: center; margin-bottom: 20px; color: var(--text); }
-    @media (max-width: 768px) {
-      .charts-grid { grid-template-columns: 1fr; }
-      .tabs { flex-direction: column; }
-      .tab-btn { width: 100%; }
-    }
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.tab-btn {
+  padding: 12px 24px;
+  background: var(--bg);
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tab-btn:hover {
+  background: var(--hover);
+  transform: translateY(-2px);
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  color: white;
+  border-color: var(--accent);
+}
+
+/* 🔥 Стили для статистики */
+.stats-container {
+  padding: 20px;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stats-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.stats-header h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.stat-card h3 {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.stat-card p {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--accent);
+  margin: 0;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+.chart-container {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.chart-container h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .tabs {
+    flex-direction: column;
+  }
+  
+  .tab-btn {
+    width: 100%;
+  }
+}
   </style>
 </head>
 <body>
   <header>
-    <h1>🎮 Библиотека пройденных игр</h1>
-    <p id="stats">Загрузка...</p>
-    <button id="themeToggle">🌞 Тема</button>
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('games')">🎮 Все игры</button>
-      <button class="tab-btn" onclick="switchTab('stats')">📊 Статистика</button>
-    </div>
-  </header>
+  <h1>🎮 Библиотека пройденных игр</h1>
+  <p id="stats">Загрузка...</p>
+  <button id="themeToggle">🌞 Тема</button>
+  
+  <!-- 🔥 НОВЫЕ ВКЛАДКИ -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('games')">🎮 Все игры</button>
+    <button class="tab-btn" onclick="switchTab('stats')">📊 Статистика</button>
+  </div>
+</header>
 
   <div class="filters">
     <select id="filterVerdict">
@@ -271,25 +387,59 @@
       <option value="has-review">Есть обзор ↓</option>
     </select>
   </div>
+  <!-- Контейнер для игр (уже есть) -->
+<div id="gamesGrid" class="games-grid"></div>
 
-  <div id="gamesGrid" class="games-grid"></div>
-
-  <div id="statsContainer" class="stats-container" style="display: none;">
-    <div class="stats-header"><h2>📈 Общая статистика</h2></div>
-    <div class="stats-grid">
-      <div class="stat-card"><h3>🎮 Всего игр</h3><p id="totalGames">0</p></div>
-      <div class="stat-card"><h3>⏱️ Всего часов</h3><p id="totalHours">0</p></div>
-      <div class="stat-card"><h3>⭐ Средняя оценка</h3><p id="avgRating">0</p></div>
-      <div class="stat-card"><h3>🏆 Средний % достижений</h3><p id="avgAchievements">0%</p></div>
+<!-- 🔥 НОВЫЙ контейнер для статистики -->
+<div id="statsContainer" class="stats-container" style="display: none;">
+  <div class="stats-header">
+    <h2>📈 Общая статистика</h2>
+  </div>
+  
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>🎮 Всего игр</h3>
+      <p id="totalGames">0</p>
     </div>
-    <div class="charts-grid">
-      <div class="chart-container"><h3>📊 Игры по жанрам</h3><canvas id="genreChart"></canvas></div>
-      <div class="chart-container"><h3>🎯 Распределение оценок</h3><canvas id="ratingChart"></canvas></div>
-      <div class="chart-container"><h3>📅 Игр пройдено по годам</h3><canvas id="yearChart"></canvas></div>
-      <div class="chart-container"><h3>⏱️ Часов по жанрам</h3><canvas id="hoursChart"></canvas></div>
+    <div class="stat-card">
+      <h3>⏱️ Всего часов</h3>
+      <p id="totalHours">0</p>
+    </div>
+    <div class="stat-card">
+      <h3>⭐ Средняя оценка</h3>
+      <p id="avgRating">0</p>
+    </div>
+    <div class="stat-card">
+      <h3>🏆 Средний % достижений</h3>
+      <p id="avgAchievements">0%</p>
     </div>
   </div>
+  
+  <div class="charts-grid">
+    <div class="chart-container">
+      <h3>📊 Игры по жанрам</h3>
+      <canvas id="genreChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+      <h3>🎯 Распределение оценок</h3>
+      <canvas id="ratingChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+      <h3>📅 Игр пройдено по годам</h3>
+      <canvas id="yearChart"></canvas>
+    </div>
+    
+    <div class="chart-container">
+      <h3>⏱️ Часов по жанрам</h3>
+      <canvas id="hoursChart"></canvas>
+    </div>
+  </div>
+</div>
 
+
+  <!-- 📄 Модальное окно обзора -->
   <div id="reviewModal">
     <div class="review-container">
       <div class="review-header">
@@ -299,63 +449,68 @@
       <div id="reviewContent"></div>
     </div>
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  
+
   <script>
+    
+    // 📚 ВСЕ ДАННЫЕ
     const GAMES_DATA = [
-      {name: 'DELTARUNE', rating: 10, verdict: 'Пик', review: null, genre: 'JRPG', date: '', hours: '', achievements: '', percent: '', steamUrl: 'https://store.steampowered.com/app/1671210/DELTARUNE/', cover: 'https://cdn2.steamgriddb.com/thumb/ea3be1a50c84a14973ef45e4b50ced89.jpg'},
-      {name: 'Disco Elysium', rating: 10, verdict: 'Пик', review: null, genre: 'RPG', date: '20.12.2023', hours: 25, achievements: '10/45', percent: 22, steamUrl: 'https://store.steampowered.com/app/632470/Disco_Elysium__The_Final_Cut/', cover: 'https://cdn2.steamgriddb.com/thumb/e17233dc1c4e3457d5a259c06c7eb502.jpg'},
-      {name: 'Resident Evil 4 Remake', rating: 10, verdict: 'Пик', review: 're4', genre: 'ХОРРОР', date: '', hours: 32.9, achievements: '23/46', percent: 50, steamUrl: 'https://store.steampowered.com/app/2050650/Resident_Evil_4/', cover: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2050650/library_600x900.jpg'},
-      {name: 'Resident Evil 4 Remake Separate Ways', rating: 10, verdict: 'Пик', review: null, genre: 'ХОРРОР', date: '', hours: 32.9, achievements: '23/46', percent: 50, steamUrl: 'https://store.steampowered.com/app/2109300/Resident_Evil_4__Separate_Ways/'},
-      {name: 'UNDERTALE', rating: 10, verdict: 'Пик', review: null, genre: 'RPG', date: '02.11.2024', hours: 11.6, achievements: '', percent: '', steamUrl: 'https://store.steampowered.com/app/391540/Undertale/', cover: 'https://cdn2.steamgriddb.com/thumb/aba1e5182d973f43f2b3fd755f8e2314.jpg'},
-      {name: 'What Remains of Edith Finch', rating: 10, verdict: 'Пик', review: null, genre: 'СИМУЛЯТОР ХОДЬБЫ', date: '22.03.2026', hours: 1.8, achievements: '4/9', percent: 44, steamUrl: 'https://store.steampowered.com/app/501300/What_Remains_of_Edith_Finch/', cover: 'https://cdn2.steamgriddb.com/thumb/22dcf0f4f3413489593f19a6b7c3a25d.jpg'},
-      {name: 'Batman Arkham City', rating: 10, verdict: 'Пик', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 60, achievements: '53/64', percent: 83, steamUrl: 'https://store.steampowered.com/app/200260/Batman_Arkham_City__Game_of_the_Year_Edition/', cover: 'https://cdn2.steamgriddb.com/thumb/428631981b73923e80d40f1b4e7033e9.jpg'},
-      {name: 'Batman Arkham Knight', rating: 10, verdict: 'Пик', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 116.8, achievements: '113/113', percent: 100, steamUrl: 'https://store.steampowered.com/app/208650/Batman_Arkham_Knight/', cover: 'https://cdn2.steamgriddb.com/thumb/f84188cb2659a5c8c875d7f0e9fc847c.jpg'},
-      {name: 'Resident Evil 2 Remake', rating: 8, verdict: 'Рекомендую', review: null, genre: 'ХОРРОР', date: '18.03.2026', hours: 12.6, achievements: '23/44', percent: 52, steamUrl: 'https://store.steampowered.com/app/883710/Resident_Evil_2/', cover: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/883710/library_600x900.jpg'},
-      {name: 'Resident Evil 9 Requiem', rating: 8, verdict: 'Рекомендую', review: 'requiem', genre: 'ХОРРОР', date: '19.03.2026', hours: 33.6, achievements: '49/49', percent: 100, steamUrl: 'https://store.steampowered.com/app/3764200/Resident_Evil_Requiem/', cover: 'https://cdn2.steamgriddb.com/thumb/956adefb0eb473d0cd054107659ab6fd.jpg'},
-      {name: 'Dispatch', rating: 7, verdict: 'Рекомендую', review: null, genre: 'КИНО', date: '14.11.2025', hours: 8.6, achievements: '21/36', percent: 58, steamUrl: 'https://store.steampowered.com/app/2592160/Dispatch/?l=russian', cover: 'https://cdn2.steamgriddb.com/thumb/db711b17dab1a439337834705b2d6dfd.jpg'},
-      {name: 'Lies of P', rating: 7, verdict: 'Рекомендую', review: 'liesofp', genre: 'SOULSLIKE', date: '08.07.2025', hours: 40, achievements: '50/53', percent: 94, steamUrl: 'https://store.steampowered.com/app/1627720/Lies_of_P/', cover: 'https://cdn2.steamgriddb.com/thumb/b9afbfdafb7e499dafadcadf8ef6952e.jpg'},
-      {name: 'Resident Evil 7 Biohazard', rating: 7, verdict: 'Рекомендую', review: null, genre: 'ХОРРОР', date: '19.02.2026', hours: 12.4, achievements: '24/58', percent: 41, steamUrl: 'https://store.steampowered.com/app/418370/BIOHAZARD_7_resident_evil/?l=russian&curator_clanid=30559666', cover: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/418370/library_600x900.jpg'},
-      {name: 'Shadow Burglar', rating: 7, verdict: 'Рекомендую', review: null, genre: 'СТЕЛС-ЭКШЕН', date: '04.03.2022', hours: 1.2, achievements: '13/13', percent: 100, steamUrl: 'https://store.steampowered.com/app/1881340/Shadow_Burglar/', cover: 'https://howlongtobeat.com/games/104781_Shadow_Burglar.jpg'},
-      {name: 'Balatro', rating: 6, verdict: 'Можно попробовать', review: null, genre: 'ROUGELIKE', date: '23.02.2026', hours: 73.4, achievements: '24/31', percent: 77, steamUrl: 'https://store.steampowered.com/app/2379780/Balatro/', cover: 'https://cdn2.steamgriddb.com/thumb/7a2b7a52ddc81967c7cd403bc96b1acd.jpg'},
-      {name: 'Ghost of Tsushima', rating: 6, verdict: 'Можно попробовать', review: 'tsushima', genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '05.03.2026', hours: 19.6, achievements: '23/77', percent: 30, steamUrl: 'https://store.steampowered.com/app/2215430/Ghost_of_Tsushima_DIRECTORS_CUT/', cover: 'https://cdn2.steamgriddb.com/thumb/db8705e95712819b479feef58b5c7ff8.jpg'},
-      {name: 'Sekiro', rating: 6, verdict: 'Рекомендую', review: 'sekiro', genre: 'SOULSLIKE', date: '05.06.2025', hours: 40, achievements: '34/34', percent: 100, steamUrl: 'https://store.steampowered.com/app/814380/Sekiro_Shadows_Die_Twice__GOTY_Edition/', cover: 'https://cdn2.steamgriddb.com/thumb/cc735352db842232a33b3d1edd26f8f6.jpg'},
-      {name: 'Torn Away', rating: 6, verdict: 'Можно попробовать', review: null, genre: 'ПРИКЛЮЧЕНИЕ', date: '30.10.2023', hours: 5.2, achievements: '27/35', percent: 77, steamUrl: 'https://store.steampowered.com/app/1568970/Torn_Away/', cover: 'https://cdn2.steamgriddb.com/thumb/0ca7f9ade26786f2efafdbc753d11ee1.jpg'},
-      {name: 'Black Myth: Wukong', rating: 5, verdict: 'Можно попробовать', review: 'wukong', genre: 'SOULSLIKE', date: '09.07.2025', hours: 34.6, achievements: '37/81', percent: 46, steamUrl: 'https://store.steampowered.com/app/2358720/Black_Myth_Wukong/', cover: 'https://cdn2.steamgriddb.com/thumb/294dbeaa35d3fd15a7eb0843e65272ee.jpg'},
-      {name: 'Clair Obscur: Expedition 33', rating: 5, verdict: 'Можно попробовать', review: 'expedition33', genre: 'JRPG', date: '10.06.2025', hours: 25.5, achievements: '31/55', percent: 56, steamUrl: 'https://store.steampowered.com/app/1903340/Clair_Obscur_Expedition_33/', cover: 'https://cdn2.steamgriddb.com/thumb/e7fff0c2739cf86c8aa5559eefe74220.jpg'},
-      {name: 'Lies of P Overture', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'SOULSLIKE', date: '08.07.2025', hours: 40, achievements: '50/53', percent: 94, steamUrl: 'https://store.steampowered.com/app/2848330/Lies_of_P_Overture/', cover: 'https://cdn2.steamgriddb.com/thumb/f30394f6e75231e421bc9edb88f2c4aa.jpg'},
-      {name: "Marvel's Spider Man 2", rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '24.10.2025', hours: 30.7, achievements: '37/43', percent: 86, steamUrl: 'https://store.steampowered.com/app/2651280/Marvels_SpiderMan_2/', cover: 'https://cdn2.steamgriddb.com/thumb/2572510b22e85f491270becf2fc166f7.jpg'},
-      {name: 'Resident Evil 3 Remake', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ХОРРОР', date: '03.11.2025', hours: 5.1, achievements: '17/32', percent: 53, steamUrl: 'https://store.steampowered.com/app/952060/Resident_Evil_3/', cover: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/952060/library_600x900.jpg'},
-      {name: 'Resident Evil 8 Village', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ХОРРОР', date: '13.02.2026', hours: 13.5, achievements: '28/56', percent: 50, steamUrl: 'https://store.steampowered.com/app/1196590/Resident_Evil_Village/', cover: 'https://cdn2.steamgriddb.com/thumb/2854ba61c34228bcf82efcd1cc1555cf.jpg'},
-      {name: 'Static Dread: The Lighthouse', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ХОРРОР', date: '25.08.2025', hours: 7.1, achievements: '30/43', percent: 70, steamUrl: 'https://store.steampowered.com/app/3298940/Static_Dread_The_Lighthouse/', cover: 'https://cdn2.steamgriddb.com/thumb/261c028d2982f1f3836f2b9862fb5cbd.jpg'},
-      {name: 'The Last of Us Part I', rating: 5, verdict: 'Можно попробовать', review: 'tlou1', genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '11.08.2025', hours: 16.3, achievements: '6/29', percent: 21, steamUrl: 'https://store.steampowered.com/app/1888930/The_Last_of_Us_Part_I/', cover: 'https://cdn2.steamgriddb.com/thumb/c840da4d342a29827b6c907c03a76f80.jpg'},
-      {name: "Castlevania: Lords of Shadow 2", rating: 4, verdict: 'Не рекомендую', review: 'castlevania', genre: 'ЭКШЕН', date: '07.12.2024', hours: 16.8, achievements: '27/56', percent: 48, steamUrl: 'https://store.steampowered.com/app/239250/Castlevania_Lords_of_Shadow_2/', cover: 'https://cdn2.steamgriddb.com/thumb/1d120c86144523926d4f638bab708ca8.jpg'},
-      {name: 'Hollow Knight: Silksong', rating: 4, verdict: 'Не рекомендую', review: 'silksong', genre: 'МЕТРОИДВАНИЯ', date: '14.09.2025', hours: 37.2, achievements: '21/52', percent: 40, steamUrl: 'https://store.steampowered.com/app/1030300/Hollow_Knight_Silksong/?snr=1_4_4__118', cover: 'https://cdn2.steamgriddb.com/thumb/352b19056ce934568b956d68cbcde3b5.jpg'},
-      {name: 'Persona 5 Royal', rating: 4, verdict: 'Не рекомендую', review: 'p5r', genre: 'JRPG', date: '29.01.2026', hours: 94.2, achievements: '41/53', percent: 77, steamUrl: 'https://store.steampowered.com/app/1687950/Persona_5_Royal/', cover: 'https://cdn2.steamgriddb.com/thumb/78b22a52a1e53b0d2e27e6b40569793a.jpg'},
-      {name: 'Bayonetta', rating: 2, verdict: 'Не рекомендую', review: 'bayonetta', genre: 'СЛЭШЕР', date: '25.10.2025', hours: 11.3, achievements: '22/50', percent: 44, steamUrl: 'https://store.steampowered.com/app/460790/Bayonetta/', cover: 'https://cdn2.steamgriddb.com/thumb/333853f0a38999344823b35427a4f9a1.jpg'},
-      {name: 'God of War 2018', rating: 2, verdict: 'Не рекомендую', review: 'gow2018', genre: 'СЛЭШЕР', date: '27.11.2025', hours: 14.7, achievements: '16/37', percent: 43, steamUrl: 'https://store.steampowered.com/app/1593500/God_of_War/', cover: 'https://cdn2.steamgriddb.com/thumb/5855660034a74cfe0e5fc8d57d17f4ac.jpg'},
-      {name: 'Sifu', rating: 2, verdict: 'Дроп', review: null, genre: 'МУСОР', date: '29.05.2025', hours: 3.7, achievements: '13/61', percent: 21, steamUrl: 'https://store.steampowered.com/app/2138710/Sifu/', cover: 'https://cdn2.steamgriddb.com/thumb/1a6235255cbe6083fa2c2a1b66984513.jpg'},
-      {name: 'Ghostwire Tokyo', rating: 2, verdict: 'Дроп', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '05.04.2026', hours: 6.2, achievements: '18/66', percent: 27, steamUrl: 'https://store.steampowered.com/app/1475810/Ghostwire_Tokyo/', cover: 'https://cdn2.steamgriddb.com/thumb/f8db1389df5ac42b28f8a58a497655a7.jpg'},
-      {name: 'Bloodborne', rating: 1, verdict: 'Не рекомендую', review: 'bloodborne', genre: 'SOULSLIKE', date: '18.12.2025', hours: 30, achievements: '', percent: '', cover: 'https://cdn2.steamgriddb.com/thumb/021399af062379408df9c358a1a83cdb.jpg'},
-      {name: 'Contrast', rating: 0, verdict: 'Дроп', review: null, genre: 'ПЛАТФОРМЕР', date: '', hours: '', achievements: '', percent: '', steamUrl: 'https://store.steampowered.com/app/224460/Contrast/', cover: 'https://cdn2.steamgriddb.com/thumb/9adf5339387a8d22144f446a92825639.jpg'},
-      {name: 'Dark Souls', rating: 0, verdict: 'Дроп', review: null, genre: 'SOULSLIKE', date: '01.01.2026', hours: 5.7, achievements: '4/41', percent: 10, steamUrl: 'https://store.steampowered.com/app/570940/DARK_SOULS_REMASTERED/', cover: 'https://cdn2.steamgriddb.com/thumb/fa09649961c5c38096ee815c1084b2f0.jpg'},
-      {name: 'REANIMAL', rating: 0, verdict: 'Не рекомендую', review: null, genre: 'ХОРРОР', date: '26.02.2026', hours: 6, achievements: '10/31', percent: 32, steamUrl: 'https://store.steampowered.com/app/2129530/REANIMAL/', cover: 'https://cdn2.steamgriddb.com/thumb/88f9e4d4cea5c725f2501a27c8842f71.jpg'},
-      {name: 'SILENT HILL f', rating: 0, verdict: 'Не рекомендую', review: 'silenthillf', genre: 'ХОРРОР', date: '27.09.2025', hours: 12.1, achievements: '19/56', percent: 34, steamUrl: 'https://store.steampowered.com/app/2947440/SILENT_HILL_f/', cover: 'https://cdn2.steamgriddb.com/thumb/836fc55095976e7a7c4df140be0ee93e.jpg'},
-      {name: 'Slay the Princess', rating: 0, verdict: 'Не рекомендую', review: null, genre: 'НОВЕЛЛА', date: '02.11.2025', hours: 2.6, achievements: '21/131', percent: 16, steamUrl: 'https://store.steampowered.com/app/1989270/Slay_the_Princess__The_Pristine_Cut/', cover: 'https://cdn2.steamgriddb.com/thumb/3180e1c30e42c9e29e6305ab66024077.jpg'},
-      {name: 'The Evil Within', rating: 0, verdict: 'Дроп', review: null, genre: 'ХОРРОР', date: '30.09.2025', hours: 1.9, achievements: '0/71', percent: 0, steamUrl: 'https://store.steampowered.com/app/268050/The_Evil_Within/?l=russian', cover: 'https://cdn2.steamgriddb.com/thumb/8dc4099e27a8e844b159341acde634bf.jpg'},
-      {name: 'The First Berserker: Khazan', rating: 0, verdict: 'Не рекомендую', review: 'khazan', genre: 'SOULSLIKE', date: '21.05.2025', hours: 47.4, achievements: '43/57', percent: 75, steamUrl: 'https://store.steampowered.com/app/2680010/The_First_Berserker_Khazan/', cover: 'https://cdn2.steamgriddb.com/thumb/87f22ef7349f8bc783fbaecb30429e4b.jpg'},
-      {name: 'The Last of Us Part II', rating: 0, verdict: 'Не рекомендую', review: 'tlou2', genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '04.01.2026', hours: 21.1, achievements: '9/45', percent: 20, steamUrl: 'https://store.steampowered.com/app/2531310/The_Last_of_Us_Part_II_Remastered/', cover: 'https://cdn2.steamgriddb.com/thumb/f3949fa34208fe26a430aed32434ebc8.jpg'},
-      {name: 'Batman Arkham Asylum', rating: null, verdict: 'Рекомендую', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 14.7, achievements: '39/47', percent: 83, steamUrl: 'https://store.steampowered.com/app/35140/Batman_Arkham_Asylum_Game_of_the_Year_Edition/?l=russian&cc=lt', cover: 'https://cdn2.steamgriddb.com/thumb/69fd92bd85b2c2d1267e63ff1df624ae.jpg'},
-      {name: 'Batman Arkham Origins', rating: null, verdict: 'Можно попробовать', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 9.3, achievements: '15/60', percent: 25, steamUrl: 'https://store.steampowered.com/app/209000/Batman_Arkham_Origins/', cover: 'https://cdn2.steamgriddb.com/thumb/2a17dafef6f0b54770c97b59b51e28e2.jpg'},
-      {name: 'Celeste', rating: null, verdict: 'Дроп', review: null, genre: 'ПЛАТФОРМЕР', date: '22.09.2025', hours: 0.9, achievements: '1/32', percent: 3, steamUrl: 'https://store.steampowered.com/app/504230/Celeste/', cover: 'https://cdn2.steamgriddb.com/thumb/8c433a09bd26b943147c4d9bacb15efc.jpg'},
-      {name: 'Firewatch', rating: null, verdict: null, review: null, genre: 'СИМУЛЯТОР ХОДЬБЫ', date: '', hours: '', achievements: '', percent: '', steamUrl: 'https://store.steampowered.com/app/383870/Firewatch/', cover: 'https://cdn2.steamgriddb.com/thumb/aa9264d85b7225106a396c7816efc645.jpg'},
-      {name: 'Nioh 2', rating: null, verdict: 'Не рекомендую', review: null, genre: 'SOULSLIKE', date: '30.09.2025', hours: 3.5, achievements: '2/88', percent: 2, steamUrl: 'https://store.steampowered.com/app/1325200/_Complete_Edition/?l=russian&ref=vgtimes.ru', cover: 'https://cdn2.steamgriddb.com/thumb/fba516f9186e17b65a125e04d8502644.jpg'},
-      {name: 'Warcraft 3', rating: null, verdict: 'Дроп', review: null, genre: 'СТРАТЕГИЯ', date: '', hours: 1.5, achievements: '', percent: '', cover: 'https://cdn2.steamgriddb.com/thumb/a404424d64bf675a4a58cd01a66532fe.png'},
-      {name: 'MiSide', rating: 7, verdict: 'Рекомендую', review: null, genre: 'ХОРРОР', date: '15.04.2026', hours: 3.3, achievements: '12/26', percent: 46, steamUrl: 'https://store.steampowered.com/app/2527500/MiSide/', cover: 'https://cdn2.steamgriddb.com/thumb/3b306fdb529b7a52475e8c006bc31c53.jpg'}
+      {name: 'DELTARUNE', rating: 10, verdict: 'Пик', review: null, genre: 'JRPG', date: '', hours: '', achievements: '', percent: '', steamUrl: 'https://store.steampowered.com/app/1671210/DELTARUNE/',cover:'https://cdn2.steamgriddb.com/thumb/ea3be1a50c84a14973ef45e4b50ced89.jpg'},
+      {name: 'Disco Elysium', rating: 10, verdict: 'Пик', review: null, genre: 'RPG', date: '20.12.2023', hours: 25, achievements: '10/45', percent: 22,steamUrl:'https://store.steampowered.com/app/632470/Disco_Elysium__The_Final_Cut/',cover:'https://cdn2.steamgriddb.com/thumb/e17233dc1c4e3457d5a259c06c7eb502.jpg'},
+      {name: 'Resident Evil 4 Remake', rating: 10, verdict: 'Пик', review: 're4', genre: 'ХОРРОР', date: '', hours: 32.9, achievements: '23/46', percent: 50,steamUrl:'https://store.steampowered.com/app/2050650/Resident_Evil_4/',cover: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2050650/library_600x900.jpg'},
+      {name: 'Resident Evil 4 Remake Separate Ways', rating: 10, verdict: 'Пик', review: null, genre: 'ХОРРОР', date: '', hours: 32.9, achievements: '23/46', percent: 50,steamUrl:'https://store.steampowered.com/app/2109300/Resident_Evil_4__Separate_Ways/'},
+      {name: 'UNDERTALE', rating: 10, verdict: 'Пик', review: null, genre: 'RPG', date: '02.11.2024', hours: 11.6, achievements: '', percent: '',steamUrl:'https://store.steampowered.com/app/391540/Undertale/',cover:'https://cdn2.steamgriddb.com/thumb/aba1e5182d973f43f2b3fd755f8e2314.jpg'},
+      {name: 'What Remains of Edith Finch', rating: 10, verdict: 'Пик', review: null, genre: 'СИМУЛЯТОР ХОДЬБЫ', date: '22.03.2026', hours: 1.8, achievements: '4/9', percent: 44,steamUrl:'https://store.steampowered.com/app/501300/What_Remains_of_Edith_Finch/',cover:'https://cdn2.steamgriddb.com/thumb/22dcf0f4f3413489593f19a6b7c3a25d.jpg'},
+      {name: 'Batman Arkham City', rating: 10, verdict: 'Пик', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 60, achievements: '53/64', percent: 83,steamUrl:'https://store.steampowered.com/app/200260/Batman_Arkham_City__Game_of_the_Year_Edition/',cover:'https://cdn2.steamgriddb.com/thumb/428631981b73923e80d40f1b4e7033e9.jpg'},
+      {name: 'Batman Arkham Knight', rating: 10, verdict: 'Пик', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 116.8, achievements: '113/113', percent: 100,steamUrl:'https://store.steampowered.com/app/208650/Batman_Arkham_Knight/',cover:'https://cdn2.steamgriddb.com/thumb/f84188cb2659a5c8c875d7f0e9fc847c.jpg'},
+      {name: 'Resident Evil 2 Remake', rating: 8, verdict: 'Рекомендую', review: null, genre: 'ХОРРОР', date: '18.03.2026', hours: 12.6, achievements: '23/44', percent: 52,steamUrl:'https://store.steampowered.com/app/883710/Resident_Evil_2/',cover: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/883710/library_600x900.jpg'},
+      {name: 'Resident Evil 9 Requiem', rating: 8, verdict: 'Рекомендую', review: 'requiem', genre: 'ХОРРОР', date: '19.03.2026', hours: 33.6, achievements: '49/49', percent: 100,steamUrl:'https://store.steampowered.com/app/3764200/Resident_Evil_Requiem/',cover:'https://cdn2.steamgriddb.com/thumb/956adefb0eb473d0cd054107659ab6fd.jpg'},
+      {name: 'Dispatch', rating: 7, verdict: 'Рекомендую', review: null, genre: 'КИНО', date: '14.11.2025', hours: 8.6, achievements: '21/36', percent: 58,steamUrl:'https://store.steampowered.com/app/2592160/Dispatch/?l=russian',cover:'https://cdn2.steamgriddb.com/thumb/db711b17dab1a439337834705b2d6dfd.jpg'},
+      {name: 'Lies of P', rating: 7, verdict: 'Рекомендую', review: 'liesofp', genre: 'SOULSLIKE', date: '08.07.2025', hours: 40, achievements: '50/53', percent: 94,steamUrl:'https://store.steampowered.com/app/1627720/Lies_of_P/',cover:'https://cdn2.steamgriddb.com/thumb/b9afbfdafb7e499dafadcadf8ef6952e.jpg'},
+      {name: 'Resident Evil 7 Biohazard', rating: 7, verdict: 'Рекомендую', review: null, genre: 'ХОРРОР', date: '19.02.2026', hours: 12.4, achievements: '24/58', percent: 41,steamUrl:'https://store.steampowered.com/app/418370/BIOHAZARD_7_resident_evil/?l=russian&curator_clanid=30559666',cover:'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/418370/library_600x900.jpg'},
+      {name: 'Shadow Burglar', rating: 7, verdict: 'Рекомендую', review: null, genre: 'СТЕЛС-ЭКШЕН', date: '04.03.2022', hours: 1.2, achievements: '13/13', percent: 100,steamUrl:'https://store.steampowered.com/app/1881340/Shadow_Burglar/',cover:'https://howlongtobeat.com/games/104781_Shadow_Burglar.jpg'},
+      {name: 'Balatro', rating: 6, verdict: 'Можно попробовать', review: null, genre: 'ROUGELIKE', date: '23.02.2026', hours: 73.4, achievements: '24/31', percent: 77,steamUrl:'https://store.steampowered.com/app/2379780/Balatro/',cover:'https://cdn2.steamgriddb.com/thumb/7a2b7a52ddc81967c7cd403bc96b1acd.jpg'},
+      {name: 'Ghost of Tsushima', rating: 6, verdict: 'Можно попробовать', review: 'tsushima', genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '05.03.2026', hours: 19.6, achievements: '23/77', percent: 30,steamUrl:'https://store.steampowered.com/app/2215430/Ghost_of_Tsushima_DIRECTORS_CUT/',cover:'https://cdn2.steamgriddb.com/thumb/db8705e95712819b479feef58b5c7ff8.jpg'},
+      {name: 'Sekiro', rating: 6, verdict: 'Рекомендую', review: 'sekiro', genre: 'SOULSLIKE', date: '05.06.2025', hours: 40, achievements: '34/34', percent: 100,steamUrl:'https://store.steampowered.com/app/814380/Sekiro_Shadows_Die_Twice__GOTY_Edition/',cover:'https://cdn2.steamgriddb.com/thumb/cc735352db842232a33b3d1edd26f8f6.jpg'},
+      {name: 'Torn Away', rating: 6, verdict: 'Можно попробовать', review: null, genre: 'ПРИКЛЮЧЕНИЕ', date: '30.10.2023', hours: 5.2, achievements: '27/35', percent: 77,steamUrl:'https://store.steampowered.com/app/1568970/Torn_Away/',cover:'https://cdn2.steamgriddb.com/thumb/0ca7f9ade26786f2efafdbc753d11ee1.jpg'},
+      {name: 'Black Myth: Wukong', rating: 5, verdict: 'Можно попробовать', review: 'wukong', genre: 'SOULSLIKE', date: '09.07.2025', hours: 34.6, achievements: '37/81', percent: 46,steamUrl:'https://store.steampowered.com/app/2358720/Black_Myth_Wukong/',cover:'https://cdn2.steamgriddb.com/thumb/294dbeaa35d3fd15a7eb0843e65272ee.jpg'},
+      {name: 'Clair Obscur: Expedition 33', rating: 5, verdict: 'Можно попробовать', review: 'expedition33', genre: 'JRPG', date: '10.06.2025', hours: 25.5, achievements: '31/55', percent: 56,steamUrl:'https://store.steampowered.com/app/1903340/Clair_Obscur_Expedition_33/',cover:'https://cdn2.steamgriddb.com/thumb/e7fff0c2739cf86c8aa5559eefe74220.jpg'},
+      {name: 'Lies of P Overture', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'SOULSLIKE', date: '08.07.2025', hours: 40, achievements: '50/53', percent: 94,steamUrl:'https://store.steampowered.com/app/2848330/Lies_of_P_Overture/',cover:'https://cdn2.steamgriddb.com/thumb/f30394f6e75231e421bc9edb88f2c4aa.jpg'},
+      {name: "Marvel's Spider Man 2", rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '24.10.2025', hours: 30.7, achievements: '37/43', percent: 86,steamUrl:'https://store.steampowered.com/app/2651280/Marvels_SpiderMan_2/',cover:'https://cdn2.steamgriddb.com/thumb/2572510b22e85f491270becf2fc166f7.jpg'},
+      {name: 'Resident Evil 3 Remake', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ХОРРОР', date: '03.11.2025', hours: 5.1, achievements: '17/32', percent: 53,steamUrl:'https://store.steampowered.com/app/952060/Resident_Evil_3/',cover:'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/952060/library_600x900.jpg'},
+      {name: 'Resident Evil 8 Village', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ХОРРОР', date: '13.02.2026', hours: 13.5, achievements: '28/56', percent: 50,steamUrl:'https://store.steampowered.com/app/1196590/Resident_Evil_Village/',cover:'https://cdn2.steamgriddb.com/thumb/2854ba61c34228bcf82efcd1cc1555cf.jpg'},
+      {name: 'Static Dread: The Lighthouse', rating: 5, verdict: 'Можно попробовать', review: null, genre: 'ХОРРОР', date: '25.08.2025', hours: 7.1, achievements: '30/43', percent: 70,steamUrl:'https://store.steampowered.com/app/3298940/Static_Dread_The_Lighthouse/',cover:'https://cdn2.steamgriddb.com/thumb/261c028d2982f1f3836f2b9862fb5cbd.jpg'},
+      {name: 'The Last of Us Part I', rating: 5, verdict: 'Можно попробовать', review: 'tlou1', genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '11.08.2025', hours: 16.3, achievements: '6/29', percent: 21,steamUrl:'https://store.steampowered.com/app/1888930/The_Last_of_Us_Part_I/',cover:'https://cdn2.steamgriddb.com/thumb/c840da4d342a29827b6c907c03a76f80.jpg'},
+      {name: "Castlevania: Lords of Shadow 2", rating: 4, verdict: 'Не рекомендую', review: 'castlevania', genre: 'ЭКШЕН', date: '07.12.2024', hours: 16.8, achievements: '27/56', percent: 48,steamUrl:'https://store.steampowered.com/app/239250/Castlevania_Lords_of_Shadow_2/',cover:'https://cdn2.steamgriddb.com/thumb/1d120c86144523926d4f638bab708ca8.jpg'},
+      {name: 'Hollow Knight: Silksong', rating: 4, verdict: 'Не рекомендую', review: 'silksong', genre: 'МЕТРОИДВАНИЯ', date: '14.09.2025', hours: 37.2, achievements: '21/52', percent: 40,steamUrl:'https://store.steampowered.com/app/1030300/Hollow_Knight_Silksong/?snr=1_4_4__118',cover:'https://cdn2.steamgriddb.com/thumb/352b19056ce934568b956d68cbcde3b5.jpg'},
+      {name: 'Persona 5 Royal', rating: 4, verdict: 'Не рекомендую', review: 'p5r', genre: 'JRPG', date: '29.01.2026', hours: 94.2, achievements: '41/53', percent: 77,steamUrl:'https://store.steampowered.com/app/1687950/Persona_5_Royal/',cover:'https://cdn2.steamgriddb.com/thumb/78b22a52a1e53b0d2e27e6b40569793a.jpg'},
+      {name: 'Bayonetta', rating: 2, verdict: 'Не рекомендую', review: 'bayonetta', genre: 'СЛЭШЕР', date: '25.10.2025', hours: 11.3, achievements: '22/50', percent: 44,steamUrl:'https://store.steampowered.com/app/460790/Bayonetta/',cover:'https://cdn2.steamgriddb.com/thumb/333853f0a38999344823b35427a4f9a1.jpg'},
+      {name: 'God of War 2018', rating: 2, verdict: 'Не рекомендую', review: 'gow2018', genre: 'СЛЭШЕР', date: '27.11.2025', hours: 14.7, achievements: '16/37', percent: 43,steamUrl:'https://store.steampowered.com/app/1593500/God_of_War/',cover:'https://cdn2.steamgriddb.com/thumb/5855660034a74cfe0e5fc8d57d17f4ac.jpg'},
+      {name: 'Sifu', rating: 2, verdict: 'Дроп', review: null, genre: 'МУСОР', date: '29.05.2025', hours: 3.7, achievements: '13/61', percent: 21,steamUrl:'https://store.steampowered.com/app/2138710/Sifu/',cover:'https://cdn2.steamgriddb.com/thumb/1a6235255cbe6083fa2c2a1b66984513.jpg'},
+      {name: 'Ghostwire Tokyo', rating: 2, verdict: 'Дроп', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '05.04.2026', hours: 6.2, achievements: '18/66', percent: 27,steamUrl:'https://store.steampowered.com/app/1475810/Ghostwire_Tokyo/',cover:'https://cdn2.steamgriddb.com/thumb/f8db1389df5ac42b28f8a58a497655a7.jpg'},
+      {name: 'Bloodborne', rating: 1, verdict: 'Не рекомендую', review: 'bloodborne', genre: 'SOULSLIKE', date: '18.12.2025', hours: 30, achievements: '', percent: '',cover:'https://cdn2.steamgriddb.com/thumb/021399af062379408df9c358a1a83cdb.jpg'},
+      {name: 'Contrast', rating: 0, verdict: 'Дроп', review: null, genre: 'ПЛАТФОРМЕР', date: '', hours: '', achievements: '', percent: '',steamUrl:'https://store.steampowered.com/app/224460/Contrast/',cover:'https://cdn2.steamgriddb.com/thumb/9adf5339387a8d22144f446a92825639.jpg'},
+      {name: 'Dark Souls', rating: 0, verdict: 'Дроп', review: null, genre: 'SOULSLIKE', date: '01.01.2026', hours: 5.7, achievements: '4/41', percent: 10,steamUrl:'https://store.steampowered.com/app/570940/DARK_SOULS_REMASTERED/',cover:'https://cdn2.steamgriddb.com/thumb/fa09649961c5c38096ee815c1084b2f0.jpg'},
+      {name: 'REANIMAL', rating: 0, verdict: 'Не рекомендую', review: null, genre: 'ХОРРОР', date: '26.02.2026', hours: 6, achievements: '10/31', percent: 32,steamUrl:'https://store.steampowered.com/app/2129530/REANIMAL/',cover:'https://cdn2.steamgriddb.com/thumb/88f9e4d4cea5c725f2501a27c8842f71.jpg'},
+      {name: 'SILENT HILL f', rating: 0, verdict: 'Не рекомендую', review: 'silenthillf', genre: 'ХОРРОР', date: '27.09.2025', hours: 12.1, achievements: '19/56', percent: 34,steamUrl:'https://store.steampowered.com/app/2947440/SILENT_HILL_f/',cover:'https://cdn2.steamgriddb.com/thumb/836fc55095976e7a7c4df140be0ee93e.jpg'},
+      {name: 'Slay the Princess', rating: 0, verdict: 'Не рекомендую', review: null, genre: 'НОВЕЛЛА', date: '02.11.2025', hours: 2.6, achievements: '21/131', percent: 16,steamUrl:'https://store.steampowered.com/app/1989270/Slay_the_Princess__The_Pristine_Cut/',cover:'https://cdn2.steamgriddb.com/thumb/3180e1c30e42c9e29e6305ab66024077.jpg'},
+      {name: 'The Evil Within', rating: 0, verdict: 'Дроп', review: null, genre: 'ХОРРОР', date: '30.09.2025', hours: 1.9, achievements: '0/71', percent: 0,steamUrl:'https://store.steampowered.com/app/268050/The_Evil_Within/?l=russian',cover:'https://cdn2.steamgriddb.com/thumb/8dc4099e27a8e844b159341acde634bf.jpg'},
+      {name: 'The First Berserker: Khazan', rating: 0, verdict: 'Не рекомендую', review: 'khazan', genre: 'SOULSLIKE', date: '21.05.2025', hours: 47.4, achievements: '43/57', percent: 75,steamUrl:'https://store.steampowered.com/app/2680010/The_First_Berserker_Khazan/',cover:'https://cdn2.steamgriddb.com/thumb/87f22ef7349f8bc783fbaecb30429e4b.jpg'},
+      {name: 'The Last of Us Part II', rating: 0, verdict: 'Не рекомендую', review: 'tlou2', genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ', date: '04.01.2026', hours: 21.1, achievements: '9/45', percent: 20,steamUrl:'https://store.steampowered.com/app/2531310/The_Last_of_Us_Part_II_Remastered/',cover:'https://cdn2.steamgriddb.com/thumb/f3949fa34208fe26a430aed32434ebc8.jpg'},
+      {name: 'Batman Arkham Asylum', rating: null, verdict: 'Рекомендую', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 14.7, achievements: '39/47', percent: 83,steamUrl:'https://store.steampowered.com/app/35140/Batman_Arkham_Asylum_Game_of_the_Year_Edition/?l=russian&cc=lt',cover:'https://cdn2.steamgriddb.com/thumb/69fd92bd85b2c2d1267e63ff1df624ae.jpg'},
+      {name: 'Batman Arkham Origins', rating: null, verdict: 'Можно попробовать', review: null, genre: 'ЭКШЕН-ПРИКЛЮЧЕНИЕ, СТЕЛС', date: '', hours: 9.3, achievements: '15/60', percent: 25,steamUrl:'https://store.steampowered.com/app/209000/Batman_Arkham_Origins/',cover:'https://cdn2.steamgriddb.com/thumb/2a17dafef6f0b54770c97b59b51e28e2.jpg'},
+      {name: 'Celeste', rating: null, verdict: 'Дроп', review: null, genre: 'ПЛАТФОРМЕР', date: '22.09.2025', hours: 0.9, achievements: '1/32', percent: 3,steamUrl:'https://store.steampowered.com/app/504230/Celeste/',cover:'https://cdn2.steamgriddb.com/thumb/8c433a09bd26b943147c4d9bacb15efc.jpg'},
+      {name: 'Firewatch', rating: null, verdict: null, review: null, genre: 'СИМУЛЯТОР ХОДЬБЫ', date: '', hours: '', achievements: '', percent: '',steamUrl:'https://store.steampowered.com/app/383870/Firewatch/',cover:'https://cdn2.steamgriddb.com/thumb/aa9264d85b7225106a396c7816efc645.jpg'},
+      {name: 'Nioh 2', rating: null, verdict: 'Не рекомендую', review: null, genre: 'SOULSLIKE', date: '30.09.2025', hours: 3.5, achievements: '2/88', percent: 2,steamUrl:'https://store.steampowered.com/app/1325200/_Complete_Edition/?l=russian&ref=vgtimes.ru',cover:'https://cdn2.steamgriddb.com/thumb/fba516f9186e17b65a125e04d8502644.jpg'},
+      {name: 'Warcraft 3', rating: null, verdict: 'Дроп', review: null, genre: 'СТРАТЕГИЯ', date: '', hours: 1.5, achievements: '', percent: '',cover:'https://cdn2.steamgriddb.com/thumb/a404424d64bf675a4a58cd01a66532fe.png'},
+      {name: 'MiSide', rating: 7, verdict: 'Рекомендую', review: null, genre: 'ХОРРОР', date: '15.04.2026', hours: 3.3, achievements: '12/26', percent: 46, steamUrl: 'https://store.steampowered.com/app/2527500/MiSide/', cover: 'https://cdn2.steamgriddb.com/thumb/3b306fdb529b7a52475e8c006bc31c53.jpg'},
     ];
 
-    const REVIEWS = {
-  're4': `**Resident Evil 4 Remake**
+    // 📝 ТЕКСТЫ ОБЗОРОВ
+      const REVIEWS = {
+      're4': `**Resident Evil 4 Remake**
 
 Круто, да?
 
@@ -383,7 +538,7 @@
 
 В итоге, хотелось бы объяснить почему мне так нравится игра, в которой по сути нет ничего особенного ни в плане сюжета, ни тем более в плане геймплея. Главная задача любой игры это приносить удовольствие в той или иной форме, а Резик с этим более чем прекрасно справляется. Это не какая-то гениальная игра, но она просто максимально комфортная и чилловая. Любой может в неё зайти и отдохнуть, повеселиться, а если сильно захочет то может пойти и позакреплять какие-то штуки на высоких уровнях сложности`,
 
-  'requiem': `**Resident Evil 9 Requiem**
+      'requiem': `**Resident Evil 9 Requiem**
 
 Ждал больше, но в итоге просто хорошая игра
 
@@ -420,7 +575,7 @@
 
 Я бы сказал, что пока что эти проблемы не настолько значительны, ведь опыт всё равно больше положительный за Леона, и как минимум неплохой за Грейс. Игру рекомендую, точно не заскучаете при 1-ом прохождении. К сожалению, я как будто начинаю замечать плохую тенденцию в Резиках: маленькая продолжительность (почти все проходятся меньше чем за 10 или даже за 5 часов, при условии что цены только растут), отсутствие каких-то значительных изменений и из-за этого сильная схожесть Резиков между собой. Нельзя сказать что по этим причинам все Резики это ужасные игры. Они всё равно остаются проектами высокого качества, за которые не стыдно отдать деньги, но как будто бы этого может быть недостаточно по мере выхода новых частей`,
 
-  'tsushima': `**Ghost of Tsushima**
+      'tsushima': `**Ghost of Tsushima**
 
 Под сакэ пойдёт
 
@@ -448,7 +603,7 @@
 
 Игра не ужасная, но и явно не хорошая. Добавили кучу всего, но не подумали будет ли это действительно интересно или сведётся к "random bullshit go". Так ещё и зрелищности никакой нету, как в каком-нибудь Batman Arkham или RE 4 Remake, которые такие же геймплейно не глубокие игры, но при этом просто увлекательные, где ты быстро разваливаешь врагов и всё это сопровождается хорошей обратной связью от каждого удара и красивыми анимациями. Цусима таким похвастаться не может`,
 
-  'sekiro': `**Sekiro: Shadows Die Twice**
+      'sekiro': `**Sekiro: Shadows Die Twice**
 
 Наверное единственный Соулс, который играется нормально
 
@@ -478,7 +633,7 @@
 
 Если захотите закрывать игру на 100% то лучше не надо, потому что это просто дрочильня на часов 5, которая наоборот убивает всё желание играть в Секиро`,
 
-  'wukong': `**Black Myth: Wukong**
+      'wukong': `**Black Myth: Wukong**
 
 Начиналось хорошо…
 
@@ -513,7 +668,7 @@
 
 Если говорить в общем и целом, то игра не то чтобы ужасная. Она просто не предлагает ничего интересного или нового в плане геймплея. Геймплей получается довольно однообразным и из-за этого скучным, поэтому единственное что может его разбавить это локации и часто меняющиеся боссы. Сами боссы лёгкие, ни на одного босса не ушло больше 10-15 попыток`,
 
-  'expedition33': `**Clair Obscur: Expedition 33**
+      'expedition33': `**Clair Obscur: Expedition 33**
 
 Шёл 1283012 год, а мы всё ещё не умеем дизайнить боссов, локации и вообще ничего…
 
@@ -539,20 +694,20 @@
 
 ## Графика
 
-- Нормальная графика, красивые эффекты, но анимации из Only Up'а это просто кринж. Смешно смотреть как персонаж делает кувырок или зацепляется за уступ
+- Нормальная графика, красивые эффекты, но анимации из Only Up’а это просто кринж. Смешно смотреть как персонаж делает кувырок или зацепляется за уступ
 
 ## ИТОГ
 
 В игре интересная боевая система, которая интереснее любой JRPG в которую я играл, но всё остальное оставляет желать лучшего особенно после середины игры`,
 
-  'liesofoverture': `**Lies of P Overture**
+      'liesofoverture': `**Lies of P Overture**
 
 Хахха, ты опоздал, Арлекино, я депнул твои пилы в Казино
 
 ## DLC
 
 - Добавили лук, который работает криво. Стрелы постоянно врезаются во что-то если пытаешь стрелять во врага, который выше тебя. Другая проблема лука это в том сколько урона ты наносишь и как часто. Урон то есть, но чем дальше тем он меньше, а вблизи постоянно стрелять сложно, ведь враги быстрые а лук не слишком быстрый
-- Крокодил это просто клоунада. Видимо разраб увидел как всем понравилось DLC Elden Ring'а и решил вкинуть в свою игру всю дичь из него. У Крокодила захват как у бегемота из Elden Ring'а, а также конченые атаки, которые тебя постоянно от него отталкивают
+- Крокодил это просто клоунада. Видимо разраб увидел как всем понравилось DLC Elden Ring’а и решил вкинуть в свою игру всю дичь из него. У Крокодила захват как у бегемота из Elden Ring’а, а также конченые атаки, которые тебя постоянно от него отталкивают
 - АРЛЕКИНО. ЭТО. БРЕД. Вот ноу оффенс, но разраб, ты вообще в эту дичь играл? Арлекино – это конченые атаки длиной в 15 ударов. Арлекино – это моментальный удар на твою хилку. Арлекино – это ядерка, которой предшествовало 25 непрерывных ударов. Арлекино – это эффект поломки от пилы. Арлекино – это БЕЗ ШУТОК И ПРЕУВЕЛИЧЕНИЙ одно окно на удар за 3 комбо босса. Вот что это за хрень? Если вы не хотите просто терпеть и терпеть, как я, то спокойно врубайте лёгкую сложность ведь в закреплении этого босса нет никакого смысла.
 - Вот огромнейший плюс этого DLC это сюжет. Ну какой же он кайфовый. Прямо таки очень приятно за ним следить и даже всякие записочки читать не скучно. Персонажи просто офигенные. Ещё очень радостно что есть связь между прошлым и будущим.
 
@@ -563,7 +718,7 @@
 Основная игра – 7/10
 DLC – 5/10 (Да, только из-за последнего босса. Ведь боссов в DLC всего 7 и большинство из них просто скучные, терпеть Арлекино за 2000 это жесть)`,
 
-  'tlou1': `**The Last of Us Part I**
+      'tlou1': `**The Last of Us Part I**
 
 Но 10 пустых ящиков из 10
 
@@ -592,7 +747,7 @@ DLC – 5/10 (Да, только из-за последнего босса. Ве
 
 Игра в норм, просто норм. Точно не надо сюда идти ради геймплея. Простая история на пару вечеров и всё. Лично мне кажется могли сделать сюжет лучше, но имеем, что имеем`,
 
-  'castlevania': `**Castlevania: Lords of Shadow 2**
+      'castlevania': `**Castlevania: Lords of Shadow 2**
 
 Если говорить в двух словах, то 2-ая часть стала чуть лучше 1-ой, но также как и свой предок проверку временем не прошла. Основные проблемы: Неадекватные враги для Слэшера, Ограничение применения оружия (хоть оно и необходимо), Плохое раскрытие персонажей.
 
@@ -612,31 +767,31 @@ DLC – 5/10 (Да, только из-за последнего босса. Ве
 
 - Тут чисто на любителя, но мне понравились городские улицы. Они не являются каким-то запоминающимися или разнообразными, но по ним просто приятно ходить и уж тем более паркурить. Главный плюс этой игры, к сожалению, это Паркур, который теперь чувствуется приятно и быстро. Ты смотришь не на едва ли ползящего по уступу Габриэля, а на Дракулу который летает между уступами ещё и в приятном сеттинге.`,
 
-  'silksong': `**Hollow Knight: Silksong**
+      'silksong': `**Hollow Knight: Silksong**
 
-"Как же горит у нытиков в комменатриях, что в игру нужно учиться игра, а не проходить спидраном без припятствий на пути))))"
+“Как же горит у нытиков в комменатриях, что в игру нужно учиться игра, а не проходить спидраном без припятствий на пути))))”
 
-Прошёл игру за 25 часов 6 минут и 39 секунд. По сути в этом обзоре будет очень много сравнений именно с оригинальным Hollow Knight'ом
+Прошёл игру за 25 часов 6 минут и 39 секунд. По сути в этом обзоре будет очень много сравнений именно с оригинальным Hollow Knight’ом
 
 ## Геймплей
 
 - Абилки (Спринт, Двойной прыжок) типо норм. Они по большей части такие же как и в HK, но их проблема в том, что ты их получаешь слишком редко как будто. Типо ты первые часов 10 как будто вообще ничего не можешь из-за чего игра ощущается очень затянуто.
-- В этой игре добавили новую фичу под названием "Знаки" и всего их 7. У знаков отличаются: длина удара, удар вниз, хилл, некоторые приёмы, а также кол-во амулетов и инструментов, которые можно брать с собой. Я нашёл всего 4 (учитывая стартовый) и могу сказать, что стартовый скорее всего никто брать не будет из-за диагонального удара вниз, а Зверя не будут брать так как он не даёт моментального хила. Странница и Жнец нормальные потому что они обладают нормальным ударом вниз и хилом. Идея в целом интересная, но из-за того что многие боссы здесь ну просто невероятно мобильные и резкие, ты вряд ли будешь использовать какие-то приёмы знаков, ещё и учитывая что мувсет босса ты не знаешь. Например, ты на Охотнице захочешь использовать атаку с разбега и отлететь вверх, а босс в это время сам прыгнет или сделает быстрый рывок и т.д. из-за чего ты получишь ненужный урон. Из-за таких ситуаций и из-за урона в 2 маски игрок скорее всего будет просто стараться играть аккуратнее и как в старые добрые в HK просто подбегать давать пару тычек и сразу убегать
-- Инструменты это буквально протезы из Секиро. Ты можешь их использовать, но они максимально опциональны, требуют расходника, делятся на "полезно всегда" и "почти бесполезно".
+- В этой игре добавили новую фичу под названием ”Знаки” и всего их 7. У знаков отличаются: длина удара, удар вниз, хилл, некоторые приёмы, а также кол-во амулетов и инструментов, которые можно брать с собой. Я нашёл всего 4 (учитывая стартовый) и могу сказать, что стартовый скорее всего никто брать не будет из-за диагонального удара вниз, а Зверя не будут брать так как он не даёт моментального хила. Странница и Жнец нормальные потому что они обладают нормальным ударом вниз и хилом. Идея в целом интересная, но из-за того что многие боссы здесь ну просто невероятно мобильные и резкие, ты вряд ли будешь использовать какие-то приёмы знаков, ещё и учитывая что мувсет босса ты не знаешь. Например, ты на Охотнице захочешь использовать атаку с разбега и отлететь вверх, а босс в это время сам прыгнет или сделает быстрый рывок и т.д. из-за чего ты получишь ненужный урон. Из-за таких ситуаций и из-за урона в 2 маски игрок скорее всего будет просто стараться играть аккуратнее и как в старые добрые в HK просто подбегать давать пару тычек и сразу убегать
+- Инструменты это буквально протезы из Секиро. Ты можешь их использовать, но они максимально опциональны, требуют расходника, делятся на “полезно всегда” и “почти бесполезно”.
 - Паркур это просто жесть. Паркур как будто из Пути Боли с врагами на каждом шагу и с дамагом на 2 маски. Крутое решение, надеюсь разраб так каждый день до дома добирается как ебучий кенгуру.
-- Экономика просто в жопе в 1-ом акте ИЗ 2-УХ БЛЯТЬ. Ну норм разраб придумал, надеюсь у него в Австралии такая экономика как в этой игре. Враги вначале игры не дают денег от слова совсем, а цены как будто под бесконечной инфляцией. Зато металл на Инструменты сыпят так "мало", что я аж большую часть игры бегаю с максимальным количеством. Из этой проблемы выходит ситуация, где я прошёл сложную локу и дошёл до карты, скамейка или быстрого перемещения, НО ОНИ ПЛАТНЫЕ, а денег поблизости достать негде.
+- Экономика просто в жопе в 1-ом акте ИЗ 2-УХ БЛЯТЬ. Ну норм разраб придумал, надеюсь у него в Австралии такая экономика как в этой игре. Враги вначале игры не дают денег от слова совсем, а цены как будто под бесконечной инфляцией. Зато металл на Инструменты сыпят так “мало”, что я аж большую часть игры бегаю с максимальным количеством. Из этой проблемы выходит ситуация, где я прошёл сложную локу и дошёл до карты, скамейка или быстрого перемещения, НО ОНИ ПЛАТНЫЕ, а денег поблизости достать негде.
 - Спеллы (Шёлковое копьё, парирование и т.д.) гораздо хуже чем в HK, потому что там ты мог все спеллы использовать без необходимости экипировать их на Скамейке, из-за чего ты, иногда, но всё же юзал все. Например, Пике чтобы задоджить урон, Вопль чтобы убить какую-то мелочь выше тебя или обычный Мстительный Дух чтобы убить кого-то не подходя близко. Здесь же всё это сводится к тому что у тебя один спелл и тебе не надо думать куда тратить ману, просто втупую жми ведь промахнуться ими сложно и они просто наносят урон только в разной области.
 - Парирование как Спелл просто Клинок Бессмертных из Секиро. Если ты его откроешь, то про все остальные забудешь ведь оно позволяет за низкую стоимость по мане не только избегать урона, но и наносить его в ответ ещё и по области.
-- Амулеты просто мусор. Если в HK у тебя конечно не все амулеты были супер полезные, то здесь полезных штуки 3-4. Если в HK ты мог собрать разные билды, то здесь ты можешь просто повесить амулеты которые "ну типо норм, всё равно нечего ставить". Просто интересную механику выкинули в мусорку
+- Амулеты просто мусор. Если в HK у тебя конечно не все амулеты были супер полезные, то здесь полезных штуки 3-4. Если в HK ты мог собрать разные билды, то здесь ты можешь просто повесить амулеты которые “ну типо норм, всё равно нечего ставить”. Просто интересную механику выкинули в мусорку
 - Урон в 2 маски? Разраб ты упал? Я надеюсь тебя Кенгуру каждый день в GTA 5 RP дамажат так. Ставим 5 масок со старта, а на самом деле 3. Окружение тоже по какой-то причине дамажит по 2 маски, многие враги почему-то имеют мультихит, который дамажит то по 1 маске, но из-за того что удар по тебе успевает пройти 2 раза, то остаёшься всё равно без 2 масок. Ну норм, это ведь точно позволяет мне нормально изучать локации и сложные атаки боссов.
 - Летающие враги как и в какой-нибудь Экспедиции 33 просто ужасные. Они буквально читают твои инпуты, и когда ты даёшь в них рывок, они сам дают рывок назад, либо изначально не подлетают слишком близко.
-- Самую большую проблему этой игры можно описать, как то что она превратилась в "Любимую 10 из 10 игру Бабадзаки Elden Ring/Dark Souls". Если в HK тебя конечно и могли иногда душить врагами или локами, то потом тебе всё равно давали передохнуть. А здесь собрали лучшие традиции Бабадзаки: Болото личинок сосущее ману (aka болото яда), конченые ловушки сносящие 2 маски, огромное кол-во мерзких врагов близко друг к другу, ПАРКУР С ЭТИМИ САМЫМИ ВРАГАМИ.
+- Самую большую проблему этой игры можно описать, как то что она превратилась в “Любимую 10 из 10 игру Бабадзаки Elden Ring/Dark Souls”. Если в HK тебя конечно и могли иногда душить врагами или локами, то потом тебе всё равно давали передохнуть. А здесь собрали лучшие традиции Бабадзаки: Болото личинок сосущее ману (aka болото яда), конченые ловушки сносящие 2 маски, огромное кол-во мерзких врагов близко друг к другу, ПАРКУР С ЭТИМИ САМЫМИ ВРАГАМИ.
 
 ## Локации
 
 - Из хорошего можно назвать что локации очень живые и разнообразные. В локе где Муравьи, после смерти противников, их трупы уносят их маленькие собратья. В локе где роботы, какие-то робомухи не просто так летают, а чинят что-то, как и написано у них в Бестиарие и т.д. За это действительно можно похвалить, ведь видя такое, ты невольно думаешь что мир игры на самом деле живой и без тебя.
 - Аспект метроидвании раскрыт на 200%. Возвращаясь в локации где уже был ты находишь много нового, чего не находил раньше из-за чего исследовать хочется больше и больше.
-- Лавочки порой за километры друг от друга или от босса, из-за чего твои прохождения неизвестных локаций превращаются в "Я обязательно выживу", а дорога до Босса в клоунаду, где ты идёшь по 5 минут, чтобы отъехать от пары ударов.
+- Лавочки порой за километры друг от друга или от босса, из-за чего твои прохождения неизвестных локаций превращаются в “Я обязательно выживу”, а дорога до Босса в клоунаду, где ты идёшь по 5 минут, чтобы отъехать от пары ударов.
 
 ## Сюжет
 
@@ -649,9 +804,9 @@ DLC – 5/10 (Да, только из-за последнего босса. Ве
 
 ## ИТОГ
 
-В итоге могу сказать, что я невероятно разочарован в Hollow Knight Silksong ведь эту делали 7 лет, а в итоге мы получаем буквально игру с проблемам Dark Souls'ов, вышедших лет 15 назад. Некоторые задумки интересные, но как и в Вуконге недожатые до чего-то крутого или просто потерявшиеся в бесконечной фрустрации от разных мелочей. Team Cherry как будто просто зажрались и выкатили игру на которую просто смотреть приятнее, чем в неё играть. Hollow Knight 3 наверняка будет и если он будет таким же, то всё будет ещё грустнее`,
+В итоге могу сказать, что я невероятно разочарован в Hollow Knight Silksong ведь эту делали 7 лет, а в итоге мы получаем буквально игру с проблемам Dark Souls’ов, вышедших лет 15 назад. Некоторые задумки интересные, но как и в Вуконге недожатые до чего-то крутого или просто потерявшиеся в бесконечной фрустрации от разных мелочей. Team Cherry как будто просто зажрались и выкатили игру на которую просто смотреть приятнее, чем в неё играть. Hollow Knight 3 наверняка будет и если он будет таким же, то всё будет ещё грустнее`,
 
-  'p5r': `**Persona 5 Royal**
+      'p5r': `**Persona 5 Royal**
 
 Ну… можно сказать что я почти прошёл Персону
 
@@ -668,15 +823,15 @@ DLC – 5/10 (Да, только из-за последнего босса. Ве
 - Кроме врагов ещё встречаются сундуки и Семечки (Will Seeds). Сундуки в 99% случаев содержат бесполезный лут для расходников, а Семечки (всего 3 уникальные штуки для каждого Дворца) дают в целом приятные, но не обязательные для комфортной игры, предметы.
 - Боссы дворцов это просто огромные мешки с ХП без уязвимостей, которые просто ставят тебя в неприятные условия. Мадарамэ со своими отвратительными копиями. Окумура со своими роботами, которые БУКВАЛЬНО НЕПРОХОДИМЫ только если до тебя не допрёт что ты должен накрафтить расходников и победить его ими. Шидо, которые постоянно бафает себя и заставляет тебя драться 1 на 1. Просто мерзотнейшие противники, где Геймплей Персоны деградирует до цикла, который я описывал раньше.
 - А вот в Реальном мире иммерсивная игра в режиме: Школа - Болтовня с сообщниками работает просто отлично. Сидеть в Школе и отвечать на Вопросы преподов прикольно, хоть и раздражает, когда тебе вкидывают какой-то вопрос, который ты можешь не знать (ну просто потому что не знаешь его IRL) и игра лишает тебя дополнительных очков для развития Характеристик. Общение с друзьями очень хорошо раскрывает их всех как Персонажей и даёт приятные бонусы за поднятие с ними отношений. Более того есть ещё полно всяких активностей в Городе: хождение в зал (для повышения ОЗ и ОД), готовка кофе (для крафта расходников на ОЗ и ОД), хождение на Работу (для заработка денег) и т.д. Всё это легко и интересно.
-- Но даже в аспекте Социальных Отношений есть свои минусы. Чтобы максимально прокачать Персонажа как можно быстрее тебе нужно выбирать "правильные" ответы в диалогах с ними, что естественно очень часто вообще не очевидно. И как оказывается есть даже ОБЯЗАТЕЛЬНЫЕ варианты для того, чтобы построить любовные отношения с какой-то девушкой (или девушками хо-хо-хо). Узнал я это естественно просто упустив возможность заромансить Врачиху.
+- Но даже в аспекте Социальных Отношений есть свои минусы. Чтобы максимально прокачать Персонажа как можно быстрее тебе нужно выбирать “правильные” ответы в диалогах с ними, что естественно очень часто вообще не очевидно. И как оказывается есть даже ОБЯЗАТЕЛЬНЫЕ варианты для того, чтобы построить любовные отношения с какой-то девушкой (или девушками хо-хо-хо). Узнал я это естественно просто упустив возможность заромансить Врачиху.
 - В какой-то момент также игра требует чтобы у тебя та или иная Характеристика была на определённом уровне, а если нет, то всё - временно ты с этим персом не общаешься. Сколько у тебя сейчас очков конкретной характеристики или сколько тебе ещё нужно игра естественно тебе не говорит.
 
 ## СЮЖЕТ
 
-- Сюжет и Персонажи это единственная хорошая сторона этой игры, которая под конец естественно дала слабину. В целом посыл игры, а именно "Подростковый бунт против угнетения взрослых" мне оооочень нравится.
+- Сюжет и Персонажи это единственная хорошая сторона этой игры, которая под конец естественно дала слабину. В целом посыл игры, а именно “Подростковый бунт против угнетения взрослых” мне оооочень нравится.
 - У каждого персонажа какая-то своя предыстория, которая может и не какая-то удивительная но просто понятная. Это прикольно, что тебя не грузят какими-то сложными мыслями, а просто круто по-анимешному показывают как подростки идут против общества и побеждают злых взрослых.
 - Но под конец естественно надо было добавить какого-то бреда с Акечи. Чел, который просто был нелюбимым ребёнком совершенно случайно получил силы почти как у Джокера и пошёл гасить людей, чтобы его Батя (политик, одержимый идеей власти над Японией, чтобы направить её по правильному пути) был доволен. Акечи просто невероятно умный персонаж, который проиграл ПРОСТО ПОТОМУ ЧТО зачем-то назвал имя своего Бати, по сути самого Главного Злодея. Вот просто захотел и назвал, хотя ему даже говорили не называть его. Ну умнейший персонаж выдаёт такой бред? Сценарист, ты меня за придурка держишь?
-- Больше всего в игре раздражает то что она растянута на 80 часов. Большую часть которого ты тратишь на скучный фарм или на прочтение диалогов персонажей, где они говорят ОДНО И ТООООО ЖЕ почти каждый раз. Разработчик как будто держит игрока за дебила, ведь тебе каждый день пишут друзья со словами "А ДАВАЙ ПОЙДЁМ ВО ДВОРЕЦ?" хотя у тебя ещё месяц целый и ты не обязан проходить Дворец сразу. Или Персонажи пересказывают свои чувства или события, которые уже были по 15 раз. А также Моргана, кот, который просто не разрешает тебе по Вечерам выходить из дома и заниматься активностями ведь Джокер должно быть "очень устал"
+- Больше всего в игре раздражает то что она растянута на 80 часов. Большую часть которого ты тратишь на скучный фарм или на прочтение диалогов персонажей, где они говорят ОДНО И ТООООО ЖЕ почти каждый раз. Разработчик как будто держит игрока за дебила, ведь тебе каждый день пишут друзья со словами “А ДАВАЙ ПОЙДЁМ ВО ДВОРЕЦ?” хотя у тебя ещё месяц целый и ты не обязан проходить Дворец сразу. Или Персонажи пересказывают свои чувства или события, которые уже были по 15 раз. А также Моргана, кот, который просто не разрешает тебе по Вечерам выходить из дома и заниматься активностями ведь Джокер должно быть “очень устал”
 
 ## ВЫВОД
 
@@ -684,7 +839,7 @@ DLC – 5/10 (Да, только из-за последнего босса. Ве
 
 Оценка - 4/10`,
 
-  'bayonetta': `**Bayonetta**
+      'bayonetta': `**Bayonetta**
 
 DMC для девочек…
 
@@ -696,7 +851,7 @@ DMC для девочек…
 - Некоторые враги в Bayonetta просто сложные. Взять хотя бы неприятную пару из синего и красного противников, на которых вообще невозможно делать какие-либо комбо. Если ты просто пытаешься их бить, то они либо уклоняются, либо атакуют быстрее тебя и единственный способ их убить это делать идеальный перекат, чтобы в Тайм стопе нанести им урон, но учитывая какие резвые у них атаки, первые стычки с ними будут выглядеть так как будто главные герои тут они. В целом игра очень часто кидает тебе врагов, на которых ты не сделаешь комбо, ведь они не поддаются контролю (то есть не подбрасываются и не станлочатся от атак). Вот и думайте что делать в этой игре: обычные болванчики умирают слишком быстро, не позволяя сделать комбо, а элитки проходятся по методу терпения (тычки, перекат, тычка, перекат).
 - Ещё есть механика уникального оружия, выпадающего с врагов после их убийства, которое зачастую просто неудобное и годящееся на 4-5 хитов. Урон конечно огромный, но у этого оружия свой Мувсет, который никак не синергирует с твоим, так что опять отмена по Комбо, к тому же это оружие зачастую медленное и ты скорее получишь пару раз по лицу прежде чем нанесешь удар.
 - Боссы просто мусор. Они как будто пришли из Соулсов, потому что все просто невероятных размеров. В DMC конечно тоже такие есть, но они всё равно меньше и многими можно жонглировать так же как и обычными противниками. В Bayonetta же ты просто доджишь простейшие атаки Боссов, которых штуки 3 всего и подходишь дать 3 тычки. Короче занимаешься отступлением, пока Босс не сдохнет. БОЛЕЕ ТОГО, по какой-то причине разрабы решили что будет отличной идеей, 3-х имеющихся боссов закинуть ЕЩЁ РАЗ в конец игры. Видимо подумали что они настолько крутые, так что пусть игрок дерётся с ними ещё раз.
-- Разрабы пытались разнообразить обычные драки с врагами геймплейными вставками, например, ездой на мотоцикле или полётом на ракете, где ты должен соответственно доджить другие машины и расстреливать врагов. И казалось бы, по своей сути простейшая вещь, но хорошо справляющаяся с разнообразием, учитывая основной геймплей (в той же DMC такого вообще нет), но это "разнообразие" длится настолько долго, что успевает из "Блин, неплохо придумали" превратиться в "Блин, а когда это нахуй кончится. Что так долго ?".
+- Разрабы пытались разнообразить обычные драки с врагами геймплейными вставками, например, ездой на мотоцикле или полётом на ракете, где ты должен соответственно доджить другие машины и расстреливать врагов. И казалось бы, по своей сути простейшая вещь, но хорошо справляющаяся с разнообразием, учитывая основной геймплей (в той же DMC такого вообще нет), но это “разнообразие” длится настолько долго, что успевает из “Блин, неплохо придумали” превратиться в “Блин, а когда это нахуй кончится. Что так долго ?”.
 
 ## Сюжет
 
@@ -707,58 +862,58 @@ DMC для девочек…
 
 В итоге могу сказать, что могла бы получиться как минимум нормальная игра, если бы убрали всех сложных врагов и добавили побольше приёмов. Ну как бы это смешно не звучало, но Bayonetta - это кастрированный DMC. Воооот так`,
 
-  'gow2018': `**God of War 2018**
+      'gow2018': `**God of War 2018**
 
 Человек Войны 4…
 
 ## Геймплей
 
-- Более скучного геймплея в казалось бы экшен игре, походящей на слэшер, я не видел. С самого начала игры кидают врагов по несколько штук. Враги в угоду, видимо, какому-то "реализму" не терпят пока ты убьёшь одного, а просто идут на тебя все вместе. Сравнивая с DMC и Bayonetta, ты видишь что в этих играх на тебя тоже идёт несколько врагов за раз, но там ты можешь отлично контролировать либо всю толпу (какими-нибудь AoE атаками), либо одного противника (подбросом противника в воздух, чтобы изолировать от других). В Боге Войны ты так не можешь. Кратос слишком медленный, чтобы постоянно подскакивать к какому-то конкретному врагу, Кратос не обладает станами (что странно ведь добавить к Топору пассивный эффект Заморозки можно было и сделать), чтобы станить всех и убивать поодиночке, Кратос не может взять и как-то вытянуть врага в плоскость где он сможет драться с ним один на один. Тебя просто гасят толпой со всех сторон. Пока бьёшь одного перед собой, сзади уже либо накидают огненные шары или просто дадут тычку в спину, которую ты физически увидеть не можешь. Почему не сделать как в DMC, где если камера вообще врага не видит, то он очень пассивный.
-- Слэшер где ты не можешь нормально делать никакие комбо. Просто задрачивая ПКМ и/или ЛКМ ты убиваешь всех без проблем. Игра не то, что не мотивирует тебя делать комбо, она наоборот наказывает за попытки. Вот думаешь, что щас ебать раскастуешься, приём за приёмом. А НЕТ БЛЯТЬ! Соси лол ведь тебе в спину уже кидают какой-то мусор или несутся с копьями. Просто абсолютное непонимание того как надо делать сражения с множеством врагов. Абсолютное непонимание того что такое "игровой flow" в игре, которая должна быть заточена на быстрые красочные битвы где ты просто танцуешь на могиле своих врагов, а не терпишь, перекатываясь, как будто в любимой игре Elden Ring.
+- Более скучного геймплея в казалось бы экшен игре, походящей на слэшер, я не видел. С самого начала игры кидают врагов по несколько штук. Враги в угоду, видимо, какому-то “реализму” не терпят пока ты убьёшь одного, а просто идут на тебя все вместе. Сравнивая с DMC и Bayonetta, ты видишь что в этих играх на тебя тоже идёт несколько врагов за раз, но там ты можешь отлично контролировать либо всю толпу (какими-нибудь AoE атаками), либо одного противника (подбросом противника в воздух, чтобы изолировать от других). В Боге Войны ты так не можешь. Кратос слишком медленный, чтобы постоянно подскакивать к какому-то конкретному врагу, Кратос не обладает станами (что странно ведь добавить к Топору пассивный эффект Заморозки можно было и сделать), чтобы станить всех и убивать поодиночке, Кратос не может взять и как-то вытянуть врага в плоскость где он сможет драться с ним один на один. Тебя просто гасят толпой со всех сторон. Пока бьёшь одного перед собой, сзади уже либо накидают огненные шары или просто дадут тычку в спину, которую ты физически увидеть не можешь. Почему не сделать как в DMC, где если камера вообще врага не видит, то он очень пассивный.
+- Слэшер где ты не можешь нормально делать никакие комбо. Просто задрачивая ПКМ и/или ЛКМ ты убиваешь всех без проблем. Игра не то, что не мотивирует тебя делать комбо, она наоборот наказывает за попытки. Вот думаешь, что щас ебать раскастуешься, приём за приёмом. А НЕТ БЛЯТЬ! Соси лол ведь тебе в спину уже кидают какой-то мусор или несутся с копьями. Просто абсолютное непонимание того как надо делать сражения с множеством врагов. Абсолютное непонимание того что такое “игровой flow” в игре, которая должна быть заточена на быстрые красочные битвы где ты просто танцуешь на могиле своих врагов, а не терпишь, перекатываясь, как будто в любимой игре Elden Ring.
 - У Кратоса два оружия на игру: Левиафан (Ледяной топор) и Клинки Хаоса (Огненные парные клинки). Левиафана - оружие ближней дистанции с фокусом в основном на одну цель. Клинки Хаоса - оружие ближней/средней дистанции с фокусом на AoE атаки по нескольким врагам за раз. Как было сказано ранее, в них нет абсолютно никакого смысла как-то жёстко выдумывать комбо и уже тем более чередовать оружие. Все враги убиваются благодаря двум кнопкам мышки и перекату, так что просто берёшь Оружие, которое сильнее бьёт и полетел.
-- Стихийные враги это единственная причина не использовать всегда одно оружие, НО даже здесь разрабы сели в лужу. Вот казалось бы, игроку говорят "Вот Ледяные враги (голубого цвета) - они не получают урон от Левиафана". Но по какой-то причине есть голубые враги, которые получают Ледяной урон. А как? А почему? А каким образом я должен определить кто получает Ледяной урон, а кто нет? По оттенкам голубой кожи врагов или чё?
-- Мало того, что врагов много, так есть ещё Летающие и какие-то неприятные ребята из Альвхейма, которые ну типо просто получают неосязаемость и улетают подальше от тебя, даже если ты не перестаёшь бить их. Кратос, который абсолютно не мобильный, вынужден драться с врагами, которые имеют рывки или полёт. Из чего и выходит: "Сделал пару ударов по врагу→ враг улетел → ты бежишь за ним → сделал пару ударов по врагу" и так далее. Ну ОООООЧЕНЬ бодрый геймплей.
-- Геймплей Атрея это "FFFFFFFF". Очень круто. Вместо того, чтобы сделать так, что Атрей как раз таки и выступал бы тем самым звеном, которое сможет как-то станить много врагов или собирать их в одной точки, чтобы Батя эпично их разъебашил, Атрей стал просто крипом, который работает по нажатию одной и той же кнопки несколько раз.
+- Стихийные враги это единственная причина не использовать всегда одно оружие, НО даже здесь разрабы сели в лужу. Вот казалось бы, игроку говорят “Вот Ледяные враги (голубого цвета) - они не получают урон от Левиафана”. Но по какой-то причине есть голубые враги, которые получают Ледяной урон. А как? А почему? А каким образом я должен определить кто получает Ледяной урон, а кто нет? По оттенкам голубой кожи врагов или чё?
+- Мало того, что врагов много, так есть ещё Летающие и какие-то неприятные ребята из Альвхейма, которые ну типо просто получают неосязаемость и улетают подальше от тебя, даже если ты не перестаёшь бить их. Кратос, который абсолютно не мобильный, вынужден драться с врагами, которые имеют рывки или полёт. Из чего и выходит: “Сделал пару ударов по врагу→ враг улетел → ты бежишь за ним → сделал пару ударов по врагу” и так далее. Ну ОООООЧЕНЬ бодрый геймплей.
+- Геймплей Атрея это “FFFFFFFF”. Очень круто. Вместо того, чтобы сделать так, что Атрей как раз таки и выступал бы тем самым звеном, которое сможет как-то станить много врагов или собирать их в одной точки, чтобы Батя эпично их разъебашил, Атрей стал просто крипом, который работает по нажатию одной и той же кнопки несколько раз.
 - Билдостроение полностью отсутствует. Просто, как обезьяна, покупаешь шмотки с наибольшими статами и качаешь все перки что видишь, ведь уже к середине игры у тебя избыток Голды и Опыта. Не зря делали. Очень интересно по-быстрому прокликать все иконки навыков, даже не читая, ведь понимаешь, что никогда их не используешь.
 
 ## Локации и Боссы
 
-- Локи и Боссы настолько "интересно" сделаны, что кину в один пункт. По сюжету Боссов штук 13-15. Правда 11 из которых это: 3 файта с Бальдером (который почти никак не меняется) и 8 файтов с Троллями (которые просто имеют разные скины). Ну, круто, 11 файтов у нас это одно и то же блять. Просто пиздец, я не играл в God of War 3, но я видел Боссфайты там и это просто Peak Fiction по сравнению с этим позорищем из игры 2018 года, которую сделала та же студия.
+- Локи и Боссы настолько “интересно” сделаны, что кину в один пункт. По сюжету Боссов штук 13-15. Правда 11 из которых это: 3 файта с Бальдером (который почти никак не меняется) и 8 файтов с Троллями (которые просто имеют разные скины). Ну, круто, 11 файтов у нас это одно и то же блять. Просто пиздец, я не играл в God of War 3, но я видел Боссфайты там и это просто Peak Fiction по сравнению с этим позорищем из игры 2018 года, которую сделала та же студия.
 - 5 локаций на игру: Шахта, Хельхейм, Леса, Альвхейм и Озеро Девяти. Просто наитупейшие локи, по которым ты проходишь несколько раз за игру, хотя там ничего нового не появляется. Просто скучнейший бэктрекинг.
 
 ## Сюжет
 
 - Честно, я думал, что это будет единственное за что я похвалю эту игру, но даже здесь я ошибся. Нарративно просто смешно смотреть, как Кратос, который способен поднимать вещи раз в 30 больше него, не шотает всех врагов. Можно было объяснить это просто любой магической хуйнёй, но нет. То Кратос переворачивает голыми руками целый храм, то Кратос вынужден просить помощь Атрея, чтобы подняться на уступ по цепи, вместо того, чтобы взять и прыгнуть на 3 метра вверх.
 - Навязчивая Фрейя это просто панацея. Нужно убрать дым на горе - Фрейя поможет, нужно вылечить Атрея - Фрейя конечно же знает как, на вас напал какой-то неуязвимый НН - так это же сын Фрейи. Единственное хороший момент с ней это, то что игра не говорит тебя с самого начала напрямую, что Бальдер это сын Фрейи, а чисто вкидывает тебе намёки (почему-то испугалась зелёных стрел/ сказала, что у неё тоже есть сын, она с ним не виделась давно/ упоминалось, что она жена Одина, а Бальдер как раз брат Тора), чтобы ты сам мог догадаться.
-- Смена настроения Атрея это просто жесть. Мне понравилось, что когда он узнал, что он Бог, то начал многовато о себе думать. Это довольно логично, ведь он ребёнок и не особо понимает, кто такие Боги и к чему приводит такая горделивость, но то что он делает дальше это beyond my understanding. Он начинает не просто выёбываться на Кратоса, ОН В НЕГО БЛЯТЬ СТРЕЛЯЕТ ИЗ ЛУКА. Типо я конечно понимаю, что навыдумывал себе, что он самый крутой, но я никогда в жизни не поверю, что ребёнок поднял бы руку на родителя и ещё блять обвинял его в чём-то, когда Кратос защищал его от Бальдера. А потом когда Кратос вкинул ему пару слов по типу "Ты потерял контроль" или "Ты меня не послушал", Атрей сразу успокоился. Это не так работает, люди не перестают делать что-то плохое, просто потому что им так сказали, особенно если это дети. У Атрея в мозгу просто неправильный (в понимании Кратоса и смертных) образ Бога. Сделали бы катсцену, где Кратос объясняет Атрею, что Боги это не те, кто делают что-то просто потому что хотят. Как раз поведал бы сыну про своё прошлое, где он чисто от злости шёл ебашить людей и богов, не думая о последствиях. Или сказал бы что-то про Мать Атрея. Это было бы гораздо лучше чем "Ну он короче просто пристыдил Атрея и тот стал снова нормальным".
+- Смена настроения Атрея это просто жесть. Мне понравилось, что когда он узнал, что он Бог, то начал многовато о себе думать. Это довольно логично, ведь он ребёнок и не особо понимает, кто такие Боги и к чему приводит такая горделивость, но то что он делает дальше это beyond my understanding. Он начинает не просто выёбываться на Кратоса, ОН В НЕГО БЛЯТЬ СТРЕЛЯЕТ ИЗ ЛУКА. Типо я конечно понимаю, что навыдумывал себе, что он самый крутой, но я никогда в жизни не поверю, что ребёнок поднял бы руку на родителя и ещё блять обвинял его в чём-то, когда Кратос защищал его от Бальдера. А потом когда Кратос вкинул ему пару слов по типу “Ты потерял контроль” или “Ты меня не послушал”, Атрей сразу успокоился. Это не так работает, люди не перестают делать что-то плохое, просто потому что им так сказали, особенно если это дети. У Атрея в мозгу просто неправильный (в понимании Кратоса и смертных) образ Бога. Сделали бы катсцену, где Кратос объясняет Атрею, что Боги это не те, кто делают что-то просто потому что хотят. Как раз поведал бы сыну про своё прошлое, где он чисто от злости шёл ебашить людей и богов, не думая о последствиях. Или сказал бы что-то про Мать Атрея. Это было бы гораздо лучше чем “Ну он короче просто пристыдил Атрея и тот стал снова нормальным”.
 
 ## Вывод
 
 Игру делали люди, которые вообще не понимают ничего. Надо было втупую сделать месилово, где Кратос устраивает красочную резню толпы слабых крипов. Думать не нужно, но хотя бы веселее будет. Если что чисто вброс. Я не имею в виду, что это именно правильный вариант, но думаю, что он получше итого продукта. Страшно осознавать, что через 6 лет вышла Black Myth:Wukong, которая имеет абсолютно те же самые ошибки`,
 
-  'bloodborne': `**Bloodborne**
+      'bloodborne': `**Bloodborne**
 
 Бойся древней крови
 
 ## Геймплей
 
-- В Бладборне у тебя 2 вида оружия: холодное (сабли, трости, катаны и т.д.) и огнестрельное (пистолеты, мушкеты, пушки и т.д.). Если холодное оружие работает так же как и в других играх FromSoftware, то пистолет это новая механика, которая представляет собой вариант парирования. Если выстрелишь ровно перед тем как босс ударит, то застанишь его и сможешь сделать рипост. Но это механика полная херня. Игрока не обучают этому, не дают визуальных подсказок, демонстрирующих что "да-да вот щас стреляй", и более того, после оглушения враг встаёт почти сразу. Механика приводящая к 2-м исходам: Игрок просто спамит выстрелы в надежде что "вот-вот щас получится", теряя все пули, либо игрок вообще не пользуется механикой.
-- Если в DS броня действительно что-то решает. Банально, тяжёлая броня - билд в танка, броня лёгкая - билд в ассасина. В Bloodborne же броня нахуй не нужна. Это даже не ситуация с Вуконгом и Казанью, где ты берёшь броню с наибольшими статами, в Бладике ты получаешь "Броню Охотника" и не меняешь никогда, потому что у неё лучшие циферки.
-- Тебе предлагают выбрать холодное оружие в самом начале. На выбор: топор, меч-пила, трость-хлыст. В целом нехуевая задумка конечно, давать игроку выбор, не рассказав о последствиях, так ещё и дропнув на игрока термины "Тайный урон" и "Кровавый урон". Та же история и с огнестрелом.
+- В Бладборне у тебя 2 вида оружия: холодное (сабли, трости, катаны и т.д.) и огнестрельное (пистолеты, мушкеты, пушки и т.д.). Если холодное оружие работает так же как и в других играх FromSoftware, то пистолет это новая механика, которая представляет собой вариант парирования. Если выстрелишь ровно перед тем как босс ударит, то застанишь его и сможешь сделать рипост. Но это механика полная херня. Игрока не обучают этому, не дают визуальных подсказок, демонстрирующих что “да-да вот щас стреляй”, и более того, после оглушения враг встаёт почти сразу. Механика приводящая к 2-м исходам: Игрок просто спамит выстрелы в надежде что “вот-вот щас получится”, теряя все пули, либо игрок вообще не пользуется механикой.
+- Если в DS броня действительно что-то решает. Банально, тяжёлая броня - билд в танка, броня лёгкая - билд в ассасина. В Bloodborne же броня нахуй не нужна. Это даже не ситуация с Вуконгом и Казанью, где ты берёшь броню с наибольшими статами, в Бладике ты получаешь “Броню Охотника” и не меняешь никогда, потому что у неё лучшие циферки.
+- Тебе предлагают выбрать холодное оружие в самом начале. На выбор: топор, меч-пила, трость-хлыст. В целом нехуевая задумка конечно, давать игроку выбор, не рассказав о последствиях, так ещё и дропнув на игрока термины “Тайный урон” и “Кровавый урон”. Та же история и с огнестрелом.
 - Ещё игра видимо хочет чтобы игрок сразу решил через какую пушку он хочет играть. Перекачать статы нельзя, а некоторые пушки игрок может открыть только под конец игры, ведь не всегда можно завершить какую-нибудь квестовую линию сразу как её начал. Вот и получается, вроде оружия достаточно, но использовать его ты скорее всего не сможешь, ведь когда получишь возможность его купить, то поймёшь, что для его использования тебе нужно полностью менять билд.
-- Хилки как расходники это противоречивое нововведение, ведь с одной стороны они потенциально бесконечные, ведь падают с врагов по мере прохождения локации, а с другой они просто ещё один источник фрустрации, ведь знать сколько просидишь на боссе нельзя, а на боссе хилки не спавнятся. Всё же если выбирать между традиционным Эстусом и Пузырьками Крови, я выберу первое, потому что в итоге у хилок из Бладика полно минусов. На Боссе они кончаются и тебе надо их фармить, но хилки падают не со всех врагов, так ещё и по возвращении на прошлые локации ты скорее всего не получишь их вообще, ведь ты стал уровнем выше чем лока. В итоге остаются вопросы "Где фармить ?", "Сколько фармить ?", "А какого хуя я вообще должен фармить ?".
+- Хилки как расходники это противоречивое нововведение, ведь с одной стороны они потенциально бесконечные, ведь падают с врагов по мере прохождения локации, а с другой они просто ещё один источник фрустрации, ведь знать сколько просидишь на боссе нельзя, а на боссе хилки не спавнятся. Всё же если выбирать между традиционным Эстусом и Пузырьками Крови, я выберу первое, потому что в итоге у хилок из Бладика полно минусов. На Боссе они кончаются и тебе надо их фармить, но хилки падают не со всех врагов, так ещё и по возвращении на прошлые локации ты скорее всего не получишь их вообще, ведь ты стал уровнем выше чем лока. В итоге остаются вопросы “Где фармить ?”, “Сколько фармить ?”, “А какого хуя я вообще должен фармить ?”.
 - Самое смешное в этой игре - это другие охотники, которые нападают на главного героя. Эти охотники имеют весь тот же арсенал, что и Главный Герой, но естественно за них играет ебаный компьютер, который имеет бескончные пули, бесконечную стамину и ебанутейшое количество что ХП, что урона. Вот когда ты убиваешь таких врагов понимаешь насколько же перекат раковая механика. Противники могут доджить любые мои удары, уходя на безопасное расстояние, ведь просто спамят перекат. Как же это честно.
 
 ## Локации
 
-- Помимо этого в игре есть "уровень локаций", о котором тебе естественно не говорят. Иногда бывает что приходишь на локу, а тебе там не то что сложно, а просто блять невозможно. Квинтэссенция этой еботни можем увидеть в Elden Ring.
+- Помимо этого в игре есть “уровень локаций”, о котором тебе естественно не говорят. Иногда бывает что приходишь на локу, а тебе там не то что сложно, а просто блять невозможно. Квинтэссенция этой еботни можем увидеть в Elden Ring.
 - Ранбеки в этой игре встречаются чаще чем костры. Для этой игры FromSoftware решил избрать абсолютно другой подход к левел-дизайну. Здесь по минимуму костров из-за чего прохождение одной локи невероятно напрягает без возможности передохнуть. Костры у боссов естественно не ставим, чтобы игрок бежал назад и просто тратил время, ещё и врагов иногда накидаем.
 
 ## Боссы
 
 - Боссы это просто пиздец. Большинство боссов в этой игре это огромные чудовища и их атаки бьют по огромной площади. Зачастую они получают больший урон именно в голову, но из-за того что она слишком высоко игрок до неё не достаёт.
 - Амигдала не очень сложный босс, но душный из-за того что получает урон только по голове. Босс которые блять только на одной атаке опускает голову, дамажится только по неё.
-- Противоположность Амигдалы это Ром. Эта ебаная паучиха не только не получает урон по башке, так ещё и относится к особой касте боссов Бладика - "боссы с подсосами". Ром как и другие такие же боссы просто закидывает тебя кончеными подсосами, которых либо тебе надо всех убить, либо просто соси хуй лол
+- Противоположность Амигдалы это Ром. Эта ебаная паучиха не только не получает урон по башке, так ещё и относится к особой касте боссов Бладика - “боссы с подсосами”. Ром как и другие такие же боссы просто закидывает тебя кончеными подсосами, которых либо тебе надо всех убить, либо просто соси хуй лол
 - Помимо всего этого у боссов почему-то просто ебанутые хитбоксы атак с рывком. Какого хуя мне дважды регистрирует урон за одну атаку босса ??? Я могу ещё простить что огромные чудовища прыгают так быстро, как будто весят 50кг пуха, но нанесение урона дважды это просто пиздец.
 - Почему урон от огнестрела так сильно различается у противников и у Главного Героя. Если я просто стреляю во врага, то наношу ему 50 урона, если обычный враг или босс делают то же самое, то у меня отлетает треть хп.
 
@@ -776,7 +931,7 @@ DMC для девочек…
 
 1/10`,
 
-  'silenthillf': `**SILENT HILL f**
+      'silenthillf': `**SILENT HILL f**
 
 0/10 
 Ни хоррора, ни боёвки… Да и в целом вообще ничего
@@ -794,26 +949,26 @@ DMC для девочек…
 
 ## Сюжет
 
-- Хотелось бы конечно написать "хз ничё не понял", но вроде более или менее понятная картина выстроилась после прохождения
-- Сюжет по классике - "Напилась таблеток и словила галлюцинации ". Вот в целом и всё. Никаких особо крутых поворотов или чего-то ещё не было
+- Хотелось бы конечно написать “хз ничё не понял”, но вроде более или менее понятная картина выстроилась после прохождения
+- Сюжет по классике - “Напилась таблеток и словила галлюцинации ”. Вот в целом и всё. Никаких особо крутых поворотов или чего-то ещё не было
 
 ## Графика
 
 - Не думал что в 2025 году такое может быть, но эта игра которой даже за Графику нельзя накинуть пару баллов как Sifu и Берсерку
-- Графика не прям ужасная, но даже, играя на ультрах, всё равно ничем кроме как "норм" ты графику не опишешь. Ещё и Физики большинства объектов вообще нету, всё просто статичное
+- Графика не прям ужасная, но даже, играя на ультрах, всё равно ничем кроме как “норм” ты графику не опишешь. Ещё и Физики большинства объектов вообще нету, всё просто статичное
 - Ещё и какие-то постоянные баги не только у меня, но и у многих других игроков. То теней и света нету, то экран превращается в какой-то калейдоскоп, то просто текстуры вообще не прогружаются
 
 ## Итог
 
 Главная проблема в том, что игра решила выдумать из себя как из хоррора неизвестно что. Совместила в себе два абсолютно несочетаемых аспекта и с обоими провалилась. Какая ещё активная боёвка с холодным оружием в хорроре ? Кому это нужно ? Сделали бы как Silent Hill 2 Remake, оставить такой же простейший геймплей как в любом хорроре и сосредоточиться на Атмосфере и Истории`,
 
-  'khazan': `**The First Berserker: Khazan**
+      'khazan': `**The First Berserker: Khazan**
 
 Желаю разрабу хотя бы поиграть в свою игру, потому что он очередной гений, которому лишь бы собрать деньги с «хардкорщиков соулсфагов», которые схавают любую фигню похожую на Dark Souls и скажут, что всё круто.
 
 ## ГЕЙМПЛЕЙ
 
-- Нужно ли что-то говорить. Просто немыслимое количество реюзов боссов, обычных врагов и тропов типикал Souls-like'а (по типу болото яда, враг из-за угла столкнул тебя вниз, миллион врагов в узком проходе). Игра рассчитана на 35 часов, но уже за 10-15 вы увидите почти всех врагов.
+- Нужно ли что-то говорить. Просто немыслимое количество реюзов боссов, обычных врагов и тропов типикал Souls-like’а (по типу болото яда, враг из-за угла столкнул тебя вниз, миллион врагов в узком проходе). Игра рассчитана на 35 часов, но уже за 10-15 вы увидите почти всех врагов.
 - Из, грубо говоря, хорошего можно отметить какую-то слабенькую попытку уйти в Слэшер с навыками, которые реально дают тебе разные приёмы, правда при прокачке буквально пары аспектов (например «Быстрая атака» и «Защита») можно в Навыки больше не заходить, потому что ничего кардинально нового ты не прокачаешь. Также можно отметить, что разраб хотя бы поиграл, если не в свою игру, то в Lies of P и Nine Sols, потому что решил добавить перекаты, парирование и усиленное парирование, которые РЕАЛЬНО надо использовать. В итоге боёвка сводится к тому, чтобы сделать Крутое Парирование и спамить удар, изредка нажимая приём, чтобы не выпускать босса из станлока, и так пока не кончится стамина (по крайней мере на Копье так).
 - Расходники вроде иногда норма, но ничего существенного не делают
 - Зачем делать разделённый хаб, где с одной стороны ты телепортируешься на локацию, а с другой у тебя кузнец и другие NPC
@@ -826,7 +981,7 @@ DMC для девочек…
 
 ## БОССЫ
 
-- Разраб просто увидел, что люди схавали «прекрасное» DLC Elden Ring'а и решил, что делать боссов с бесконечными ядерками и нечитаемыми атаками это круто. Буквально доходит до того, что я знаю точную последовательность некоторых действий босса
+- Разраб просто увидел, что люди схавали «прекрасное» DLC Elden Ring’а и решил, что делать боссов с бесконечными ядерками и нечитаемыми атаками это круто. Буквально доходит до того, что я знаю точную последовательность некоторых действий босса
 - Дракон Хизмар, Риз, Озма и ещё многие боссы имеют просто какое-то запредельное кол-во хп. Всё доходит до того, что на одну попытку уходит по 10-15 минут реального времени. В каком мире это норма ?
 - Повторы не только самих боссов, но и их мувсетов у совершенно других боссов (Трокка и Белериана)
 
@@ -834,20 +989,50 @@ DMC для девочек…
 
 Единственное за что эту игру правда можно похвалить это за визуальный стиль и анимации. Всё выглядит очень красиво и плавно. Если бы миллард эфеектов на экране ещё не мешал играть, вообще было бы круто.`,
 
-  // 🔥 ДОБАВЛЕНЫ ПРОПУЩЕННЫЕ ОБЗОРЫ:
-  'liesofp': `**Lies of P**`,
-  'dispatch': `**Dispatch**\n\nСюжет в конце слился в мусорку, хоть геймплей хороший`,
-  'shadow_burglar': `**Shadow Burglar**\n\nИндиушка от студента. Прикольная и лёгкая`,
-  'balatro': `**Balatro**\n\nРогалик где мало что решает скилл, всё зависит от удачи`,
-  'reanimal': `**REANIMAL**\n\nСюжет - непонятный, геймплей - ходьба, баги - дохуя`,
-  'slay_princess': `**Slay the Princess**\n\nВизуальная новелла без геймплея`,
-  'evil_within': `**The Evil Within**\n\nУстаревшая душнейшая игра`,
-  'tlou2': `**The Last of Us Part II**\n\nКакая-то затянутая как будто и я опять ничё не понял`,
-  'celeste': `**Celeste**\n\nХа, просто скучно. Не прям фанат платформеров`,
-  'warcraft3': `**Warcraft 3**\n\nПоиграл час и понял что вообще не люблю стратегии`,
-  'nioh2': `**Nioh 2**`,
-  'firewatch': `**Firewatch**`
-};
+      'dispatch': `**Dispatch**
+
+Сюжет в конце слился в мусорку, хоть геймплей хороший`,
+
+'shadow_burglar': `**Shadow Burglar**
+
+Индиушка от студента. Прикольная и лёгкая`,
+
+'balatro': `**Balatro**
+
+Рогалик где мало что решает скилл, всё зависит от удачи`,
+
+'reanimal': `**REANIMAL**
+
+Сюжет - непонятный, геймплей - ходьба, баги - дохуя`,
+
+'slay_princess': `**Slay the Princess**
+
+Визуальная новелла без геймплея`,
+
+'evil_within': `**The Evil Within**
+
+Устаревшая душнейшая игра`,
+
+'tlou2': `**The Last of Us Part II**
+
+Какая-то затянутая как будто и я опять ничё не понял`,
+
+'celeste': `**Celeste**
+
+Ха, просто скучно. Не прям фанат платформеров`,
+
+'warcraft3': `**Warcraft 3**
+
+Поиграл час и понял что вообще не люблю стратегии`,
+
+'nioh2': `**Nioh 2**
+
+`,
+
+'firewatch': `**Firewatch**
+
+`
+    };
 
     let games = GAMES_DATA;
     let currentFilter = {verdict: '', genre: '', search: '', sort: 'date-desc'};
@@ -876,11 +1061,6 @@ DMC для девочек…
       return 'purple';
     }
 
-    function getInitials(name) {
-      if (!name) return '??';
-      return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-    }
-
     function renderGames(list) {
       const grid = document.getElementById('gamesGrid');
       grid.innerHTML = '';
@@ -888,43 +1068,78 @@ DMC для девочек…
         grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted)">Ничего не найдено 😕</p>';
         return;
       }
+      
       list.forEach(g => {
         const card = document.createElement('div');
         card.className = 'card';
-        const hours = g.hours ? `${fmtNum(g.hours)} ч` : '';
-        let displayGenre = (g.genre || '—').replace(', Стелс', '').trim();
-        const genreIcons = {
-          'ХОРРОР': '👻', 'SOULSLIKE': '💀', 'RPG': '🛡️', 'JRPG': '🏯', 'ROUGELIKE': '🎲',
-          'ЭКШЕН-ПРИКЛЮЧЕНИЕ': '🗡️', 'ЭКШЕН': '⚔️', 'КИНО': '🎬', 'ПЛАТФОРМЕР': '🏃',
-          'СТРАТЕГИЯ': '♟️', 'НОВЕЛЛА': '📖', 'СЛЭШЕР': '🗡️', 'МЕТРОИДВАНИЯ': '🦇', 'СИМУЛЯТОР ХОДЬБЫ': '🚶'
-        };
-        const genreIcon = genreIcons[displayGenre] || '🎮';
-        const ach = g.achievements || '';
-        const pct = g.percent ? `(${g.percent}%)` : '';
-        const rating = (g.rating !== null && g.rating !== undefined) ? `${g.rating}/10` : '–';
-        const ratingClass = getRatingClass(g.rating);
-        let reviewHtml = g.review ? `<div class="review-preview"><span class="review-btn" data-game="${g.name}">📄 Читать обзор →</span></div>` : '';
+        // Часы (только цифры, без иконки)
+const hours = g.hours ? `${fmtNum(g.hours)} ч` : '';
+
+// Жанр (убираем ", Стелс")
+let displayGenre = g.genre || '—';
+displayGenre = displayGenre.replace(', Стелс', '').trim();
+
+// Иконки для жанров
+const genreIcons = {
+  'ХОРРОР': '👻',
+  'SOULSLIKE': '💀',
+  'RPG': '🛡️',
+  'JRPG': '🏯',
+  'ROUGELIKE': '🎲',
+  'ЭКШЕН-ПРИКЛЮЧЕНИЕ': '🗡️',
+  'ЭКШЕН': '⚔️',
+  'КИНО': '🎬',
+  'ПЛАТФОРМЕР': '🏃',
+  'СТРАТЕГИЯ': '♟️',
+  'НОВЕЛЛА': '📖',
+  'СЛЭШЕР': '🗡️',
+  'МЕТРОИДВАНИЯ': '🦇',
+  'СИМУЛЯТОР ХОДЬБЫ': '🚶'
+};
+const genreIcon = genreIcons[displayGenre] || '🎮';
+
+// Остальное
+const ach = g.achievements || '';
+const pct = g.percent ? `(${g.percent}%)` : '';
+const rating = g.rating !== null && g.rating !== undefined ? `${g.rating}/10` : '–';
+const ratingClass = getRatingClass(g.rating);
+        
+        let reviewHtml = '';
+        if (g.review) {
+          reviewHtml = `<div class="review-preview"><span class="review-btn" data-game="${g.name}">📄 Читать обзор →</span></div>`;
+        }
         const steamBtn = g.steamUrl ? `<a href="${g.steamUrl}" target="_blank" class="steam-link">🎮 Steam</a>` : '';
-        card.innerHTML = `
-          <div class="cover-wrapper">
-            ${g.cover 
-              ? `<img src="${g.cover}" alt="${g.name}" class="game-cover" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="cover-placeholder" style="display:none;">${getInitials(g.name)}</div>`
-              : `<div class="cover-placeholder">${getInitials(g.name)}</div>`
-            }
-          </div>
-          <div class="card-header"><div class="game-title">${g.name}</div><div class="rating ${ratingClass}">${rating}</div></div>
-          ${steamBtn}
-          <div style="padding:0 12px">${fmtVerdict(g.verdict)}</div>
-          <div class="meta">
-            <div>${genreIcon} ${displayGenre}</div><div>📅 ${g.date || '—'}</div>
-            <div>⏱ ${hours}</div><div>${ach ? '🏆 ' + ach : ''} ${pct}</div>
-          </div>
-          ${reviewHtml}
-        `;
+
+       card.innerHTML = `
+  <div class="cover-wrapper">
+    ${g.cover 
+      ? `<img src="${g.cover}" alt="${g.name}" class="game-cover" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+         <div class="cover-placeholder" style="display:none;">${getInitials(g.name)}</div>`
+      : `<div class="cover-placeholder">${getInitials(g.name)}</div>`
+    }
+  </div>
+  <div class="card-header">
+    <div class="game-title">${g.name}</div>
+    <div class="rating ${ratingClass}">${rating}</div>
+  </div>
+  ${steamBtn}
+  ${fmtVerdict(g.verdict)}
+  <div class="meta">
+    <div>${genreIcon} ${displayGenre}</div>
+<div>📅 ${g.date || '—'}</div>
+<div>⏱ ${hours}</div>
+<div>${ach ? '🏆 ' + ach : ''} ${pct}</div>
+  </div>
+  ${reviewHtml}
+`;
         grid.appendChild(card);
+        
         const reviewBtn = card.querySelector('.review-btn');
         if (reviewBtn) {
-          reviewBtn.addEventListener('click', (e) => { e.stopPropagation(); openReview(g.name, g.review); });
+          reviewBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openReview(g.name, g.review);
+          });
         }
       });
     }
@@ -933,13 +1148,21 @@ DMC для девочек…
       const modal = document.getElementById('reviewModal');
       const titleEl = document.getElementById('reviewTitle');
       const contentEl = document.getElementById('reviewContent');
+      
       titleEl.textContent = gameName;
       contentEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);">⏳ Загрузка...</div>';
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
+      
       const reviewText = REVIEWS[reviewKey];
       if (reviewText) {
-        let formatted = reviewText.replace(/^### (.+)$/gm, '<h3>$1</h3>').replace(/^## (.+)$/gm, '<h2>$1</h2>').replace(/^# (.+)$/gm, '<h1>$1</h1>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+        let formatted = reviewText
+  .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+  .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+  .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+  .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  .replace(/\n\n/g, '</p><p>')
+  .replace(/\n/g, '<br>');
         contentEl.innerHTML = '<p>' + formatted + '</p>';
       } else {
         contentEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--c-red);">❌ Обзор не найден</div>';
@@ -960,30 +1183,37 @@ DMC для девочек…
       statsEl.textContent = `Игр: ${total} | Ср. оценка: ${avg} | Всего часов: ${totalHours}`;
     }
 
-    function populateGenres(list) {
-      const select = document.getElementById('filterGenre');
-      while (select.options.length > 1) select.remove(1);
-      const genres = [...new Set(list.map(g => {
-        if (!g.genre) return null;
-        return g.genre.replace(', СТЕЛС', '').trim();
-      }).filter(Boolean))].sort();
-      genres.forEach(genre => {
-        const opt = document.createElement('option');
-        opt.value = genre;
-        opt.textContent = genre;
-        select.appendChild(opt);
-      });
-    }
+   function populateGenres(list) {
+  const select = document.getElementById('filterGenre');
+  while (select.options.length > 1) select.remove(1);
+  
+  // Убираем ", СТЕЛС" из жанров и создаем уникальный список
+  const genres = [...new Set(list.map(g => {
+    if (!g.genre) return null;
+    // Убираем ", СТЕЛС" из названия жанра
+    return g.genre.replace(', СТЕЛС', '').trim();
+  }).filter(Boolean))].sort();
+  
+  genres.forEach(genre => {
+    const opt = document.createElement('option');
+    opt.value = genre;
+    opt.textContent = genre;
+    select.appendChild(opt);
+  });
+}
 
-    function filterAndRender() {
-      let filtered = games.filter(g => {
-        const v = (g.verdict || '').toLowerCase();
-        const filterV = currentFilter.verdict.toLowerCase();
-        const matchV = !currentFilter.verdict || v === filterV;
-        const matchG = !currentFilter.genre || g.genre === currentFilter.genre;
-        const matchS = !currentFilter.search || g.name.toLowerCase().includes(currentFilter.search);
-        return matchV && matchG && matchS;
-      });
+   function filterAndRender() {
+  let filtered = games.filter(g => {
+    const v = (g.verdict || '').toLowerCase();
+    const filterV = currentFilter.verdict.toLowerCase();
+    
+    const matchV = !currentFilter.verdict || v === filterV;
+    const matchG = !currentFilter.genre || g.genre === currentFilter.genre;
+    const matchS = !currentFilter.search || g.name.toLowerCase().includes(currentFilter.search);
+    
+    return matchV && matchG && matchS;
+  });
+      
       const [field, order] = currentFilter.sort.split('-');
       const mult = order === 'asc' ? 1 : -1;
       filtered.sort((a,b) => {
@@ -998,7 +1228,11 @@ DMC для девочек…
           return (ha - hb) * mult;
         }
         if (field === 'date') {
-          const parse = d => { if (!d) return 0; const [day,mon,yr] = d.split('.'); return new Date(yr, mon-1, day).getTime() || 0; };
+          const parse = d => {
+            if (!d) return 0;
+            const [day,mon,yr] = d.split('.');
+            return new Date(yr, mon-1, day).getTime() || 0;
+          };
           return (parse(a.date) - parse(b.date)) * mult;
         }
         if (field === 'has' || currentFilter.sort === 'has-review') {
@@ -1008,134 +1242,282 @@ DMC для девочек…
         }
         return 0;
       });
+      
       renderGames(filtered);
     }
+    // Функция для получения инициалов названия игры
+function getInitials(name) {
+  if (!name) return '??';
+  return name
+    .split(' ')
+    .map(word => word[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+}
 
-    function initTheme() {
-      const saved = localStorage.getItem('theme');
-      const toggle = document.getElementById('themeToggle');
-      if (saved) { document.documentElement.setAttribute('data-theme', saved); updateThemeIcon(saved); }
-      else { document.documentElement.setAttribute('data-theme', 'dark'); updateThemeIcon('dark'); }
-      if (toggle) {
-        toggle.addEventListener('click', () => {
-          const current = document.documentElement.getAttribute('data-theme');
-          const next = current === 'light' ? 'dark' : 'light';
-          document.documentElement.setAttribute('data-theme', next);
-          localStorage.setItem('theme', next);
-          updateThemeIcon(next);
-          const statsContainer = document.getElementById('statsContainer');
-          if (statsContainer && statsContainer.style.display !== 'none') renderStatistics();
-        });
-      }
-    }
-
-    function updateThemeIcon(theme) {
-      const toggle = document.getElementById('themeToggle');
-      if (toggle) toggle.textContent = theme === 'dark' ? '🌞 Тема' : '🌙 Тема';
-    }
-
-    function getThemeColor() {
-      const theme = document.documentElement.getAttribute('data-theme');
-      return theme === 'dark' ? '#aaa' : '#333';
-    }
-
-    function getGridColor() {
-      const theme = document.documentElement.getAttribute('data-theme');
-      return theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
-    }
-
-    function switchTab(tab) {
-      const gamesGrid = document.getElementById('gamesGrid');
+   function initTheme() {
+  const saved = localStorage.getItem('theme');
+  const toggle = document.getElementById('themeToggle');
+  
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon(saved);
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    updateThemeIcon('dark');
+  }
+  
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeIcon(next);
+      
       const statsContainer = document.getElementById('statsContainer');
-      const tabBtns = document.querySelectorAll('.tab-btn');
-      if (tab === 'games') {
-        gamesGrid.style.display = 'grid';
-        statsContainer.style.display = 'none';
-        tabBtns[0].classList.add('active');
-        tabBtns[1].classList.remove('active');
-      } else {
-        gamesGrid.style.display = 'none';
-        statsContainer.style.display = 'block';
-        tabBtns[0].classList.remove('active');
-        tabBtns[1].classList.add('active');
+      if (statsContainer && statsContainer.style.display !== 'none') {
         renderStatistics();
       }
-    }
-
-    function renderStatistics() {
-      const totalGames = games.length;
-      const totalHours = games.reduce((sum, g) => sum + (parseFloat(g.hours) || 0), 0);
-      const ratedGames = games.filter(g => g.rating !== null && g.rating !== undefined);
-      const avgRating = ratedGames.length ? (ratedGames.reduce((sum, g) => sum + g.rating, 0) / ratedGames.length).toFixed(1) : 0;
-      const avgAchievements = games.length ? (games.reduce((sum, g) => sum + (parseFloat(g.percent) || 0), 0) / games.length).toFixed(1) : 0;
-      document.getElementById('totalGames').textContent = totalGames;
-      document.getElementById('totalHours').textContent = totalHours.toFixed(1) + ' ч';
-      document.getElementById('avgRating').textContent = avgRating + '/10';
-      document.getElementById('avgAchievements').textContent = avgAchievements + '%';
-      document.querySelectorAll('canvas').forEach(canvas => { const chart = Chart.getChart(canvas); if (chart) chart.destroy(); });
-      
-      // График 1: Игры по жанрам
-      const genreCount = {};
-      games.forEach(g => { const genre = g.genre || 'Без жанра'; genreCount[genre] = (genreCount[genre] || 0) + 1; });
-      new Chart(document.getElementById('genreChart'), {
-        type: 'doughnut',
-        data: { labels: Object.keys(genreCount), datasets: [{ data: Object.values(genreCount), backgroundColor: ['#667eea','#764ba2','#f093fb','#4facfe','#43e97b','#fa709a','#fee140','#30cfd0','#a8edea','#fed6e3'] }] },
-        options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: getComputedStyle(document.body).getPropertyValue('--text') } } } }
-      });
-      
-      // График 2: Распределение оценок
-      const ratingRanges = { '0-2': 0, '3-4': 0, '5-6': 0, '7-8': 0, '9-10': 0 };
-      ratedGames.forEach(g => {
-        if (g.rating <= 2) ratingRanges['0-2']++;
-        else if (g.rating <= 4) ratingRanges['3-4']++;
-        else if (g.rating <= 6) ratingRanges['5-6']++;
-        else if (g.rating <= 8) ratingRanges['7-8']++;
-        else ratingRanges['9-10']++;
-      });
-      const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-      const txtColor = isDark ? '#d0d0d0' : '#333333';
-      const gridCol = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
-      new Chart(document.getElementById('ratingChart'), {
-        type: 'bar',
-        data: { labels: Object.keys(ratingRanges), datasets: [{ label: 'Количество игр', data: Object.values(ratingRanges), backgroundColor: isDark ? 'rgba(124, 92, 255, 0.8)' : 'rgba(102, 126, 234, 0.8)' }] },
-        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: gridCol }, ticks: { color: txtColor } }, x: { grid: { display: false }, ticks: { color: txtColor } } } }
-      });
-      
-      // График 3: Игр пройдено по годам
-      const yearCount = {};
-      games.forEach(g => { if (g.date) { const year = g.date.split('.').pop(); yearCount[year] = (yearCount[year] || 0) + 1; } });
-      new Chart(document.getElementById('yearChart'), {
-        type: 'line',
-        data: { labels: Object.keys(yearCount).sort(), datasets: [{ label: 'Игр пройдено', data: Object.keys(yearCount).sort().map(y => yearCount[y]), borderColor: getThemeColor() === '#aaa' ? '#7c5cff' : '#667eea', backgroundColor: getThemeColor() === '#aaa' ? 'rgba(124, 92, 255, 0.2)' : 'rgba(102, 126, 234, 0.2)', fill: true, tension: 0.4 }] },
-        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: getGridColor() }, ticks: { color: getThemeColor() } }, x: { grid: { display: false }, ticks: { color: getThemeColor() } } } }
-      });
-      
-      // График 4: Часов по жанрам
-      const genreHours = {};
-      games.forEach(g => { const genre = g.genre || 'Без жанра'; genreHours[genre] = (genreHours[genre] || 0) + (parseFloat(g.hours) || 0); });
-      new Chart(document.getElementById('hoursChart'), {
-        type: 'bar',
-        data: { labels: Object.keys(genreHours), datasets: [{ label: 'Часов', data: Object.values(genreHours), backgroundColor: '#764ba2' }] },
-        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } }, x: { ticks: { color: getThemeColor() } } } }
-      });
-    }
+    });
+  }
+}
+    function updateThemeIcon(theme) {
+  const toggle = document.getElementById('themeToggle');
+  if (toggle) {
+    toggle.textContent = theme === 'dark' ? '🌞 Тема' : '🌙 Тема';
+  }
+}
 
     function init() {
       initTheme();
       populateGenres(games);
       updateStats(games);
       filterAndRender();
+      
       document.getElementById('closeReview').addEventListener('click', closeReview);
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeReview(); });
-      document.getElementById('reviewModal').addEventListener('click', (e) => { if (e.target.id === 'reviewModal') closeReview(); });
-      document.getElementById('filterVerdict').addEventListener('change', (e) => { currentFilter.verdict = e.target.value; filterAndRender(); });
-      document.getElementById('filterGenre').addEventListener('change', (e) => { currentFilter.genre = e.target.value; filterAndRender(); });
-      document.getElementById('search').addEventListener('input', (e) => { currentFilter.search = e.target.value.toLowerCase(); filterAndRender(); });
-      document.getElementById('sortBy').addEventListener('change', (e) => { currentFilter.sort = e.target.value; filterAndRender(); });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeReview();
+      });
+      document.getElementById('reviewModal').addEventListener('click', (e) => {
+        if (e.target.id === 'reviewModal') closeReview();
+      });
+      
+      document.getElementById('filterVerdict').addEventListener('change', (e) => {
+        currentFilter.verdict = e.target.value;
+        filterAndRender();
+      });
+      document.getElementById('filterGenre').addEventListener('change', (e) => {
+        currentFilter.genre = e.target.value;
+        filterAndRender();
+      });
+      document.getElementById('search').addEventListener('input', (e) => {
+        currentFilter.search = e.target.value.toLowerCase();
+        filterAndRender();
+      });
+      document.getElementById('sortBy').addEventListener('change', (e) => {
+        currentFilter.sort = e.target.value;
+        filterAndRender();
+      });
+      
       console.log(`✅ Загружено ${games.length} игр`);
     }
 
     init();
+
+    // 🔥 Переключение вкладок
+function switchTab(tab) {
+  const gamesGrid = document.getElementById('gamesGrid');
+  const statsContainer = document.getElementById('statsContainer');
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  
+  if (tab === 'games') {
+    gamesGrid.style.display = 'grid';
+    statsContainer.style.display = 'none';
+    tabBtns[0].classList.add('active');
+    tabBtns[1].classList.remove('active');
+  } else {
+    gamesGrid.style.display = 'none';
+    statsContainer.style.display = 'block';
+    tabBtns[0].classList.remove('active');
+    tabBtns[1].classList.add('active');
+    renderStatistics();
+  }
+}
+
+// 🔥 Отрисовка статистики
+function renderStatistics() {
+  const totalGames = games.length;
+  const totalHours = games.reduce((sum, g) => sum + (parseFloat(g.hours) || 0), 0);
+  const ratedGames = games.filter(g => g.rating !== null && g.rating !== undefined);
+  const avgRating = ratedGames.length ? (ratedGames.reduce((sum, g) => sum + g.rating, 0) / ratedGames.length).toFixed(1) : 0;
+  const avgAchievements = games.length ? (games.reduce((sum, g) => sum + (parseFloat(g.percent) || 0), 0) / games.length).toFixed(1) : 0;
+  
+  // Обновляем карточки
+  document.getElementById('totalGames').textContent = totalGames;
+  document.getElementById('totalHours').textContent = totalHours.toFixed(1) + ' ч';
+  document.getElementById('avgRating').textContent = avgRating + '/10';
+  document.getElementById('avgAchievements').textContent = avgAchievements + '%';
+  
+  // Очищаем старые графики
+  document.querySelectorAll('canvas').forEach(canvas => {
+    const chart = Chart.getChart(canvas);
+    if (chart) chart.destroy();
+  });
+  
+  // 📊 График 1: Игры по жанрам
+  const genreCount = {};
+  games.forEach(g => {
+    const genre = g.genre || 'Без жанра';
+    genreCount[genre] = (genreCount[genre] || 0) + 1;
+  });
+  
+  new Chart(document.getElementById('genreChart'), {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(genreCount),
+      datasets: [{
+        data: Object.values(genreCount),
+        backgroundColor: [
+          '#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b',
+          '#fa709a', '#fee140', '#30cfd0', '#a8edea', '#fed6e3'
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: getComputedStyle(document.body).getPropertyValue('--text') } }
+      }
+    }
+  });
+  
+  // 🎯 График 2: Распределение оценок
+  const ratingRanges = { '0-2': 0, '3-4': 0, '5-6': 0, '7-8': 0, '9-10': 0 };
+  ratedGames.forEach(g => {
+    if (g.rating <= 2) ratingRanges['0-2']++;
+    else if (g.rating <= 4) ratingRanges['3-4']++;
+    else if (g.rating <= 6) ratingRanges['5-6']++;
+    else if (g.rating <= 8) ratingRanges['7-8']++;
+    else ratingRanges['9-10']++;
+  });
+  
+ new Chart(document.getElementById('ratingChart'), {
+  type: 'bar',
+  data: {
+    labels: Object.keys(ratingRanges),
+    datasets: [{
+      label: 'Количество игр',
+      data: Object.values(ratingRanges),
+      backgroundColor: '#667eea'
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false }
+    },
+    scales: {
+      y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } },
+      x: { ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } }
+    }
+  }
+});
+  
+  // 📅 График 3: Игр пройдено по годам
+  const yearCount = {};
+  games.forEach(g => {
+    if (g.date) {
+      const year = g.date.split('.').pop();
+      yearCount[year] = (yearCount[year] || 0) + 1;
+    }
+  });
+  
+  new Chart(document.getElementById('yearChart'), {
+  type: 'line',
+  data: {
+    labels: Object.keys(yearCount).sort(),
+    datasets: [{
+      label: 'Игр пройдено',
+      data: Object.keys(yearCount).sort().map(y => yearCount[y]),
+      borderColor: getThemeColor() === '#aaa' ? '#7c5cff' : '#667eea',
+      backgroundColor: getThemeColor() === '#aaa' ? 'rgba(124, 92, 255, 0.2)' : 'rgba(102, 126, 234, 0.2)',
+      fill: true,
+      tension: 0.4
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false }
+    },
+    scales: {
+      y: { 
+        beginAtZero: true,
+        grid: { color: getGridColor() },
+        ticks: { color: getThemeColor() }
+      },
+      x: { 
+        grid: { display: false },
+        ticks: { color: getThemeColor() }
+      }
+    }
+  }
+});
+  
+  // ⏱️ График 4: Часов по жанрам
+  const genreHours = {};
+  games.forEach(g => {
+    const genre = g.genre || 'Без жанра';
+    genreHours[genre] = (genreHours[genre] || 0) + (parseFloat(g.hours) || 0);
+  });
+  
+  new Chart(document.getElementById('hoursChart'), {
+    type: 'bar',
+    data: {
+      labels: Object.keys(genreHours),
+      datasets: [{
+        label: 'Часов',
+        data: Object.values(genreHours),
+        backgroundColor: '#764ba2'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } },
+                x: {
+          ticks: { color: getThemeColor() }
+        }
+      }
+    }
+  });
+  
+} // ← закрывает renderStatistics
+
+// 🎨 Вспомогательные функции для тем
+function getThemeColor() {
+  const theme = document.documentElement.getAttribute('data-theme');
+  return theme === 'dark' ? '#aaa' : '#333';
+}
+
+function getGridColor() {
+  const theme = document.documentElement.getAttribute('data-theme');
+  return theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+}
+
+function updateThemeIcon(theme) {
+  const toggle = document.getElementById('themeToggle');
+  if (toggle) {
+    toggle.textContent = theme === 'dark' ? '🌞 Тема' : '🌙 Тема';
+  }
+}
+
   </script>
 </body>
 </html>
